@@ -20,7 +20,7 @@ export class DetectorQualityHistory {
 
     @Column({
         type: 'enum',
-        enum: 'test'
+        enum: ['test']
     })
     run_quality: 'test';
 }

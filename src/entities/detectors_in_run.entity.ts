@@ -9,14 +9,14 @@ export class DetectorsInRun {
         eager: true,
     })
     @JoinColumn({ name: 'run_number' })
-    @PrimaryColumn()
+    @PrimaryColumn({ type: 'bigint' })
     run: Run;
 
     @ManyToOne(type => Detector, detector => detector.detectorsInRun, {
         eager: true,
     })
     @JoinColumn({ name: 'detector_id' })
-    @PrimaryColumn()
+    @PrimaryColumn({ type: 'bigint' })
     detector: Detector;
 
     @Column({

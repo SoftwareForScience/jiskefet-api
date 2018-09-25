@@ -7,16 +7,16 @@ export class UserNotification {
     @ManyToOne(type => User, user => user.userNotification, {
         eager: true,
     })
-    @JoinColumn({name: 'user_id'})
-    @PrimaryColumn()
+    @PrimaryColumn({ type: 'bigint' })
+    // @JoinColumn({name: 'user_id'})
     user: User;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'tinyint' })
     notify_sor: boolean;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'tinyint' })
     notify_eor: boolean;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'tinyint' })
     notify_subsystem: boolean;
 }

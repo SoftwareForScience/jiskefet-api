@@ -11,7 +11,7 @@ export class RunQualityHistory {
 
     @Column({
         type: 'enum',
-        enum: 'test'
+        enum: ['test']
     })
     subsystem: 'test';
 
@@ -23,7 +23,7 @@ export class RunQualityHistory {
 
     @Column({
         type: 'enum',
-        enum: 'test'
+        enum: ['test']
     })
     end_of_run_season: 'test';
 }

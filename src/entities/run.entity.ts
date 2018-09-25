@@ -11,29 +11,50 @@ export class Run {
     @PrimaryGeneratedColumn()
     run_number: number;
 
-    @Column({ type: 'timestamp' })
-    time_o2_start: Timestamp;
+    @Column({
+        type: 'timestamp',
+        nullable: true,
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    time_o2_start: Date;
 
-    @Column({ type: 'timestamp' })
-    time_trg_start: Timestamp;
+    @Column({
+        type: 'timestamp',
+        nullable: true,
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    time_trg_start: Date;
 
-    @Column({ type: 'timestamp' })
-    time_trg_end: Timestamp;
+    @Column({
+        type: 'timestamp',
+        nullable: true,
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    time_trg_end: Date;
+
+    @Column({
+        type: 'timestamp',
+        nullable: true,
+        default: () => 'CURRENT_TIMESTAMP'
+    })
+    time_o2_end: Date;
 
     @Column({ type: 'char', length: 64 })
     activity_id: string;
 
     @Column({
         type: 'enum',
-        enum: 'test'
+        enum: ['test'],
+        nullable: true
     })
-    run_type: 'test';
+    run_type: ['test'];
 
     @Column({
         type: 'enum',
-        enum: 'test'
+        enum: ['test'],
+        nullable: true
     })
-    run_quality: 'test';
+    run_quality: ['test'];
 
     @Column()
     n_detectors: number;

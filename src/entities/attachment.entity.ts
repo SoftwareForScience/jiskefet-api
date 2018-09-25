@@ -4,13 +4,13 @@ import { Log } from './log.entity';
 @Entity('Attachment')
 export class Attachment {
 
-    @PrimaryGeneratedColumn({type: 'bigint'})
+    @PrimaryGeneratedColumn({ type: 'bigint' })
     file_id: number;
 
     @ManyToOne(type => Log, log => log.attachment)
     log: Log;
 
-    @Column({type: 'timestamp'})
+    @Column({ type: 'timestamp' })
     creation_time: string;
 
     @Column()
@@ -19,9 +19,9 @@ export class Attachment {
     @Column()
     file_mime: string;
 
-    @Column({type: 'blob'})
+    @Column({ type: 'blob' })
     file_data: number;
 
-    @Column({type: 'char', length: 16})
+    @Column({ type: 'char', length: 16 })
     file_md5: string;
 }

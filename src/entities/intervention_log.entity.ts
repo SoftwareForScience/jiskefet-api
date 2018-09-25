@@ -8,7 +8,7 @@ export class InterventionLog {
         eager: true,
     })
     @JoinColumn({ name: 'log_id' })
-    @PrimaryColumn()
+    @PrimaryColumn({ type: 'bigint' })
     log: Log;
 
     @Column({ type: 'timestamp' })

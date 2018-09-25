@@ -9,19 +9,19 @@ export class SubSystemPermission {
         eager: true,
     })
     @JoinColumn({name: 'user_id'})
-    @PrimaryColumn()
+    @PrimaryColumn({ type: 'bigint' })
     user: User;
 
     @ManyToOne(type => SubSystem, subSystem => subSystem.subSystemPermission, {
         eager: true,
     })
-    @JoinColumn({name: 'subsystem_id'})
-    @PrimaryColumn()
+    @JoinColumn({ name: 'subsystem_id' })
+    @PrimaryColumn({ type: 'bigint' })
     subSystem: SubSystem;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'tinyint' })
     is_member: boolean;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'tinyint' })
     edit_eor_reason: boolean;
 }

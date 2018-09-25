@@ -1,6 +1,30 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsInt } from 'class-validator';
 export class RunDto {
+    
+    // @ApiModelProperty({
+    //     example: '2018-05-05 10:00:00+01',
+    //     description: '',
+    // })
+    // readonly time_02_start: Date;
+
+    // @ApiModelProperty({
+    //     example: '2018-05-05 10:00:00+01',
+    //     description: '',
+    // })
+    // readonly time_trg_start: Date;
+
+    // @ApiModelProperty({
+    //     example: '2018-05-05 10:00:00+01',
+    //     description: '',
+    // })
+    // readonly time_trg_end: Date;
+
+    // @ApiModelProperty({
+    //     example: '2018-05-05 10:00:00+01',
+    //     description: '',
+    // })
+    // readonly time_02_end: Date;
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
