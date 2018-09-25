@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('UserNotification')
+@Entity('user_notifications')
 export class UserNotification {
 
     @ManyToOne(type => User, user => user.userNotification, {

@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
 
-@Entity('SubSystemPermission')
+@Entity('sub_system_permissions')
 export class SubSystemPermission {
 
     @ManyToOne(type => User, user => user.subSystemPermission, {

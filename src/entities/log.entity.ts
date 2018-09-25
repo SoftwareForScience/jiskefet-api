@@ -3,7 +3,7 @@ import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 
-@Entity('Log')
+@Entity('logs')
 export class Log {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('EpnRoleSession')
+@Entity('epn_role_sessions')
 export class EpnRoleSession {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

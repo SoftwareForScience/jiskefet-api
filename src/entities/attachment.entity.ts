@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('Attachment')
+@Entity('attachments')
 export class Attachment {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

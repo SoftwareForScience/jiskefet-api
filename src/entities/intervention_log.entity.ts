@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('InterventionLog')
+@Entity('intervention_logs')
 export class InterventionLog {
 
     @OneToOne(type => Log, {

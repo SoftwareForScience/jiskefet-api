@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('FlpRole')
+@Entity('flp_roles')
 export class FlpRole {
 
     @PrimaryColumn({ type: 'char', length: 16 })

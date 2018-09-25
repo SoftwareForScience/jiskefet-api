@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn } from 'typeorm';
 
-@Entity('DetectorQualtiyHistory')
+@Entity('detector_qualtiy_history')
 export class DetectorQualityHistory {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

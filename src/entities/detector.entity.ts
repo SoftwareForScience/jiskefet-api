@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { DetectorsInRun } from './detectors_in_run.entity';
 
-@Entity('Detector')
+@Entity('detectors')
 export class Detector {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

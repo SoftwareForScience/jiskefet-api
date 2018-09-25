@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('UserFilter')
+@Entity('user_filters')
 export class UserFilter {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

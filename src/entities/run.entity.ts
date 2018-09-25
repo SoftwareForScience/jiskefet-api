@@ -1,11 +1,11 @@
-import { Timestamp, Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Tag } from './tag.entity';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
 import { DetectorsInRun } from './detectors_in_run.entity';
 
-@Entity('Run')
+@Entity('runs')
 export class Run {
 
     @PrimaryGeneratedColumn()

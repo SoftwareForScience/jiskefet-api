@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, Timestamp, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('RunEorHistory')
+@Entity('run_eor_history')
 export class RunEorHistory {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

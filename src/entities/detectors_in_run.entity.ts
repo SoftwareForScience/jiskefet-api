@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Run } from './run.entity';
 import { Detector } from './detector.entity';
 
-@Entity('DetectorsInRun')
+@Entity('detectors_in_run')
 export class DetectorsInRun {
 
     @ManyToOne(type => Run, run => run.detectorsInRun, {

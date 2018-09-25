@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { SubSystemPermission } from './sub_system_permission.entity';
 
-@Entity('SubSystem')
+@Entity('sub_systems')
 export class SubSystem {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })

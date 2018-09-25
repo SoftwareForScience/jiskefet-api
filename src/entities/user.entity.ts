@@ -6,7 +6,7 @@ import { UserFilter } from './user_filter.entity';
 import { RunEorHistory } from './run_eor_history.entity';
 import { SubSystemPermission } from './sub_system_permission.entity';
 
-@Entity('User')
+@Entity('users')
 export class User {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })
