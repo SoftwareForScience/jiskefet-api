@@ -1,17 +1,18 @@
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Runs } from './runs.entity';
+import { Run } from './run.entity';
 
-@Entity('EpnRoleSessions')
-export class EpnRoleSessions {
+@Entity('EpnRoleSession')
+export class EpnRoleSession {
 
     @PrimaryColumn({type: 'char', length: 16})
     epn_role_name: string;
 
-    @ManyToOne(type => Runs, runs => runs.epnRoleSessions, {
+    @ManyToOne(type => Run, run => run.epnRoleSession, {
         eager: true,
     })
     @JoinColumn({name: 'run_number'})
-    runs: Runs;
+    @PrimaryColumn()
+    run: Run;
 
     @PrimaryGeneratedColumn({type: 'bigint'})
     session_number: number;

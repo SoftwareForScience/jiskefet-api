@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn } from 'typeorm';
 
 @Entity('DetectorQualtiyHistory')
 export class DetectorQualityHistory {
@@ -12,12 +12,15 @@ export class DetectorQualityHistory {
     @PrimaryColumn({ type: 'int' })
     fk_detector_id: number;
 
-    @PrimaryColumn({ type: 'int' })
+    @Column({ type: 'int' })
     fk_changed_by_user_id: number;
 
     @Column({ type: 'timestamp' })
     change_time: Timestamp;
 
-    @Column({ type: 'enum' })
-    run_quality: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: 'test'
+    })
+    run_quality: 'test';
 }

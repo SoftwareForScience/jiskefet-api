@@ -1,22 +1,27 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Runs } from './runs.entity';
-import { Detectors } from './detector.entity';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
+import { Run } from './run.entity';
+import { Detector } from './detector.entity';
 
 @Entity('DetectorsInRun')
 export class DetectorsInRun {
 
-    @ManyToOne(type => Runs, runs => runs.detectorsInRun, {
+    @ManyToOne(type => Run, run => run.detectorsInRun, {
         eager: true,
     })
-    @JoinColumn({name: 'run_number'})
-    runs: Runs;
+    @JoinColumn({ name: 'run_number' })
+    @PrimaryColumn()
+    run: Run;
 
-    @ManyToOne(type => Detectors, detectors => detectors.detectorsInRun, {
+    @ManyToOne(type => Detector, detector => detector.detectorsInRun, {
         eager: true,
     })
-    @JoinColumn({name: 'detector_id'})
-    detectors: Detectors;
+    @JoinColumn({ name: 'detector_id' })
+    @PrimaryColumn()
+    detector: Detector;
 
-    @Column({ type: 'enum' })
-    run_quality: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: ['test']
+    })
+    run_quality: 'test';
 }

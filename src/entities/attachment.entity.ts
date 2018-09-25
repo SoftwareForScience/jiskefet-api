@@ -1,14 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Logs } from './logs.entity';
+import { Log } from './log.entity';
 
-@Entity('Attachments')
-export class Attachments {
+@Entity('Attachment')
+export class Attachment {
 
     @PrimaryGeneratedColumn({type: 'bigint'})
     file_id: number;
 
-    @ManyToOne(type => Logs, logs => logs.attachments)
-    logs: Logs;
+    @ManyToOne(type => Log, log => log.attachment)
+    log: Log;
 
     @Column({type: 'timestamp'})
     creation_time: string;

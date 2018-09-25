@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Tags')
-export class Tags {
+@Entity('Tag')
+export class Tag {
 
     @PrimaryGeneratedColumn({type: 'bigint'})
     tag_id: number;

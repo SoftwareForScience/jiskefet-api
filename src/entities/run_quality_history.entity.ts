@@ -9,8 +9,11 @@ export class RunQualityHistory {
     @Column({ type: 'int' })
     fk_run_number: number;
 
-    @Column({ type: 'enum' })
-    subsystem: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: 'test'
+    })
+    subsystem: 'test';
 
     @Column({ type: 'int' })
     fk_changed_by_user_id: number;
@@ -18,6 +21,9 @@ export class RunQualityHistory {
     @Column({ type: 'timestamp' })
     change_time: Timestamp;
 
-    @Column({ type: 'enum' })
-    end_of_run_season: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: 'test'
+    })
+    end_of_run_season: 'test';
 }

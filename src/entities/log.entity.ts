@@ -1,10 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
-import { Tags } from './tags.entity';
-import { Attachments } from './attachments.entity';
-import { Users } from './users.entity';
+import { Tag } from './tag.entity';
+import { Attachment } from './attachment.entity';
+import { User } from './user.entity';
 
-@Entity('Logs')
-export class Logs {
+@Entity('Log')
+export class Log {
 
     @PrimaryGeneratedColumn({ type: 'bigint' })
     log_id: number;
@@ -13,16 +13,16 @@ export class Logs {
         type: 'enum',
         enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
-    subtype: Enumerator;
+    subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
 
-    @ManyToOne(type => Users, user => user.logs)
-    user: Users;
+    @ManyToOne(type => User, user => user.log)
+    user: User;
 
     @Column({
         type: 'enum',
         enum: ['human', 'process'],
     })
-    origin: Enumerator;
+    origin: 'human' | 'process';
 
     @Column({ type: 'timestamp' })
     creation_time: string;
@@ -45,10 +45,10 @@ export class Logs {
     @Column()
     comment_fk_root_log_id: number;
 
-    @ManyToMany(type => Tags)
+    @ManyToMany(type => Tag)
     @JoinTable()
-    tags: Tags[];
+    tag: Tag[];
 
-    @OneToMany(type => Attachments, attachments => attachments.logs)
-    attachments: Attachments[];
+    @OneToMany(type => Attachment, attachment => attachment.log)
+    attachment: Attachment[];
 }
