@@ -1,10 +1,14 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Logs } from './logs.entity';
 
 @Entity('InterventionLogs')
 export class InterventionLogs {
 
-    @PrimaryColumn()
-    fk_log_id: number;
+    @OneToOne(type => Logs, {
+        eager: true,
+    })
+    @JoinColumn({name: 'log_id'})
+    logs: Logs;
 
     @Column({type: 'timestamp'})
     time_of_call: string;

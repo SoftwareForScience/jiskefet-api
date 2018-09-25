@@ -1,10 +1,11 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import { Users } from './users.entity';
 
 @Entity('ReportPreferences')
 export class ReportPreferences {
 
-    @PrimaryColumn({ type: 'int' })
-    fk_user_id: number;
+    @ManyToOne(type => Users, user => user.reportPreferences)
+    user: Users;
 
     @Column({ type: 'varchar' })
     report_stuff_etc: string;

@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 import { Tags } from './tags.entity';
+import { Attachments } from './attachments.entity';
+import { Users } from './users.entity';
 
 @Entity('Logs')
 export class Logs {
@@ -13,8 +15,8 @@ export class Logs {
     })
     subtype: Enumerator;
 
-    @Column()
-    fk_user_id: number;
+    @ManyToOne(type => Users, user => user.logs)
+    user: Users;
 
     @Column({
         type: 'enum',
@@ -46,4 +48,7 @@ export class Logs {
     @ManyToMany(type => Tags)
     @JoinTable()
     tags: Tags[];
+
+    @OneToMany(type => Attachments, attachments => attachments.logs)
+    attachments: Attachments[];
 }

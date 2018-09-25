@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Runs } from './runs.entity';
 
 @Entity('EpnRoleSessions')
 export class EpnRoleSessions {
@@ -6,8 +7,11 @@ export class EpnRoleSessions {
     @PrimaryColumn({type: 'char', length: 16})
     epn_role_name: string;
 
-    @PrimaryColumn()
-    fk_run_number: number;
+    @ManyToOne(type => Runs, runs => runs.epnRoleSessions, {
+        eager: true,
+    })
+    @JoinColumn({name: 'run_number'})
+    runs: Runs;
 
     @PrimaryGeneratedColumn({type: 'bigint'})
     session_number: number;
@@ -29,4 +33,5 @@ export class EpnRoleSessions {
 
     @Column({type: 'timestamp'})
     session_end: string;
+
 }

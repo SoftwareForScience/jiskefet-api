@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn, OneToMany } from 'typeorm';
 
 @Entity('DetectorQualtiyHistory')
 export class DetectorQualityHistory {

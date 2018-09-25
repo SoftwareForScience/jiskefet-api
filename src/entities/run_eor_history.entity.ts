@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, Timestamp } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, Timestamp, ManyToOne } from 'typeorm';
+import { Users } from './users.entity';
 
 @Entity('RunEorHistory')
 export class RunEorHistory {
@@ -12,8 +13,8 @@ export class RunEorHistory {
     @PrimaryColumn({ type: 'enum' })
     subsystem: Enumerator;
 
-    @Column({ type: 'int' })
-    fk_changed_by_user_id: number;
+    @ManyToOne(type => Users, user => user.runEorHistory)
+    user: Users;
 
     @Column({ type: 'timestamp' })
     change_time: Timestamp;

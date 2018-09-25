@@ -1,13 +1,21 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { SubSystems } from './sub_systems.entity';
+import { Users } from './users.entity';
 
 @Entity('SubSystemPermissions')
 export class SubSystemPermissions {
 
-    @PrimaryColumn({ type: 'int' })
-    fk_user_id: number;
+    @ManyToOne(type => Users, users => users.subSystemPermissions, {
+        eager: true,
+    })
+    @JoinColumn({name: 'user_id'})
+    users: Users;
 
-    @PrimaryColumn({ type: 'int' })
-    fk_subsystem_id: number;
+    @ManyToOne(type => SubSystems, subSystems => subSystems.subSystemPermissions, {
+        eager: true,
+    })
+    @JoinColumn({name: 'subsystem_id'})
+    subSystems: SubSystems;
 
     @Column({ type: 'boolean' })
     is_member: boolean;

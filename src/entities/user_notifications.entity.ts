@@ -1,10 +1,14 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Users } from './users.entity';
 
 @Entity('UsersNotifications')
 export class UsersNotifications {
 
-    @PrimaryColumn({ type: 'int' })
-    fk_user_id: number;
+    @ManyToOne(type => Users, user => user.usersNotifications, {
+        eager: true,
+    })
+    @JoinColumn({name: 'user_id'})
+    user: Users;
 
     @Column({ type: 'boolean' })
     notify_sor: boolean;

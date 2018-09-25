@@ -1,6 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Tags } from './tags.entity';
 import { Logs } from './logs.entity';
+import { EpnRoleSessions } from './epn_role_sessions.entity';
+import { FlpRoles } from './flp_roles.entity';
+import { DetectorsInRun } from './detectors_in_run.entity';
 
 @Entity('Runs')
 export class Runs {
@@ -54,4 +57,13 @@ export class Runs {
     @ManyToMany(type => Logs)
     @JoinTable()
     logs: Logs[];
+
+    @OneToMany(type => EpnRoleSessions, epnRoleSessions => epnRoleSessions.runs)
+    epnRoleSessions: EpnRoleSessions[];
+
+    @OneToMany(type => FlpRoles, flpRoles => flpRoles.runs)
+    flpRoles: FlpRoles[];
+
+    @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.runs)
+    detectorsInRun: DetectorsInRun[];
 }

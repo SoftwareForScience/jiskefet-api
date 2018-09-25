@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Users } from './users.entity';
 
 @Entity('UserFilters')
 export class UserFilters {
@@ -6,6 +7,6 @@ export class UserFilters {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     filter_id: number;
 
-    @PrimaryColumn({ type: 'int' })
-    fk_user_id: number;
+    @ManyToOne(type => Users, user => user.userFilters)
+    user: Users;
 }

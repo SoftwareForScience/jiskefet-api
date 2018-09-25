@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Runs } from './runs.entity';
 
 @Entity('FlpRoles')
 export class FlpRoles {
@@ -6,8 +7,11 @@ export class FlpRoles {
     @PrimaryColumn({type: 'char', length: 16})
     flp_role_name: string;
 
-    @PrimaryColumn()
-    fk_run_number: number;
+    @ManyToOne(type => Runs, runs => runs.flpRoles, {
+        eager: true,
+    })
+    @JoinColumn({name: 'run_number'})
+    runs: Runs;
 
     @Column()
     flp_hostname: string;
