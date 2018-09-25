@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Tags } from './tags.entity';
+import { Logs } from './logs.entity';
 
 @Entity('Runs')
 export class Runs {
@@ -9,19 +11,19 @@ export class Runs {
     @Column()
     time_o2_start: Date;
 
-    @Column({type: 'timestamp'})
+    @Column({ type: 'timestamp' })
     time_trg_start: string;
 
-    @Column({type: 'timestamp'})
+    @Column({ type: 'timestamp' })
     time_trg_end: string;
 
-    @Column({type: 'char', length: 64})
+    @Column({ type: 'char', length: 64 })
     activity_id: string;
 
-    @Column({type: 'enum'})
+    @Column({ type: 'enum' })
     run_type: Enumerator;
 
-    @Column({type: 'enum'})
+    @Column({ type: 'enum' })
     run_quality: Enumerator;
 
     @Column()
@@ -29,7 +31,7 @@ export class Runs {
 
     @Column()
     n_flps: number;
-    
+
     @Column()
     n_epns: number;
 
@@ -44,4 +46,12 @@ export class Runs {
 
     @Column()
     bytes_timeframe_builder: number;
+
+    @ManyToMany(type => Tags)
+    @JoinTable()
+    tags: Tags[];
+
+    @ManyToMany(type => Logs)
+    @JoinTable()
+    logs: Logs[];
 }
