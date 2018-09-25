@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn } from
 
 @Entity('DetectorQualtiyHistory')
 export class DetectorQualityHistory {
-    
+
     @PrimaryGeneratedColumn({ type: 'bigint' })
     detector_quality_history_id: number;
 

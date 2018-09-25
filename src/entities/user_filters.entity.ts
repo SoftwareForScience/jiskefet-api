@@ -7,5 +7,5 @@ export class UserFilters {
     filter_id: number;
 
     @PrimaryColumn({ type: 'int' })
-    fk_user_id: number
+    fk_user_id: number;
 }

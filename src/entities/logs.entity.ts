@@ -9,7 +9,7 @@ export class Logs {
 
     @Column({
         type: 'enum',
-        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment']
+        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
     subtype: Enumerator;
 
@@ -18,11 +18,11 @@ export class Logs {
 
     @Column({
         type: 'enum',
-        enum: ['human', 'process']
+        enum: ['human', 'process'],
     })
     origin: Enumerator;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: 'timestamp' })
     creation_time: string;
 
     @Column()
