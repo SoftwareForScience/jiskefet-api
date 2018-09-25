@@ -8,7 +8,7 @@ export class DetectorsInRun {
 
     @PrimaryColumn({ type: 'int' })
     fk_detector_id: number;
-    
+
     @Column({ type: 'enum' })
     run_quality: Enumerator;
 }
