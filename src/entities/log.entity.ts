@@ -37,7 +37,7 @@ export class Log {
     subsystem_fk_subsystem_id: number;
 
     @Column({ type: 'timestamp' })
-    announcement_valid_until: string;
+    announcement_valid_until: Date;
 
     @Column()
     comment_fk_parent_log_id: number;

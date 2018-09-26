@@ -13,28 +13,24 @@ export class Run {
 
     @Column({
         type: 'timestamp',
-        nullable: true,
         default: () => 'CURRENT_TIMESTAMP',
     })
     time_o2_start: Date;
 
     @Column({
         type: 'timestamp',
-        nullable: true,
         default: () => 'CURRENT_TIMESTAMP',
     })
     time_trg_start: Date;
 
     @Column({
         type: 'timestamp',
-        nullable: true,
         default: () => 'CURRENT_TIMESTAMP',
     })
     time_trg_end: Date;
 
     @Column({
         type: 'timestamp',
-        nullable: true,
         default: () => 'CURRENT_TIMESTAMP',
     })
     time_o2_end: Date;
@@ -45,14 +41,12 @@ export class Run {
     @Column({
         type: 'enum',
         enum: ['test'],
-        nullable: true,
     })
     run_type: ['test'];
 
     @Column({
         type: 'enum',
         enum: ['test'],
-        nullable: true,
     })
     run_quality: ['test'];
 
