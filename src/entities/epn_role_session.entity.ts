@@ -32,7 +32,10 @@ export class EpnRoleSession {
     @Column({ type: 'timestamp' })
     session_start: string;
 
-    @Column({ type: 'timestamp' })
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
     session_end: string;
 
 }

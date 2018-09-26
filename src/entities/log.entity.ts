@@ -36,7 +36,10 @@ export class Log {
     @Column()
     subsystem_fk_subsystem_id: number;
 
-    @Column({ type: 'timestamp' })
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
     announcement_valid_until: Date;
 
     @Column()
