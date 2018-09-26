@@ -17,7 +17,7 @@ export class RunService {
 
     /**
      * Handler for saving the run entity in db.
-     * @param runDto 
+     * @param runDto
      */
     async create(runDto: RunDto): Promise<Run> {
         const RunEntity = plainToClass(Run, runDto);
