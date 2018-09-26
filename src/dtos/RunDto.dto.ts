@@ -8,30 +8,6 @@ import { IsInt } from 'class-validator';
 export class RunDto {
 
     @ApiModelProperty({
-        example: '2018-05-05 10:12:00+01',
-        description: 'TimeStamp',
-    })
-    readonly time_o2_start: Date;
-
-    @ApiModelProperty({
-        example: '2018-05-05 10:13:00+01',
-        description: 'TimeStamp',
-    })
-    readonly time_trg_start: Date;
-
-    @ApiModelProperty({
-        example: '2018-05-05 10:14:00+01',
-        description: 'TimeStamp',
-    })
-    readonly time_trg_end: Date;
-
-    @ApiModelProperty({
-        example: '2018-05-05 10:15:00+01',
-        description: 'TimeStamp',
-    })
-    readonly time_o2_end: Date;
-
-    @ApiModelProperty({
         example: ['test'],
         description: 'Enumerator',
     })
