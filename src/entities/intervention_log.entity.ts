@@ -1,23 +1,30 @@
 import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
-import { Logs } from './logs.entity';
+import { Log } from './log.entity';
 
-@Entity('InterventionLogs')
-export class InterventionLogs {
+@Entity('intervention_logs')
+export class InterventionLog {
 
-    @OneToOne(type => Logs, {
+    @OneToOne(type => Log, {
         eager: true,
     })
-    @JoinColumn({name: 'log_id'})
-    logs: Logs;
+    @JoinColumn({ name: 'log_id' })
+    @PrimaryColumn({ type: 'bigint' })
+    log: Log;
 
-    @Column({type: 'timestamp'})
+    @Column({ type: 'timestamp' })
     time_of_call: string;
 
-    @PrimaryColumn({type: 'enum'})
-    intervention_type: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: ['test'],
+    })
+    intervention_type: 'test';
 
-    @Column({type: 'enum'})
-    location: Enumerator;
+    @Column({
+        type: 'enum',
+        enum: ['test'],
+    })
+    location: 'test';
 
     @Column()
     action_taken: string;
