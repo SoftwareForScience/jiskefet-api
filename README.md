@@ -1,4 +1,8 @@
+Master
 [![Build Status](https://travis-ci.com/BastiaanReinalda/alice-bookkeeping-api.svg?branch=master)](https://travis-ci.com/BastiaanReinalda/alice-bookkeeping-api)
+
+Develop
+[![Build Status](https://travis-ci.com/BastiaanReinalda/alice-bookkeeping-api.svg?branch=develop)](https://travis-ci.com/BastiaanReinalda/alice-bookkeeping-api)
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
