@@ -19,7 +19,7 @@ export class User {
     token: string;
 
     @Column({ type: 'timestamp' })
-    token_valid_until: Timestamp;
+    token_valid_until: Date;
 
     @OneToMany(type => Log, log => log.user)
     log: Log[];

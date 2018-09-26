@@ -15,12 +15,19 @@ export class RunService {
         this.repository = repository;
     }
 
+    /**
+     * Handler for saving the run entity in db.
+     * @param runDto 
+     */
     async create(runDto: RunDto): Promise<Run> {
         const RunEntity = plainToClass(Run, runDto);
         await this.repository.save(RunEntity);
         return RunEntity;
     }
 
+    /**
+     * Handler for getting all runs from db.
+     */
     async findAllRuns(): Promise<Run[]> {
         return await this.repository.find();
     }
