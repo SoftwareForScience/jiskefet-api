@@ -1,5 +1,5 @@
 /**
- * This DTO handles the data sent from the client ui. 
+ * This DTO handles the data sent from the client ui.
  * In swagger it will handle example values to test the api.
  */
 
