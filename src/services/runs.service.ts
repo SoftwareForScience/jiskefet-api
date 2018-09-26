@@ -1,4 +1,4 @@
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
@@ -15,11 +15,11 @@ export class RunService {
         this.repository = repository;
     }
 
-    async create(RunDto: RunDto): Promise<Run> {
-        const RunEntity = plainToClass(Run, RunDto);
+    async create(runDto: RunDto): Promise<Run> {
+        const RunEntity = plainToClass(Run, runDto);
         await this.repository.save(RunEntity);
         return RunEntity;
-    } 
+    }
 
     async findAllRuns(): Promise<Run[]> {
         return await this.repository.find();

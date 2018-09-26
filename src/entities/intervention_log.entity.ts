@@ -16,13 +16,13 @@ export class InterventionLog {
 
     @Column({
         type: 'enum',
-        enum: ['test']
+        enum: ['test'],
     })
     intervention_type: 'test';
 
     @Column({
         type: 'enum',
-        enum: ['test']
+        enum: ['test'],
     })
     location: 'test';
 

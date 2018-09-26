@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsInt } from 'class-validator';
 export class RunDto {
-    
+
     @ApiModelProperty({
         example: '2018-05-05 10:00:00+01',
         description: '',

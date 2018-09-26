@@ -12,7 +12,7 @@ export class RunEorHistory {
 
     @PrimaryColumn({
         type: 'enum',
-        enum: ['test']
+        enum: ['test'],
     })
     subsystem: 'test';
 
@@ -24,7 +24,7 @@ export class RunEorHistory {
 
     @Column({
         type: 'enum',
-        enum: ['test']
+        enum: ['test'],
     })
     end_of_run_reason: 'test';
 }
