@@ -12,7 +12,7 @@ export class LogController {
 
     /**
      * Post a new Log item. /logs
-     * @param request CreateLogDto from frontend
+     * @param request CreateLogDto from frontend.
      */
     @Post()
     async create(@Body() request: CreateLogDto) {
@@ -29,10 +29,19 @@ export class LogController {
 
     /**
      * Find a specific Log item. /logs/id
-     * @param id unique identifier for a Log item
+     * @param id unique identifier for a Log item.
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
         return await this.logservice.findLogById(id);
-}
+    }
+
+    /**
+     * Find a specific Log with the belonging Runs. /logs/id/runs
+     * @param logId unique identifier for a Log item. 
+     */
+    @Get(':id/runs')
+    async findWithRuns(@Param('id') id: number): Promise<Log> {
+        return await this.logservice.findLogWithRuns(id);
+    }
 }
