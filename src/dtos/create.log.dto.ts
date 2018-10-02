@@ -6,38 +6,31 @@ export class CreateLogDto {
 
     @ApiModelProperty({
         example: ['run'],
-        description: 'Enumerator',
+        description: 'What kind of log is it?',
     })
     subtype: [];
- 
+
     @ApiModelProperty({
         example: ['human'],
-        description: 'Enumerator',
+        description: 'Where did the log come from?',
     })
     origin: [];
 
     @ApiModelProperty({
-        example: 'Sl4e12ofb83no92ns',
-        description: 'CHAR',
+        example: '01-10-2018',
+        description: 'Date of creation',
     })
     creation_time: Date;
 
     @ApiModelProperty({
-        example: 'Sl4e12ofb83no92ns',
-        description: 'CHAR',
+        example: 'log for run 12',
+        description: 'describes the log in short',
     })
     title: string;
 
     @ApiModelProperty({
-        example: 'Sl4e12ofb83no92ns',
-        description: 'CHAR',
+        example: 'lorum ipsum',
+        description: 'describes the log in depth',
     })
     text: string;
-
-    @ApiModelProperty({
-        example: 'Sl4e12ofb83no92ns',
-        description: 'CHAR',
-    })
-    subsystem_fk_subsystem_id: number;
-    
 }

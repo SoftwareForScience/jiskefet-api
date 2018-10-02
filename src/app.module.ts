@@ -5,13 +5,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RunModule } from 'modules/run.module';
 import { RunController } from 'controllers/run.controller';
 import { RunService } from 'services/run.service';
+import { LogController } from 'controllers/log.controller';
+import { LogService } from 'services/log.service';
+import { LogModule } from 'modules/log.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
+    LogModule
   ],
-  controllers: [AppController, RunController],
-  providers: [AppService, RunService],
+  controllers: [AppController, RunController, LogController],
+  providers: [AppService, RunService, LogService],
 })
 export class AppModule { }
