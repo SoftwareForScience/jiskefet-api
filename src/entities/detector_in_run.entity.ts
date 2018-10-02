@@ -20,8 +20,9 @@ export class DetectorsInRun {
     detector: Detector;
 
     @Column({
+        name: 'run_quality',
         type: 'enum',
         enum: ['test'],
     })
-    run_quality: 'test';
+    runQuality: 'test';
 }

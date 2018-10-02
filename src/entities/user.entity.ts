@@ -11,20 +11,28 @@ import { DetectorQualityHistory } from './detector_quality_history.entity';
 @Entity('users')
 export class User {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    user_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'user_id',
+        type: 'bigint'
+    })
+    userId: number;
 
-    @Column({ type: 'int' })
-    sams_id: number;
+    @Column({
+        name: 'sams_id',
+        type: 'int'
+    })
+    samsId: number;
 
-    @Column()
+    @Column({ nullable: true })
     token: string;
 
     @Column({
+        name: 'token_valid_until',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
+        nullable: true
     })
-    token_valid_until: Date;
+    tokenValidUntil: Date;
 
     @OneToMany(type => Log, log => log.user)
     log: Log[];

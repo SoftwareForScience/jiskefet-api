@@ -4,11 +4,18 @@ import { Run } from './run.entity';
 @Entity('epn_role_sessions')
 export class EpnRoleSession {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    session_number: number;
+    @PrimaryGeneratedColumn({
+        name: 'session_number',
+        type: 'bigint'
+    })
+    sessionNumber: number;
 
-    @PrimaryColumn({ type: 'char', length: 16 })
-    epn_role_name: string;
+    @PrimaryColumn({
+        name: 'epn_role_name',
+        type: 'char',
+        length: 16
+    })
+    epnRoleName: string;
 
     @ManyToOne(type => Run, run => run.epnRoleSession, {
         eager: true,
@@ -17,28 +24,29 @@ export class EpnRoleSession {
     @PrimaryColumn({ type: 'bigint' })
     run: Run;
 
-    @Column()
-    epn_hostname: string;
+    @Column({ name: 'epn_hostname' })
+    epnHostname: string;
 
-    @Column()
-    n_subtimeframes: number;
+    @Column({ name: 'n_subtimeframes' })
+    nSubtimeframes: number;
 
-    @Column()
-    bytes_in: number;
+    @Column({ name: 'bytes_in' })
+    bytesIn: number;
 
-    @Column()
-    bytes_out: number;
+    @Column({ name: 'bytes_out' })
+    bytesOut: number;
 
     @Column({
+        name: 'session_start',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    session_start: string;
+    sessionStart: string;
 
     @Column({
+        name: 'session_end',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    session_end: string;
-
+    sessionEnd: string;
 }

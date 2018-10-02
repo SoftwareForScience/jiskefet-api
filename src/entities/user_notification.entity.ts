@@ -11,12 +11,21 @@ export class UserNotification {
     // @JoinColumn({name: 'user_id'})
     user: User;
 
-    @Column({ type: 'tinyint' })
-    notify_sor: boolean;
+    @Column({
+        name: 'notify_sor',
+        type: 'tinyint'
+    })
+    notifySor: boolean;
 
-    @Column({ type: 'tinyint' })
-    notify_eor: boolean;
+    @Column({
+        name: 'notify_eor',
+        type: 'tinyint'
+    })
+    notifyEor: boolean;
 
-    @Column({ type: 'tinyint' })
-    notify_subsystem: boolean;
+    @Column({
+        name: 'notify_subsystem',
+        type: 'tinyint'
+    })
+    notifySubsystem: boolean;
 }

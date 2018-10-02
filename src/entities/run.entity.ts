@@ -11,68 +11,78 @@ import { RunEorHistory } from './run_eor_history.entity';
 @Entity('runs')
 export class Run {
 
-    @PrimaryGeneratedColumn()
-    run_number: number;
+    @PrimaryGeneratedColumn({ name: 'run_number' })
+    runNumber: number;
 
     @Column({
+        name: 'time_o2_start',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    time_o2_start: Date;
+    timeO2Start: Date;
 
     @Column({
+        name: 'time_trg_start',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    time_trg_start: Date;
+    timeTrgStart: Date;
 
     @Column({
+        name: 'time_trg_end',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    time_trg_end: Date;
+    timeTrgEnd: Date;
 
     @Column({
+        name: 'time_o2_end',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    time_o2_end: Date;
-
-    @Column({ type: 'char', length: 64 })
-    activity_id: string;
+    timeO2End: Date;
 
     @Column({
+        name: 'activity_id',
+        type: 'char',
+        length: 64
+    })
+    activityId: string;
+
+    @Column({
+        name: 'run_type',
         type: 'enum',
         enum: ['test'],
     })
-    run_type: ['test'];
+    runType: ['test'];
 
     @Column({
+        name: 'run_quality',
         type: 'enum',
         enum: ['test'],
     })
-    run_quality: ['test'];
+    runQuality: ['test'];
 
-    @Column()
-    n_detectors: number;
+    @Column({ name: 'n_detectors' })
+    nDetectors: number;
 
-    @Column()
-    n_flps: number;
+    @Column({ name: 'n_flps' })
+    nFlps: number;
 
-    @Column()
-    n_epns: number;
+    @Column({ name: 'n_epns' })
+    nEpns: number;
 
-    @Column()
-    n_timeframes: number;
+    @Column({ name: 'n_timeframes' })
+    nTimeframes: number;
 
-    @Column()
-    n_subtimeframes: number;
+    @Column({ name: 'n_subtimeframes'})
+    nSubtimeframes: number;
 
-    @Column()
-    bytes_read_out: number;
+    @Column({ name: 'bytes_read_out' })
+    bytesReadOut: number;
 
-    @Column()
-    bytes_timeframe_builder: number;
+    @Column({ name: 'bytes_timeframe_builder' })
+    bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)
     @JoinTable()

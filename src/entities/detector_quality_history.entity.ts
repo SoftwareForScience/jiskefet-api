@@ -6,8 +6,11 @@ import { Detector } from './detector.entity';
 @Entity('detector_qualtiy_history')
 export class DetectorQualityHistory {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    detector_quality_history_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'detector_quality_history_id',
+        type: 'bigint'
+    })
+    detectorQualityHistoryId: number;
 
     @ManyToOne(type => Run, run => run.detectorQualityHistory)
     @PrimaryColumn({ type: 'int' })
@@ -18,16 +21,18 @@ export class DetectorQualityHistory {
     detector: Detector;
 
     @Column({
+        name: 'change_time',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    change_time: Date;
+    changeTime: Date;
 
     @Column({
+        name: 'run_quality',
         type: 'enum',
         enum: ['test'],
     })
-    run_quality: 'test';
+    runQuality: 'test';
 
     @ManyToOne(type => User, user => user.detectorQualityHistory)
     user: User;

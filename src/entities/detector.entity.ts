@@ -5,11 +5,14 @@ import { DetectorQualityHistory } from './detector_quality_history.entity';
 @Entity('detectors')
 export class Detector {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    detector_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'detector_id',
+        type: 'bigint'
+    })
+    detectorId: number;
 
-    @Column()
-    detector_name: string;
+    @Column({ name: 'detector_name' })
+    detectorName: string;
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.detector)
     detectorsInRun: DetectorsInRun[];

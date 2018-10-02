@@ -4,27 +4,39 @@ import { Log } from './log.entity';
 @Entity('attachments')
 export class Attachment {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    file_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'file_id',
+        type: 'bigint'
+    })
+    fileId: number;
 
     @ManyToOne(type => Log, log => log.attachment)
     log: Log;
 
     @Column({
+        name: 'creation_time',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    creation_time: Date;
+    creationTime: Date;
 
     @Column()
     title: string;
 
-    @Column()
-    file_mime: string;
+    @Column({ name: 'file_mime' })
+    fileMime: string;
 
-    @Column({ type: 'blob' })
-    file_data: number;
+    @Column({
+        name: 'file_data',
+        type: 'blob'
+    })
+    fileData: number;
 
-    @Column({ type: 'char', length: 16 })
-    file_md5: string;
+    @Column({
+        name: 'file_md5',
+        type: 'char',
+        length: 16,
+        nullable: true
+    })
+    fileMd5: string;
 }

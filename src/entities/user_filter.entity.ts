@@ -4,8 +4,11 @@ import { User } from './user.entity';
 @Entity('user_filters')
 export class UserFilter {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    filter_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'filter_id',
+        type: 'bigint'
+    })
+    filterId: number;
 
     @ManyToOne(type => User, user => user.userFilter)
     @PrimaryColumn({ type: 'bigint' })

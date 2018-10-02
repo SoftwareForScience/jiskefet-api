@@ -5,8 +5,11 @@ import { Run } from './run.entity';
 @Entity('run_eor_history')
 export class RunEorHistory {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    eor_history_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'eor_history_id',
+        type: 'bigint'
+    })
+    eorHistoryId: number;
 
     @ManyToOne(type => Run, run => run.runQualityHistory)
     @PrimaryColumn({ type: 'int' })
@@ -22,14 +25,16 @@ export class RunEorHistory {
     user: User;
 
     @Column({
+        name: 'change_time',
         type: 'timestamp',
         default: () => 'CURRENT_TIMESTAMP',
     })
-    change_time: Date;
+    changeTime: Date;
 
     @Column({
+        name: 'end_of_run_reason',
         type: 'enum',
         enum: ['test'],
     })
-    end_of_run_reason: 'test';
+    endOfRunReason: 'test';
 }

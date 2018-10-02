@@ -19,9 +19,15 @@ export class SubSystemPermission {
     @PrimaryColumn({ type: 'bigint' })
     subSystem: SubSystem;
 
-    @Column({ type: 'tinyint' })
-    is_member: boolean;
+    @Column({
+        name: 'is_member',
+        type: 'tinyint'
+    })
+    isMember: boolean;
 
-    @Column({ type: 'tinyint' })
-    edit_eor_reason: boolean;
+    @Column({
+        name: 'edit_eor_reason',
+        type: 'tinyint'
+    })
+    editEorReason: boolean;
 }

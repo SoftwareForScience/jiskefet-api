@@ -4,11 +4,14 @@ import { SubSystemPermission } from './sub_system_permission.entity';
 @Entity('sub_systems')
 export class SubSystem {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    subsystem_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'subsystem_id',
+        type: 'bigint'
+    })
+    subsystemId: number;
 
-    @Column()
-    subsystem_name: string;
+    @Column({ name: 'subsystem_name' })
+    subsystemName: string;
 
     @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subSystem)
     subSystemPermission: SubSystemPermission[];
