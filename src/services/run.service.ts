@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Run } from 'entities/run.entity';
-import { RunDto } from 'dtos/RunDto.dto';
+import { CreateRunDto } from 'dtos/create.run.dto';
 
 @Injectable()
 export class RunService {
@@ -17,10 +17,10 @@ export class RunService {
 
     /**
      * Handler for saving the run entity in db.
-     * @param runDto
+     * @param createRunDto
      */
-    async create(runDto: RunDto): Promise<Run> {
-        const RunEntity = plainToClass(Run, runDto);
+    async create(createRunDto: CreateRunDto): Promise<Run> {
+        const RunEntity = plainToClass(Run, createRunDto);
         await this.repository.save(RunEntity);
         return RunEntity;
     }

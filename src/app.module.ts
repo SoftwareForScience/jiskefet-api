@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RunModule } from 'modules/run.module';
 import { RunController } from 'controllers/run.controller';
-import { RunService } from 'services/runs.service';
+import { RunService } from 'services/run.service';
 
 @Module({
   imports: [
