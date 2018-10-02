@@ -10,8 +10,11 @@ export class Attachment {
     @ManyToOne(type => Log, log => log.attachment)
     log: Log;
 
-    @Column({ type: 'timestamp' })
-    creation_time: string;
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    creation_time: Date;
 
     @Column()
     title: string;

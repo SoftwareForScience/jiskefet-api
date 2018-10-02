@@ -6,6 +6,6 @@ export class Tag {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     tag_id: number;
 
-    @Column({ type: 'varchar' })
+    @Column()
     tag_text: string;
 }

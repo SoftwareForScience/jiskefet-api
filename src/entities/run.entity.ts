@@ -3,7 +3,10 @@ import { Tag } from './tag.entity';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
-import { DetectorsInRun } from './detectors_in_run.entity';
+import { DetectorsInRun } from './detector_in_run.entity';
+import { DetectorQualityHistory } from './detector_quality_history.entity';
+import { RunQualityHistory } from './run_quality_history.entity';
+import { RunEorHistory } from './run_eor_history.entity';
 
 @Entity('runs')
 export class Run {
@@ -87,4 +90,13 @@ export class Run {
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)
     detectorsInRun: DetectorsInRun[];
+
+    @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.run)
+    detectorQualityHistory: DetectorQualityHistory[];
+
+    @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.run)
+    runQualityHistory: RunQualityHistory[];
+
+    @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.run)
+    runEorHistory: RunEorHistory[];
 }

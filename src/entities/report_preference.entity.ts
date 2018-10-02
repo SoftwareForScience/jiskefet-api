@@ -8,6 +8,6 @@ export class ReportPreference {
     @PrimaryColumn({ type: 'bigint' })
     user: User;
 
-    @Column({ type: 'varchar' })
+    @Column()
     report_stuff_etc: string;
 }

@@ -24,8 +24,11 @@ export class Log {
     })
     origin: 'human' | 'process';
 
-    @Column({ type: 'timestamp' })
-    creation_time: string;
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    creation_time: Date;
 
     @Column()
     title: string;

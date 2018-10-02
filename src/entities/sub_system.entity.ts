@@ -7,7 +7,7 @@ export class SubSystem {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     subsystem_id: number;
 
-    @Column({ type: 'varchar' })
+    @Column()
     subsystem_name: string;
 
     @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subSystem)
