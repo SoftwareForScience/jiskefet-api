@@ -4,8 +4,8 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsInt } from 'class-validator';
-export class RunDto {
+import { IsInt, IsString } from 'class-validator';
+export class CreateRunDto {
 
     @ApiModelProperty({
         example: ['test'],
@@ -23,7 +23,7 @@ export class RunDto {
         example: 'Sl4e12ofb83no92ns',
         description: 'CHAR',
     })
-    @IsInt() readonly activity_id: string;
+    @IsString() readonly activity_id: string;
 
     @ApiModelProperty({
         example: 16,

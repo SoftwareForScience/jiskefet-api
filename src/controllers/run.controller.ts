@@ -1,8 +1,8 @@
 import { Get, Controller, Body } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
-import { RunService } from 'services/runs.service';
-import { RunDto } from 'dtos/RunDto.dto';
+import { RunService } from 'services/run.service';
+import { CreateRunDto } from 'dtos/create.run.dto';
 
 @ApiUseTags('runs')
 @Controller('runs')
@@ -11,10 +11,10 @@ export class RunController {
 
     /**
      * Post a new Run into the db.
-     * @param request RunDto from frontend
+     * @param request CreateRunDto from frontend
      */
     @Post()
-    async create(@Body() request: RunDto) {
+    async create(@Body() request: CreateRunDto) {
         await this.runService.create(request);
     }
 
