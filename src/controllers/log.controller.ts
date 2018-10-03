@@ -38,7 +38,7 @@ export class LogController {
 
     /**
      * Find a specific Log with the belonging Runs. /logs/id/runs
-     * @param logId unique identifier for a Log item. 
+     * @param logId unique identifier for a Log item.
      */
     @Get(':id/runs')
     async findWithRuns(@Param('id') id: number): Promise<Log> {

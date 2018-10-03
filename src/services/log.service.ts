@@ -5,7 +5,6 @@ import { plainToClass } from 'class-transformer';
 import { Log } from 'entities/log.entity';
 import { CreateLogDto } from 'dtos/create.log.dto';
 
-
 @Injectable()
 export class LogService {
 
@@ -47,14 +46,14 @@ export class LogService {
 
     /**
      * Handler for getting a specific Log item with belonging Runs from db.
-     * @param id unique identifier for a Log.   
+     * @param id unique identifier for a Log.
      */
     async findLogWithRuns(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
-            .leftJoinAndSelect("log.runs", "run")
+            .leftJoinAndSelect('log.runs', 'run')
             .where('id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
-            .catch(err => Promise.reject(err));;
+            .catch(err => Promise.reject(err));
     }
 }

@@ -20,7 +20,7 @@ export class CreateLogDto {
         example: '01-10-2018',
         description: 'Date of creation',
     })
-    creation_time: Date;
+    creationTime: Date;
 
     @ApiModelProperty({
         example: 'log for run 12',

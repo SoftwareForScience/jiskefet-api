@@ -11,59 +11,59 @@ export class CreateRunDto {
         example: ['test'],
         description: 'What kind of run.',
     })
-    readonly run_type: [];
+    readonly runType: [];
 
     @ApiModelProperty({
         example: ['test'],
         description: 'The quality of the run.',
     })
-    readonly run_quality: [];
+    readonly runQuality: [];
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
         description: 'The id of the activity.',
     })
-    @IsString() readonly activity_id: string;
+    @IsString() readonly activityId: string;
 
     @ApiModelProperty({
         example: 16,
         description: 'Number of detectors during run.',
     })
-    @IsInt() readonly n_detectors: number;
+    @IsInt() readonly nDetectors: number;
 
     @ApiModelProperty({
         example: 7,
         description: 'Number of FLPs that computed data',
     })
-    @IsInt() readonly n_flps: number;
+    @IsInt() readonly nFlps: number;
 
     @ApiModelProperty({
         example: 8,
         description: 'Number of EPNs that stored data',
     })
-    @IsInt() readonly n_epns: number;
+    @IsInt() readonly nEpns: number;
 
     @ApiModelProperty({
         example: 2,
         description: 'Number of timeframes',
     })
-    @IsInt() readonly n_timeframes: number;
+    @IsInt() readonly nTimeframes: number;
 
     @ApiModelProperty({
         example: 4,
         description: 'Number of subtimeframes',
     })
-    @IsInt() readonly n_subtimeframes: number;
+    @IsInt() readonly nSubtimeframes: number;
 
     @ApiModelProperty({
         example: 5,
         description: 'Amount of bytes read out',
     })
-    @IsInt() readonly bytes_read_out: number;
+    @IsInt() readonly bytesReadOut: number;
 
     @ApiModelProperty({
         example: 12,
         description: 'What builder was used.',
     })
-    @IsInt() readonly bytes_timeframe_builder: number;
+    @IsInt() readonly bytesTimeframeBuilder: number;
 }
