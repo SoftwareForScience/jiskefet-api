@@ -1,4 +1,3 @@
-dist:
 {
     "type": "mysql",
     "host": "localhost",
