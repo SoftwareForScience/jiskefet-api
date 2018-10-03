@@ -51,7 +51,7 @@ export class LogService {
     async findLogWithRuns(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
             .leftJoinAndSelect('log.runs', 'run')
-            .where('logId = :id', { id })
+            .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
