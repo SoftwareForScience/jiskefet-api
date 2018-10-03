@@ -93,20 +93,20 @@ export class Run {
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
-    epnRoleSession: EpnRoleSession[];
+    epnRoleSessions: EpnRoleSession[];
 
     @OneToMany(type => FlpRole, flpRole => flpRole.run)
-    flpRole: FlpRole[];
+    flpRoles: FlpRole[];
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)
     detectorsInRun: DetectorsInRun[];
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.run)
-    detectorQualityHistory: DetectorQualityHistory[];
+    detectorQualityHistories: DetectorQualityHistory[];
 
     @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.run)
-    runQualityHistory: RunQualityHistory[];
+    runQualityHistories: RunQualityHistory[];
 
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.run)
-    runEorHistory: RunEorHistory[];
+    runEorHistories: RunEorHistory[];
 }

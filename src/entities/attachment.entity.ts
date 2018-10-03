@@ -10,7 +10,7 @@ export class Attachment {
     })
     fileId: number;
 
-    @ManyToOne(type => Log, log => log.attachment)
+    @ManyToOne(type => Log, log => log.attachments)
     log: Log;
 
     @Column({

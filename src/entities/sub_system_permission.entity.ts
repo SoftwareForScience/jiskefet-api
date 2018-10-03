@@ -5,14 +5,14 @@ import { User } from './user.entity';
 @Entity('sub_system_permissions')
 export class SubSystemPermission {
 
-    @ManyToOne(type => User, user => user.subSystemPermission, {
+    @ManyToOne(type => User, user => user.subSystemPermissions, {
         eager: true,
     })
     @JoinColumn({name: 'user_id'})
     @PrimaryColumn({ type: 'bigint' })
     user: User;
 
-    @ManyToOne(type => SubSystem, subSystem => subSystem.subSystemPermission, {
+    @ManyToOne(type => SubSystem, subSystem => subSystem.subSystemPermissions, {
         eager: true,
     })
     @JoinColumn({ name: 'subsystem_id' })

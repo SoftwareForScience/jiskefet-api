@@ -11,7 +11,7 @@ export class FlpRole {
     })
     flpRoleName: string;
 
-    @ManyToOne(type => Run, run => run.flpRole, {
+    @ManyToOne(type => Run, run => run.flpRoles, {
         eager: true,
     })
     @PrimaryColumn({ type: 'bigint' })

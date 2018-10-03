@@ -4,7 +4,7 @@ import { User } from './user.entity';
 @Entity('report_preferences')
 export class ReportPreference {
 
-    @ManyToOne(type => User, user => user.reportPreference)
+    @ManyToOne(type => User, user => user.reportPreferences)
     @PrimaryColumn({ type: 'bigint' })
     user: User;
 

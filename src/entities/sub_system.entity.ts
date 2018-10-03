@@ -14,5 +14,5 @@ export class SubSystem {
     subsystemName: string;
 
     @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subSystem)
-    subSystemPermission: SubSystemPermission[];
+    subSystemPermissions: SubSystemPermission[];
 }

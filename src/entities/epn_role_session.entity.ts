@@ -17,7 +17,7 @@ export class EpnRoleSession {
     })
     epnRoleName: string;
 
-    @ManyToOne(type => Run, run => run.epnRoleSession, {
+    @ManyToOne(type => Run, run => run.epnRoleSessions, {
         eager: true,
     })
     @JoinColumn({ name: 'run_number' })

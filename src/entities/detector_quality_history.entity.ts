@@ -12,11 +12,11 @@ export class DetectorQualityHistory {
     })
     detectorQualityHistoryId: number;
 
-    @ManyToOne(type => Run, run => run.detectorQualityHistory)
+    @ManyToOne(type => Run, run => run.detectorQualityHistories)
     @PrimaryColumn({ type: 'int' })
     run: Run;
 
-    @ManyToOne(type => Detector, detector => detector.detectorQualityHistory)
+    @ManyToOne(type => Detector, detector => detector.detectorQualityHistories)
     @PrimaryColumn({ type: 'int' })
     detector: Detector;
 
@@ -34,6 +34,6 @@ export class DetectorQualityHistory {
     })
     runQuality: 'test';
 
-    @ManyToOne(type => User, user => user.detectorQualityHistory)
+    @ManyToOne(type => User, user => user.detectorQualityHistories)
     user: User;
 }

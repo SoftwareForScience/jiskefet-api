@@ -38,23 +38,23 @@ export class User {
     log: Log[];
 
     @OneToMany(type => UserNotification, userNotification => userNotification.user)
-    userNotification: UserNotification[];
+    userNotifications: UserNotification[];
 
     @OneToMany(type => ReportPreference, reportPreference => reportPreference.user)
-    reportPreference: ReportPreference[];
+    reportPreferences: ReportPreference[];
 
     @OneToMany(type => UserFilter, userFilter => userFilter.user)
-    userFilter: UserFilter[];
+    userFilters: UserFilter[];
 
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.user)
-    runEorHistory: RunEorHistory[];
+    runEorHistories: RunEorHistory[];
 
     @OneToMany(type => SubSystemPermission, subSystemPermissions => subSystemPermissions.user)
-    subSystemPermission: SubSystemPermission[];
+    subSystemPermissions: SubSystemPermission[];
 
     @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.user)
-    runQualityHistory: RunQualityHistory[];
+    runQualityHistories: RunQualityHistory[];
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.user)
-    detectorQualityHistory: DetectorQualityHistory[];
+    detectorQualityHistories: DetectorQualityHistory[];
 }

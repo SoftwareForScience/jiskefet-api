@@ -10,7 +10,7 @@ export class UserFilter {
     })
     filterId: number;
 
-    @ManyToOne(type => User, user => user.userFilter)
+    @ManyToOne(type => User, user => user.userFilters)
     @PrimaryColumn({ type: 'bigint' })
     user: User;
 }

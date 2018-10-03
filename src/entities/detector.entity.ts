@@ -18,5 +18,5 @@ export class Detector {
     detectorsInRun: DetectorsInRun[];
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.detector)
-    detectorQualityHistory: DetectorQualityHistory[];
+    detectorQualityHistories: DetectorQualityHistory[];
 }

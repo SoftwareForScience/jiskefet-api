@@ -11,7 +11,7 @@ export class RunQualityHistory {
     })
     runQualityHistoryId: number;
 
-    @ManyToOne(type => Run, run => run.runQualityHistory)
+    @ManyToOne(type => Run, run => run.runQualityHistories)
     @PrimaryColumn({ type: 'int' })
     run: Run;
 
@@ -41,6 +41,6 @@ export class RunQualityHistory {
     })
     endOfRunSeason: 'test';
 
-    @ManyToOne(type => User, user => user.runQualityHistory)
+    @ManyToOne(type => User, user => user.runQualityHistories)
     user: User;
 }

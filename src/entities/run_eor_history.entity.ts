@@ -11,7 +11,7 @@ export class RunEorHistory {
     })
     eorHistoryId: number;
 
-    @ManyToOne(type => Run, run => run.runQualityHistory)
+    @ManyToOne(type => Run, run => run.runQualityHistories)
     @PrimaryColumn({ type: 'int' })
     run: Run;
 
@@ -21,7 +21,7 @@ export class RunEorHistory {
     })
     subsystem: 'test';
 
-    @ManyToOne(type => User, user => user.runEorHistory)
+    @ManyToOne(type => User, user => user.runEorHistories)
     user: User;
 
     @Column({
