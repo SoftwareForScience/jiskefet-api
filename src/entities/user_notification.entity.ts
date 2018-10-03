@@ -1,13 +1,19 @@
-import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('user_notifications')
+@Entity('user_notification')
 export class UserNotification {
 
-    @ManyToOne(type => User, user => user.userNotifications, {
-        eager: true,
-    })
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => User,
+        user => user.userNotifications,
+        {
+            primary: true,
+            nullable: false,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 
     @Column({

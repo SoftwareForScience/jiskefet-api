@@ -1,12 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('tags')
+@Entity('tag')
 export class Tag {
 
-    @PrimaryGeneratedColumn({
-        name: 'tag_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'tag_id' })
     tagId: number;
 
     @Column({ name: 'tag_text' })

@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Tag } from './tag.entity';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
-import { DetectorsInRun } from './detector_in_run.entity';
+import { DetectorsInRun } from './detectors_in_run.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { RunEorHistory } from './run_eor_history.entity';
+import { Tag } from './tag.entity';
 
-@Entity('runs')
+@Entity('run')
 export class Run {
 
     @PrimaryGeneratedColumn({ name: 'run_number' })
@@ -85,11 +85,20 @@ export class Run {
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)
-    @JoinTable()
-    tag: Tag[];
+    @JoinTable({
+        name: 'tags_in_run',
+        joinColumn: {
+            name: 'fk_run_id',
+            referencedColumnName: 'runNumber'
+        },
+        inverseJoinColumn: {
+            name: 'fk_tag_id',
+            referencedColumnName: 'tagId'
+        }
+    })
+    tags: Tag[];
 
-    @ManyToMany(type => Log)
-    @JoinTable()
+    @ManyToMany(type => Log, log => log.runs)
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)

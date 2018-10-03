@@ -4,13 +4,10 @@ import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 
-@Entity('logs')
+@Entity('log')
 export class Log {
 
-    @PrimaryGeneratedColumn({
-        name: 'log_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'log_id' })
     logId: number;
 
     @Column({
@@ -19,7 +16,14 @@ export class Log {
     })
     subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
 
-    @ManyToOne(type => User, user => user.log)
+    @ManyToOne(
+        type => User,
+        user => user.logs,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 
     @Column({
@@ -68,14 +72,36 @@ export class Log {
     commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)
-    @JoinTable()
+    @JoinTable({
+        name: 'tags_in_log',
+        joinColumn: {
+            name: 'fk_log_id',
+            referencedColumnName: 'logId'
+        },
+        inverseJoinColumn: {
+            name: 'fk_tag_id',
+            referencedColumnName: 'tagId'
+        }
+    })
     tags: Tag[];
 
-    @ManyToMany(type => Log)
-    @JoinTable()
+    @ManyToMany(
+        type => Run,
+        run => run.logs
+    )
+    @JoinTable({
+        name: 'runs_in_log',
+        joinColumn: {
+            name: 'fk_log_id',
+            referencedColumnName: 'logId'
+        },
+        inverseJoinColumn: {
+            name: 'fk_run_number',
+            referencedColumnName: 'runNumber'
+        }
+    })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log)
-    @JoinColumn({ name: 'fk_log_id' })
     attachments: Attachment[];
 }

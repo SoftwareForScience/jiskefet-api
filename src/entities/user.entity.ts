@@ -1,4 +1,3 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Log } from './log.entity';
 import { UserNotification } from './user_notification.entity';
 import { ReportPreference } from './report_preference.entity';
@@ -7,14 +6,12 @@ import { RunEorHistory } from './run_eor_history.entity';
 import { SubSystemPermission } from './sub_system_permission.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
+import { PrimaryGeneratedColumn, Entity, Column, OneToMany } from 'typeorm';
 
-@Entity('users')
+@Entity('user')
 export class User {
 
-    @PrimaryGeneratedColumn({
-        name: 'user_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'user_id' })
     userId: number;
 
     @Column({
@@ -35,7 +32,7 @@ export class User {
     tokenValidUntil: Date;
 
     @OneToMany(type => Log, log => log.user)
-    log: Log[];
+    logs: Log[];
 
     @OneToMany(type => UserNotification, userNotification => userNotification.user)
     userNotifications: UserNotification[];
