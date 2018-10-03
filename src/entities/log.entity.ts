@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
+import { Run } from './run.entity';
 
 @Entity('logs')
 export class Log {
@@ -69,6 +70,10 @@ export class Log {
     @ManyToMany(type => Tag)
     @JoinTable()
     tag: Tag[];
+
+    @ManyToMany(type => Log)
+    @JoinTable()
+    run: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log)
     attachment: Attachment[];

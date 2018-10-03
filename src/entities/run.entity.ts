@@ -90,7 +90,7 @@ export class Run {
 
     @ManyToMany(type => Log)
     @JoinTable()
-    log: Log[];
+    logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
     epnRoleSession: EpnRoleSession[];
