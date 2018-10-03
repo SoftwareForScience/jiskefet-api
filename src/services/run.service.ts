@@ -38,7 +38,7 @@ export class RunService {
      */
     async findRunById(id: number): Promise<Run> {
         return await this.repository.createQueryBuilder()
-            .where('id = :id', { id })
+            .where('runNumber = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));

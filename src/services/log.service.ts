@@ -38,7 +38,7 @@ export class LogService {
      */
     async findLogById(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
-            .where('id = :id', { id })
+            .where('logId = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
@@ -51,7 +51,7 @@ export class LogService {
     async findLogWithRuns(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
             .leftJoinAndSelect('log.runs', 'run')
-            .where('id = :id', { id })
+            .where('logId = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
