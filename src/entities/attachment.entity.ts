@@ -38,5 +38,5 @@ export class Attachment {
         length: 16,
         nullable: true
     })
-    fileMd5: string;
+    fileMD5: string;
 }
