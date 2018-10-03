@@ -1,4 +1,3 @@
-dist:
 {
     "type": "mysql",
     "host": "localhost",
@@ -9,5 +8,10 @@ dist:
     "entities": [
         "src/**/**.entity{.ts,.js}"
     ],
-    "synchronize": true
+    "migrations": [
+        "src/migration/*{.ts,.js}"
+    ],
+    "cli": {
+        "migrationsDir": "src/migration"
+    }
 }
