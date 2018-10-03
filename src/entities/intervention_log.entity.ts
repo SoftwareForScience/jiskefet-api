@@ -1,14 +1,17 @@
 import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('intervention_logs')
+@Entity('intervention_log')
 export class InterventionLog {
 
-    @OneToOne(type => Log, {
-        eager: true,
-    })
+    @OneToOne(
+        type => Log,
+        {
+            primary: true,
+            eager: true,
+        }
+    )
     @JoinColumn({ name: 'log_id' })
-    @PrimaryColumn({ type: 'bigint' })
     log: Log;
 
     @Column({

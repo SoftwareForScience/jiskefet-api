@@ -1,16 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('attachments')
+@Entity('attachment')
 export class Attachment {
 
-    @PrimaryGeneratedColumn({
-        name: 'file_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'file_id' })
     fileId: number;
 
-    @ManyToOne(type => Log, log => log.attachment)
+    @ManyToOne(
+        type => Log,
+        log => log.attachments,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_log_id'})
     log: Log;
 
     @Column({

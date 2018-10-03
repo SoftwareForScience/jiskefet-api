@@ -5,18 +5,24 @@ import { Detector } from './detector.entity';
 @Entity('detectors_in_run')
 export class DetectorsInRun {
 
-    @ManyToOne(type => Run, run => run.detectorsInRun, {
-        eager: true,
-    })
-    @JoinColumn({ name: 'run_number' })
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => Run, run => run.detectorsInRun,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
-    @ManyToOne(type => Detector, detector => detector.detectorsInRun, {
-        eager: true,
-    })
-    @JoinColumn({ name: 'detector_id' })
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => Detector, detector => detector.detectorsInRun,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_detector_id' })
     detector: Detector;
 
     @Column({

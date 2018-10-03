@@ -1,16 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('user_filters')
+@Entity('user_filter')
 export class UserFilter {
 
-    @PrimaryGeneratedColumn({
-        name: 'filter_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'filter_id' })
     filterId: number;
 
-    @ManyToOne(type => User, user => user.userFilter)
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => User,
+        user => user.userFilters,
+        {
+            primary: true
+        }
+    )
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 }

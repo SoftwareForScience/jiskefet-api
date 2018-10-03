@@ -1,4 +1,3 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Log } from './log.entity';
 import { UserNotification } from './user_notification.entity';
 import { ReportPreference } from './report_preference.entity';
@@ -7,14 +6,12 @@ import { RunEorHistory } from './run_eor_history.entity';
 import { SubSystemPermission } from './sub_system_permission.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
+import { PrimaryGeneratedColumn, Entity, Column, OneToMany } from 'typeorm';
 
-@Entity('users')
+@Entity('user')
 export class User {
 
-    @PrimaryGeneratedColumn({
-        name: 'user_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'user_id' })
     userId: number;
 
     @Column({
@@ -35,26 +32,26 @@ export class User {
     tokenValidUntil: Date;
 
     @OneToMany(type => Log, log => log.user)
-    log: Log[];
+    logs: Log[];
 
     @OneToMany(type => UserNotification, userNotification => userNotification.user)
-    userNotification: UserNotification[];
+    userNotifications: UserNotification[];
 
     @OneToMany(type => ReportPreference, reportPreference => reportPreference.user)
-    reportPreference: ReportPreference[];
+    reportPreferences: ReportPreference[];
 
     @OneToMany(type => UserFilter, userFilter => userFilter.user)
-    userFilter: UserFilter[];
+    userFilters: UserFilter[];
 
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.user)
-    runEorHistory: RunEorHistory[];
+    runEorHistories: RunEorHistory[];
 
     @OneToMany(type => SubSystemPermission, subSystemPermissions => subSystemPermissions.user)
-    subSystemPermission: SubSystemPermission[];
+    subSystemPermissions: SubSystemPermission[];
 
     @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.user)
-    runQualityHistory: RunQualityHistory[];
+    runQualityHistories: RunQualityHistory[];
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.user)
-    detectorQualityHistory: DetectorQualityHistory[];
+    detectorQualityHistories: DetectorQualityHistory[];
 }

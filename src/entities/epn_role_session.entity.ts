@@ -1,13 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('epn_role_sessions')
+@Entity('epn_role_session')
 export class EpnRoleSession {
 
-    @PrimaryGeneratedColumn({
-        name: 'session_number',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'session_number' })
     sessionNumber: number;
 
     @PrimaryColumn({
@@ -17,11 +14,14 @@ export class EpnRoleSession {
     })
     epnRoleName: string;
 
-    @ManyToOne(type => Run, run => run.epnRoleSession, {
-        eager: true,
-    })
-    @JoinColumn({ name: 'run_number' })
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => Run, run => run.epnRoleSessions,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
     @Column({ name: 'epn_hostname' })
