@@ -1,26 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { User } from './user.entity';
+import { Run } from './run.entity';
+import { Detector } from './detector.entity';
 
 @Entity('detector_qualtiy_history')
 export class DetectorQualityHistory {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    detector_quality_history_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'detector_quality_history_id',
+        type: 'bigint'
+    })
+    detectorQualityHistoryId: number;
 
+    @ManyToOne(type => Run, run => run.detectorQualityHistory)
     @PrimaryColumn({ type: 'int' })
-    fk_run_number: number;
+    run: Run;
 
+    @ManyToOne(type => Detector, detector => detector.detectorQualityHistory)
     @PrimaryColumn({ type: 'int' })
-    fk_detector_id: number;
-
-    @Column({ type: 'int' })
-    fk_changed_by_user_id: number;
-
-    @Column({ type: 'timestamp' })
-    change_time: Timestamp;
+    detector: Detector;
 
     @Column({
+        name: 'change_time',
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    changeTime: Date;
+
+    @Column({
+        name: 'run_quality',
         type: 'enum',
         enum: ['test'],
     })
-    run_quality: 'test';
+    runQuality: 'test';
+
+    @ManyToOne(type => User, user => user.detectorQualityHistory)
+    user: User;
 }

@@ -14,7 +14,7 @@
     "baseUrl": "./src"
   },
   "include": [
-    "src/**/*"
+    "src/**/*", "ormconfig.ts", "ormconfig.js"
   ],
   "exclude": [
     "node_modules",
