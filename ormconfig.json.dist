@@ -8,6 +8,7 @@
     "entities": [
         "src/**/**.entity{.ts,.js}"
     ],
+    "synchronize": false
     "migrations": [
         "src/migration/*{.ts,.js}"
     ],

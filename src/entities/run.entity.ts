@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Tag } from './tag.entity';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
-import { DetectorsInRun } from './detector_in_run.entity';
+import { DetectorsInRun } from './detectors_in_run.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { RunEorHistory } from './run_eor_history.entity';
+import { Tag } from './tag.entity';
 
-@Entity('runs')
+@Entity('run')
 export class Run {
 
     @PrimaryGeneratedColumn({ name: 'run_number' })
@@ -85,28 +85,37 @@ export class Run {
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)
-    @JoinTable()
-    tag: Tag[];
+    @JoinTable({
+        name: 'tags_in_run',
+        joinColumn: {
+            name: 'fk_run_id',
+            referencedColumnName: 'runNumber'
+        },
+        inverseJoinColumn: {
+            name: 'fk_tag_id',
+            referencedColumnName: 'tagId'
+        }
+    })
+    tags: Tag[];
 
-    @ManyToMany(type => Log)
-    @JoinTable()
+    @ManyToMany(type => Log, log => log.runs)
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
-    epnRoleSession: EpnRoleSession[];
+    epnRoleSessions: EpnRoleSession[];
 
     @OneToMany(type => FlpRole, flpRole => flpRole.run)
-    flpRole: FlpRole[];
+    flpRoles: FlpRole[];
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)
     detectorsInRun: DetectorsInRun[];
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.run)
-    detectorQualityHistory: DetectorQualityHistory[];
+    detectorQualityHistories: DetectorQualityHistory[];
 
     @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.run)
-    runQualityHistory: RunQualityHistory[];
+    runQualityHistories: RunQualityHistory[];
 
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.run)
-    runEorHistory: RunEorHistory[];
+    runEorHistories: RunEorHistory[];
 }

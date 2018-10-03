@@ -1,18 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 
 @Entity('run_eor_history')
 export class RunEorHistory {
 
-    @PrimaryGeneratedColumn({
-        name: 'eor_history_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'eor_history_id' })
     eorHistoryId: number;
 
-    @ManyToOne(type => Run, run => run.runQualityHistory)
-    @PrimaryColumn({ type: 'int' })
+    @ManyToOne(
+        type => Run,
+        run => run.runQualityHistories,
+        {
+            primary: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
     @PrimaryColumn({
@@ -21,7 +24,14 @@ export class RunEorHistory {
     })
     subsystem: 'test';
 
-    @ManyToOne(type => User, user => user.runEorHistory)
+    @ManyToOne(
+        type => User,
+        user => user.runEorHistories,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_changed_by_user_id' })
     user: User;
 
     @Column({
