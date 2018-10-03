@@ -4,8 +4,12 @@ import { Run } from './run.entity';
 @Entity('flp_roles')
 export class FlpRole {
 
-    @PrimaryColumn({ type: 'char', length: 16 })
-    flp_role_name: string;
+    @PrimaryColumn({
+        name: 'flp_role_name',
+        type: 'char',
+        length: 16
+    })
+    flpRoleName: string;
 
     @ManyToOne(type => Run, run => run.flpRole, {
         eager: true,
@@ -14,12 +18,12 @@ export class FlpRole {
     @JoinColumn({ name: 'run_number' })
     run: Run;
 
-    @Column()
-    flp_hostname: string;
+    @Column({ name: 'flp_hostname' })
+    flpHostname: string;
 
-    @Column()
-    n_timeframes: number;
+    @Column({ name: 'n_timeframes' })
+    nTimeframes: number;
 
-    @Column()
-    bytes_processed: number;
+    @Column({ name: 'bytes_processed' })
+    bytesProcessed: number;
 }

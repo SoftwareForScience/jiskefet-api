@@ -7,8 +7,11 @@ import { Run } from './run.entity';
 @Entity('logs')
 export class Log {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    log_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'log_id',
+        type: 'bigint'
+    })
+    logId: number;
 
     @Column({
         type: 'enum',
@@ -25,8 +28,12 @@ export class Log {
     })
     origin: 'human' | 'process';
 
-    @Column({ type: 'timestamp' })
-    creation_time: string;
+    @Column({
+        name: 'creation_time',
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    creationTime: Date;
 
     @Column()
     title: string;
@@ -34,20 +41,31 @@ export class Log {
     @Column()
     text: string;
 
-    @Column()
-    subsystem_fk_subsystem_id: number;
+    @Column({
+        name: 'subsystem_fk_subsystem_id',
+        nullable: true,
+    })
+    subsystemFkSubsystemId: number;
 
     @Column({
+        name: 'announcement_valid_until',
         type: 'timestamp',
+        nullable: true,
         default: () => 'CURRENT_TIMESTAMP',
     })
-    announcement_valid_until: Date;
+    announcementValidUntil: Date;
 
-    @Column()
-    comment_fk_parent_log_id: number;
+    @Column({
+        name: 'comment_fk_parent_log_id',
+        nullable: true
+    })
+    commentFkParentLogId: number;
 
-    @Column()
-    comment_fk_root_log_id: number;
+    @Column({
+        name: 'comment_fk_root_log_id',
+        nullable: true
+    })
+    commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)
     @JoinTable()

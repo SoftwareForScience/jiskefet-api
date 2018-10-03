@@ -1,14 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, Timestamp, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
+import { Run } from './run.entity';
 
 @Entity('run_eor_history')
 export class RunEorHistory {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    eor_history_id: number;
+    @PrimaryGeneratedColumn({
+        name: 'eor_history_id',
+        type: 'bigint'
+    })
+    eorHistoryId: number;
 
+    @ManyToOne(type => Run, run => run.runQualityHistory)
     @PrimaryColumn({ type: 'int' })
-    fk_run_number: number;
+    run: Run;
 
     @PrimaryColumn({
         type: 'enum',
@@ -19,12 +24,17 @@ export class RunEorHistory {
     @ManyToOne(type => User, user => user.runEorHistory)
     user: User;
 
-    @Column({ type: 'timestamp' })
-    change_time: Timestamp;
+    @Column({
+        name: 'change_time',
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    changeTime: Date;
 
     @Column({
+        name: 'end_of_run_reason',
         type: 'enum',
         enum: ['test'],
     })
-    end_of_run_reason: 'test';
+    endOfRunReason: 'test';
 }

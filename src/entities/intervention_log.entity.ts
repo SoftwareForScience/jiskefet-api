@@ -11,21 +11,31 @@ export class InterventionLog {
     @PrimaryColumn({ type: 'bigint' })
     log: Log;
 
-    @Column({ type: 'timestamp' })
-    time_of_call: string;
-
     @Column({
-        type: 'enum',
-        enum: ['test'],
+        name: 'time_of_call',
+        type: 'timestamp',
+        nullable: true
     })
-    intervention_type: 'test';
+    timeOfCall: string;
+
+    @Column({
+        name: 'intervention_type',
+        type: 'enum',
+        enum: ['test'],
+        nullable: true
+    })
+    interventionType: 'test';
 
     @Column({
         type: 'enum',
         enum: ['test'],
+        nullable: true
     })
     location: 'test';
 
-    @Column()
-    action_taken: string;
+    @Column({
+        name: 'action_taken',
+        nullable: true
+    })
+    actionTaken: string;
 }
