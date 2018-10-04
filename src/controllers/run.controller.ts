@@ -1,6 +1,6 @@
-import { Get, Controller, Body, Param } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { RunService } from 'services/run.service';
 import { CreateRunDto } from 'dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
@@ -20,11 +20,16 @@ export class RunController {
     }
 
     /**
-     * Get all Runs from db.
+     * Get all runs, with optional filters.
+     * @param query optional filters
      */
     @Get()
-    async findAll() {
-        return await this.runService.findAllRuns();
+    @ApiImplicitQuery({ name: 'searchTerm', required: false })
+    @ApiImplicitQuery({ name: 'minHours', required: false })
+    @ApiImplicitQuery({ name: 'maxHours', required: false })
+    @ApiImplicitQuery({ name: 'major', required: false })
+    async findWithFilters(@Query() query?: any): Promise<Run[]> {
+        return await this.runService.find(query.searchTerm, query.minHours, query.maxHours, query.major);
     }
 
     /**

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Run } from 'entities/run.entity';
 import { CreateRunDto } from 'dtos/create.run.dto';
+import { isNullOrUndefined } from 'util';
 
 @Injectable()
 export class RunService {
@@ -26,10 +27,29 @@ export class RunService {
     }
 
     /**
-     * Handler for getting all runs from db.
+     * Handler for getting all runs, with optional filters.
+     * @param searchTerm filter for
+     * @param minHours filter for
+     * @param maxHours fitler
+     * @param major filter
      */
-    async findAllRuns(): Promise<Run[]> {
-        return await this.repository.find();
+    async find(searchTerm?: string, minHours?: number, maxHours?: number, major?: string): Promise<Run[]> {
+
+        if (isNullOrUndefined(searchTerm)) {
+            searchTerm = '';
+        }
+        if (isNullOrUndefined(minHours)) {
+            minHours = 0;
+        }
+        if (isNullOrUndefined(maxHours)) {
+            maxHours = 9999;
+        }
+        if (isNullOrUndefined(major)) {
+            major = '';
+        }
+
+        return await this.repository.find({ where: { firstName: 'Timber', lastName: 'Saw' } });
+
     }
 
     /**
