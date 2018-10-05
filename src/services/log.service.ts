@@ -38,7 +38,7 @@ export class LogService {
      */
     async findLogById(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
-            .where('logId = :id', { id })
+            .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
