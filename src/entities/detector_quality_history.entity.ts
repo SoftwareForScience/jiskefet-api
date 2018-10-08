@@ -41,8 +41,6 @@ export class DetectorQualityHistory {
 
     @Column({
         name: 'change_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
     changeTime: Date;
 

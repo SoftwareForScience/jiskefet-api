@@ -16,31 +16,23 @@ export class Run {
 
     @Column({
         name: 'time_o2_start',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    timeO2Start: Date;
+    timeO2Start: Date = new Date();
 
     @Column({
         name: 'time_trg_start',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    timeTrgStart: Date;
+    timeTrgStart: Date = new Date();
 
     @Column({
         name: 'time_trg_end',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    timeTrgEnd: Date;
+    timeTrgEnd: Date = new Date();
 
     @Column({
         name: 'time_o2_end',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    timeO2End: Date;
+    timeO2End: Date = new Date();
 
     @Column({
         name: 'activity_id',

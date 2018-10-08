@@ -25,8 +25,6 @@ export class User {
 
     @Column({
         name: 'token_valid_until',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
         nullable: true
     })
     tokenValidUntil: Date;

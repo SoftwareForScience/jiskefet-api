@@ -38,15 +38,11 @@ export class EpnRoleSession {
 
     @Column({
         name: 'session_start',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    sessionStart: string;
+    sessionStart: Date;
 
     @Column({
         name: 'session_end',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    sessionEnd: string;
+    sessionEnd: Date;
 }

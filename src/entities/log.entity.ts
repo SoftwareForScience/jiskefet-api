@@ -35,10 +35,8 @@ export class Log {
 
     @Column({
         name: 'creation_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    creationTime: Date;
+    creationTime: Date = new Date();
 
     @Column()
     title: string;
@@ -54,11 +52,9 @@ export class Log {
 
     @Column({
         name: 'announcement_valid_until',
-        type: 'timestamp',
         nullable: true,
-        default: () => 'CURRENT_TIMESTAMP',
     })
-    announcementValidUntil: Date;
+    announcementValidUntil: Date = new Date();
 
     @Column({
         name: 'comment_fk_parent_log_id',
