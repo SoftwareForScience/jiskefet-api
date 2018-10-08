@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
@@ -16,21 +16,25 @@ export class Run {
 
     @Column({
         name: 'time_o2_start',
+        precision: 0,
     })
     timeO2Start: Date = new Date();
 
     @Column({
         name: 'time_trg_start',
+        precision: 0,
     })
     timeTrgStart: Date = new Date();
 
     @Column({
         name: 'time_trg_end',
+        precision: 0,
     })
     timeTrgEnd: Date = new Date();
 
     @Column({
         name: 'time_o2_end',
+        precision: 0,
     })
     timeO2End: Date = new Date();
 

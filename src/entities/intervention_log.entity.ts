@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
 @Entity('intervention_log')
@@ -16,10 +16,10 @@ export class InterventionLog {
 
     @Column({
         name: 'time_of_call',
-        type: 'timestamp',
+        precision: 0,
         nullable: true
     })
-    timeOfCall: string;
+    timeOfCall: Date = new Date();
 
     @Column({
         name: 'intervention_type',

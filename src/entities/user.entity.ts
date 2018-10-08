@@ -25,9 +25,10 @@ export class User {
 
     @Column({
         name: 'token_valid_until',
+        precision: 0,
         nullable: true
     })
-    tokenValidUntil: Date;
+    tokenValidUntil: Date = new Date();
 
     @OneToMany(type => Log, log => log.user)
     logs: Log[];

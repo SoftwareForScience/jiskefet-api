@@ -36,8 +36,9 @@ export class RunEorHistory {
 
     @Column({
         name: 'change_time',
+        precision: 0,
     })
-    changeTime: Date;
+    changeTime: Date = new Date();
 
     @Column({
         name: 'end_of_run_reason',

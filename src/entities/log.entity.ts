@@ -35,6 +35,7 @@ export class Log {
 
     @Column({
         name: 'creation_time',
+        precision: 0,
     })
     creationTime: Date = new Date();
 
@@ -52,6 +53,7 @@ export class Log {
 
     @Column({
         name: 'announcement_valid_until',
+        precision: 0,
         nullable: true,
     })
     announcementValidUntil: Date = new Date();

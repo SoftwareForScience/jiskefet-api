@@ -38,11 +38,13 @@ export class EpnRoleSession {
 
     @Column({
         name: 'session_start',
+        precision: 0,
     })
-    sessionStart: Date;
+    sessionStart: Date = new Date();
 
     @Column({
         name: 'session_end',
+        precision: 0,
     })
-    sessionEnd: Date;
+    sessionEnd: Date = new Date();
 }

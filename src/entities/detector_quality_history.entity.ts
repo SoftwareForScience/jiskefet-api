@@ -41,8 +41,9 @@ export class DetectorQualityHistory {
 
     @Column({
         name: 'change_time',
+        precision: 0,
     })
-    changeTime: Date;
+    changeTime: Date = new Date();
 
     @Column({
         name: 'run_quality',

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 
@@ -30,8 +30,9 @@ export class RunQualityHistory {
 
     @Column({
         name: 'change_time',
+        precision: 0,
     })
-    changeTime: Date;
+    changeTime: Date = new Date();
 
     @Column({
         type: 'enum',
