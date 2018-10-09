@@ -4,8 +4,32 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsDate } from 'class-validator';
 export class CreateRunDto {
+
+    @ApiModelProperty({
+        example: new Date(),
+        description: 'Current Date'
+    })
+    @IsDate() timeO2Start: Date;
+
+    @ApiModelProperty({
+        example: new Date(),
+        description: 'Current Date'
+    })
+    @IsDate() timeTrgStart: Date;
+
+    @ApiModelProperty({
+        example: new Date(),
+        description: 'Current Date'
+    })
+    @IsDate() timeO2End: Date;
+
+    @ApiModelProperty({
+        example: new Date(),
+        description: 'Current Date'
+    })
+    @IsDate() timeTrgEnd: Date;
 
     @ApiModelProperty({
         example: ['test'],
