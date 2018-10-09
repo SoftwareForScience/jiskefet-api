@@ -21,15 +21,23 @@ export class RunController {
 
     /**
      * Get all runs, with optional filters.
+     * @param pageSize the amount of Runs to get (default: 50)
      * @param query optional filters
      */
     @Get()
-    @ApiImplicitQuery({ name: 'searchTerm', required: false })
-    @ApiImplicitQuery({ name: 'minHours', required: false })
-    @ApiImplicitQuery({ name: 'maxHours', required: false })
-    @ApiImplicitQuery({ name: 'major', required: false })
-    async findWithFilters(@Query() query?: any): Promise<Run[]> {
-        return await this.runService.find(query.searchTerm, query.minHours, query.maxHours, query.major);
+    @ApiImplicitQuery({ name: 'pageSize', required: false })
+    @ApiImplicitQuery({ name: 'pageNumber', required: false })
+    @ApiImplicitQuery({ name: 'runNumber', required: false })
+    @ApiImplicitQuery({ name: 'timeO2Start', required: false })
+    @ApiImplicitQuery({ name: 'timeO2End', required: false })
+    @ApiImplicitQuery({ name: 'timeTrgStart', required: false })
+    @ApiImplicitQuery({ name: 'timeTrgEnd', required: false })
+    async findAll(@Query('pageSize') pageSize: number = 50, @Query() query?: any): Promise<Run[]> {
+        return await this.runService.findAll(
+            pageSize, query.pageNumber,
+            query.runNumber, query.timeO2Start,
+            query.timeO2End, query.timeTrgStart,
+            query.timeTrgEnd);
     }
 
     /**
@@ -38,7 +46,7 @@ export class RunController {
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Run> {
-        return await this.runService.findRunById(id);
+        return await this.runService.findById(id);
     }
 
 }
