@@ -16,6 +16,7 @@ export class LogController {
      */
     @Post()
     async create(@Body() request: CreateLogDto) {
+        request.creationTime = new Date();
         await this.logservice.create(request);
     }
 
