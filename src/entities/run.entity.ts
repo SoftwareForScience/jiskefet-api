@@ -18,25 +18,25 @@ export class Run {
         name: 'time_o2_start',
         precision: 0,
     })
-    timeO2Start: Date = new Date();
+    timeO2Start: Date;
 
     @Column({
         name: 'time_trg_start',
         precision: 0,
     })
-    timeTrgStart: Date = new Date();
+    timeTrgStart: Date;
 
     @Column({
         name: 'time_trg_end',
         precision: 0,
     })
-    timeTrgEnd: Date = new Date();
+    timeTrgEnd: Date;
 
     @Column({
         name: 'time_o2_end',
         precision: 0,
     })
-    timeO2End: Date = new Date();
+    timeO2End: Date;
 
     @Column({
         name: 'activity_id',

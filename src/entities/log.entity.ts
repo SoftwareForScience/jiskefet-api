@@ -37,7 +37,7 @@ export class Log {
         name: 'creation_time',
         precision: 0,
     })
-    creationTime: Date = new Date();
+    creationTime: Date;
 
     @Column()
     title: string;
@@ -56,7 +56,7 @@ export class Log {
         precision: 0,
         nullable: true,
     })
-    announcementValidUntil: Date = new Date();
+    announcementValidUntil: Date;
 
     @Column({
         name: 'comment_fk_parent_log_id',

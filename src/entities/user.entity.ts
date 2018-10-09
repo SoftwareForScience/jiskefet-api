@@ -28,7 +28,7 @@ export class User {
         precision: 0,
         nullable: true
     })
-    tokenValidUntil: Date = new Date();
+    tokenValidUntil: Date;
 
     @OneToMany(type => Log, log => log.user)
     logs: Log[];

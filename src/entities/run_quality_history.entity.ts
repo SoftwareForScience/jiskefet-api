@@ -32,7 +32,7 @@ export class RunQualityHistory {
         name: 'change_time',
         precision: 0,
     })
-    changeTime: Date = new Date();
+    changeTime: Date;
 
     @Column({
         type: 'enum',

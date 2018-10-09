@@ -21,7 +21,7 @@ export class Attachment {
         name: 'creation_time',
         precision: 0,
     })
-    creationTime: Date = new Date();
+    creationTime: Date;
 
     @Column()
     title: string;

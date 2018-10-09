@@ -19,7 +19,7 @@ export class InterventionLog {
         precision: 0,
         nullable: true
     })
-    timeOfCall: Date = new Date();
+    timeOfCall: Date;
 
     @Column({
         name: 'intervention_type',
