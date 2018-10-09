@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 import { Detector } from './detector.entity';
@@ -41,8 +41,7 @@ export class DetectorQualityHistory {
 
     @Column({
         name: 'change_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     changeTime: Date;
 

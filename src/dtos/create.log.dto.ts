@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsDate } from 'class-validator';
 
 @Entity('logs')
 export class CreateLogDto {
@@ -17,10 +18,10 @@ export class CreateLogDto {
     origin: [];
 
     @ApiModelProperty({
-        example: '01-10-2018',
+        example: new Date(),
         description: 'Date of creation',
     })
-    creationTime: Date;
+    @IsDate() creationTime: Date;
 
     @ApiModelProperty({
         example: 'log for run 12',

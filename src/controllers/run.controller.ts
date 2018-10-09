@@ -16,6 +16,10 @@ export class RunController {
      */
     @Post()
     async create(@Body() request: CreateRunDto) {
+        request.timeO2Start = new Date();
+        request.timeTrgStart = new Date();
+        request.timeO2End = new Date();
+        request.timeTrgEnd = new Date();
         await this.runService.create(request);
     }
 

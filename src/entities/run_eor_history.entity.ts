@@ -36,8 +36,7 @@ export class RunEorHistory {
 
     @Column({
         name: 'change_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     changeTime: Date;
 

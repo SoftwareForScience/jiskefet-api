@@ -35,8 +35,7 @@ export class Log {
 
     @Column({
         name: 'creation_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     creationTime: Date;
 
@@ -54,9 +53,8 @@ export class Log {
 
     @Column({
         name: 'announcement_valid_until',
-        type: 'timestamp',
+        precision: 0,
         nullable: true,
-        default: () => 'CURRENT_TIMESTAMP',
     })
     announcementValidUntil: Date;
 

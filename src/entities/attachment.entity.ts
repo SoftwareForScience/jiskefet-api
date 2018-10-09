@@ -19,8 +19,7 @@ export class Attachment {
 
     @Column({
         name: 'creation_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     creationTime: Date;
 

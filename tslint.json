@@ -3,6 +3,11 @@
     "extends": [
         "tslint:recommended"
     ],
+    "linterOptions": {
+        "exclude": [
+            "src/migration/*.ts"
+        ]
+    },
     "rules": {
         "arrow-parens": false,
         "arrow-return-shorthand": true,
