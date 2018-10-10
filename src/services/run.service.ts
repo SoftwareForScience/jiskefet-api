@@ -38,8 +38,8 @@ export class RunService {
      */
     async findAll(
         pageSize: number, pageNumber?: number,
-        runNumber?: number, time02Start?: any,
-        time02End?: any, timeTrgStart?: any, timeTrgEnd?: any
+        runNumber?: number, time02Start?: string,
+        time02End?: string, timeTrgStart?: string, timeTrgEnd?: string
     ): Promise<Run[]> {
 
         const sqlQuery = this.repository.createQueryBuilder();
@@ -52,11 +52,19 @@ export class RunService {
                 .catch(err => Promise.reject(err));
         } else {
             return await sqlQuery
-                .where('time_o2_start >= :startO2', { startO2: time02Start || '1970-01-01' })
-                .andWhere('time_o2_end <= :endO2', { endO2: time02End || '2999-01-01' })
-                .andWhere('time_trg_start >= :startTrg', { startTrg: timeTrgStart || '1970-01-01' })
-                .andWhere('time_trg_end <= :endTrg', { endTrg: timeTrgEnd || '2999-01-01' })
-                .skip((pageNumber || 1) * pageSize)
+                .where('time_o2_start >= :startO2', {
+                    startO2: time02Start ? time02Start.replace('%3A', ':')  : '1970-01-01'
+                })
+                .andWhere('time_o2_end <= :endO2', {
+                    endO2: time02End ? time02End.replace('%3A', ':') : '2999-01-01'
+                })
+                .andWhere('time_trg_start >= :startTrg', {
+                    startTrg: timeTrgStart ? timeTrgStart.replace('%3A', ':') : '1970-01-01'
+                })
+                .andWhere('time_trg_end <= :endTrg', {
+                    endTrg: timeTrgEnd ? timeTrgEnd.replace('%3A', ':') : '2999-01-01'
+                })
+                .skip((pageNumber || 0) * pageSize)
                 .take(pageSize)
                 .getMany();
         }

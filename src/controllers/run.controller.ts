@@ -32,7 +32,7 @@ export class RunController {
     @ApiImplicitQuery({ name: 'timeO2End', required: false })
     @ApiImplicitQuery({ name: 'timeTrgStart', required: false })
     @ApiImplicitQuery({ name: 'timeTrgEnd', required: false })
-    async findAll(@Query('pageSize') pageSize: number = 50, @Query() query?: any): Promise<Run[]> {
+    async findAll(@Query('pageSize') pageSize: number = 25, @Query() query?: any): Promise<Run[]> {
         return await this.runService.findAll(
             pageSize, query.pageNumber,
             query.runNumber, query.timeO2Start,
