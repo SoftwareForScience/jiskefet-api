@@ -34,7 +34,7 @@ $ npm run start:prod
 Automatic migration generation creates a new migration file and writes all sql queries that must be executed to make a new database or to update the database.
 It is needed to specify where the dependency is located, that is the reason it's needed to put the following command infront of the normal typeorm command.
 ```bash
-$ node_modules/.bin/ts-node ./node_modules/.bin/
+$ node_modules/ts-node/dist/bin.js node_modules/typeorm/cli.js
 ```
 
 To check what sql queries are going to be made when changes are made in the entities is as follows

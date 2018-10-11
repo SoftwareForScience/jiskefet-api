@@ -50,7 +50,7 @@ export class Log {
     @Column()
     title: string;
 
-    @Column()
+    @Column({ type: 'longtext' })
     text: string;
 
     @Column({
