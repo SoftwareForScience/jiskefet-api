@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

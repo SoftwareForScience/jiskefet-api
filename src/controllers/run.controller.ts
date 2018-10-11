@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
  *
@@ -6,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Get, Controller, Body, Param, Query } from '@nestjs/common';
 
 import { Post } from '@nestjs/common';

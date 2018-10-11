@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
@@ -78,7 +79,7 @@ export class Run {
     @Column({ name: 'n_timeframes' })
     nTimeframes: number;
 
-    @Column({ name: 'n_subtimeframes'})
+    @Column({ name: 'n_subtimeframes' })
     nSubtimeframes: number;
 
     @Column({ name: 'bytes_read_out' })

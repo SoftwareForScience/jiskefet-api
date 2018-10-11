@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -54,16 +55,16 @@ export class LogService {
         } else {
             return await sqlQuery
                 .where('title like :title', {
-                    title: searchterm ? '%${searchterm}%' : ''
+                    title: searchterm ? '%${searchterm}%' : '%'
                 })
-                .andWhere('subtype like :subType', {
-                    subType: subType ? subType : ''
+                .andWhere('subtype like :sub', {
+                    sub: subType ? subType : '%'
                 })
-                .andWhere('origin like :origin', {
-                    startTrg: origin ? origin : ''
+                .andWhere('origin like :orig', {
+                    orig: origin ? origin : '%'
                 })
-                .andWhere('creation_time <= :creationTime', {
-                    endTrg: creationTime ? creationTime.replace('%3A', ':') : '1970-01-01'
+                .andWhere('creation_time >= :createTime', {
+                    createTime: creationTime ? creationTime.replace('%3A', ':') : '1970-01-01 21:45:43'
                 })
                 .skip((pageNumber || 0) * pageSize)
                 .take(pageSize)

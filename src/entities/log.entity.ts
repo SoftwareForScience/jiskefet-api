@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';

@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
@@ -21,7 +22,7 @@ export class Attachment {
             nullable: false
         }
     )
-    @JoinColumn({ name: 'fk_log_id'})
+    @JoinColumn({ name: 'fk_log_id' })
     log: Log;
 
     @Column({

@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tag')

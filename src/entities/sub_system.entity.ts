@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { SubSystemPermission } from './sub_system_permission.entity';
 

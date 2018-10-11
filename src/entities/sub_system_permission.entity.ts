@@ -5,6 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
@@ -20,7 +21,7 @@ export class SubSystemPermission {
             eager: true
         }
     )
-    @JoinColumn({name: 'fk_user_id'})
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 
     @ManyToOne(
