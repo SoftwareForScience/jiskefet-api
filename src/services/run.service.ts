@@ -46,14 +46,14 @@ export class RunService {
 
         if (!isNullOrUndefined(runNumber)) {
             return await sqlQuery
-                .where('run_number = :id', { runNumber })
+                .where('run_number = :id', { id: runNumber })
                 .getMany()
                 .then(res => Promise.resolve(res))
                 .catch(err => Promise.reject(err));
         } else {
             return await sqlQuery
                 .where('time_o2_start >= :startO2', {
-                    startO2: time02Start ? time02Start.replace('%3A', ':')  : '1970-01-01'
+                    startO2: time02Start ? time02Start.replace('%3A', ':') : '1970-01-01'
                 })
                 .andWhere('time_o2_end <= :endO2', {
                     endO2: time02End ? time02End.replace('%3A', ':') : '2999-01-01'
