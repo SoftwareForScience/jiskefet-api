@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 /**
  * This DTO handles the data sent from the client ui.
  * In swagger it will handle example values to test the api.
  */
-
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsInt, IsString, IsDate } from 'class-validator';
 export class CreateRunDto {
