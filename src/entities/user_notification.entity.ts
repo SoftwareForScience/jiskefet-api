@@ -1,14 +1,26 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('user_notifications')
+@Entity('user_notification')
 export class UserNotification {
 
-    @ManyToOne(type => User, user => user.userNotification, {
-        eager: true,
-    })
-    @PrimaryColumn({ type: 'bigint' })
-    // @JoinColumn({name: 'user_id'})
+    @ManyToOne(
+        type => User,
+        user => user.userNotifications,
+        {
+            primary: true,
+            nullable: false,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 
     @Column({

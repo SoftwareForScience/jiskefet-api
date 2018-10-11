@@ -1,13 +1,17 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('epn_role_sessions')
+@Entity('epn_role_session')
 export class EpnRoleSession {
 
-    @PrimaryGeneratedColumn({
-        name: 'session_number',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'session_number' })
     sessionNumber: number;
 
     @PrimaryColumn({
@@ -17,11 +21,14 @@ export class EpnRoleSession {
     })
     epnRoleName: string;
 
-    @ManyToOne(type => Run, run => run.epnRoleSession, {
-        eager: true,
-    })
-    @JoinColumn({ name: 'run_number' })
-    @PrimaryColumn({ type: 'bigint' })
+    @ManyToOne(
+        type => Run, run => run.epnRoleSessions,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
     @Column({ name: 'epn_hostname' })
@@ -38,15 +45,13 @@ export class EpnRoleSession {
 
     @Column({
         name: 'session_start',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
-    sessionStart: string;
+    sessionStart: Date;
 
     @Column({
         name: 'session_end',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
-    sessionEnd: string;
+    sessionEnd: Date;
 }

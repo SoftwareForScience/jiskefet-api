@@ -1,5 +1,14 @@
+
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 import { Get, Post, Controller, Body, Param, Query } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+
 import { LogService } from 'services/log.service';
 import { CreateLogDto } from 'dtos/create.log.dto';
 import { Log } from 'entities/log.entity';
@@ -16,6 +25,7 @@ export class LogController {
      */
     @Post()
     async create(@Body() request: CreateLogDto) {
+        request.creationTime = new Date();
         await this.logservice.create(request);
     }
 

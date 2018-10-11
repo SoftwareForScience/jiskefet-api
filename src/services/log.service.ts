@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -70,7 +77,7 @@ export class LogService {
      */
     async findLogById(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
-            .where('logId = :id', { id })
+            .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
@@ -83,7 +90,7 @@ export class LogService {
     async findLogWithRuns(id: number): Promise<Log> {
         return await this.repository.createQueryBuilder()
             .leftJoinAndSelect('log.runs', 'run')
-            .where('logId = :id', { id })
+            .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));

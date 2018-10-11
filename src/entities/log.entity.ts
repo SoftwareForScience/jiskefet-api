@@ -1,16 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 
-@Entity('logs')
+@Entity('log')
 export class Log {
 
-    @PrimaryGeneratedColumn({
-        name: 'log_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'log_id' })
     logId: number;
 
     @Column({
@@ -19,7 +23,15 @@ export class Log {
     })
     subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
 
-    @ManyToOne(type => User, user => user.log)
+    @ManyToOne(
+        type => User,
+        user => user.logs,
+        // User should not be nullable, but for testing purposes it currently is
+        {
+            nullable: true
+        }
+    )
+    @JoinColumn({ name: 'fk_user_id' })
     user: User;
 
     @Column({
@@ -30,8 +42,7 @@ export class Log {
 
     @Column({
         name: 'creation_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     creationTime: Date;
 
@@ -49,9 +60,8 @@ export class Log {
 
     @Column({
         name: 'announcement_valid_until',
-        type: 'timestamp',
+        precision: 0,
         nullable: true,
-        default: () => 'CURRENT_TIMESTAMP',
     })
     announcementValidUntil: Date;
 
@@ -68,13 +78,36 @@ export class Log {
     commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)
-    @JoinTable()
-    tag: Tag[];
+    @JoinTable({
+        name: 'tags_in_log',
+        joinColumn: {
+            name: 'fk_log_id',
+            referencedColumnName: 'logId'
+        },
+        inverseJoinColumn: {
+            name: 'fk_tag_id',
+            referencedColumnName: 'tagId'
+        }
+    })
+    tags: Tag[];
 
-    @ManyToMany(type => Log)
-    @JoinTable()
-    run: Run[];
+    @ManyToMany(
+        type => Run,
+        run => run.logs
+    )
+    @JoinTable({
+        name: 'runs_in_log',
+        joinColumn: {
+            name: 'fk_log_id',
+            referencedColumnName: 'logId'
+        },
+        inverseJoinColumn: {
+            name: 'fk_run_number',
+            referencedColumnName: 'runNumber'
+        }
+    })
+    runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log)
-    attachment: Attachment[];
+    attachments: Attachment[];
 }

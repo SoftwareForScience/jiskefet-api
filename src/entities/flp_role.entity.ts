@@ -1,7 +1,14 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('flp_roles')
+@Entity('flp_role')
 export class FlpRole {
 
     @PrimaryColumn({
@@ -11,11 +18,14 @@ export class FlpRole {
     })
     flpRoleName: string;
 
-    @ManyToOne(type => Run, run => run.flpRole, {
-        eager: true,
-    })
-    @PrimaryColumn({ type: 'bigint' })
-    @JoinColumn({ name: 'run_number' })
+    @ManyToOne(
+        type => Run, run => run.flpRoles,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
     @Column({ name: 'flp_hostname' })

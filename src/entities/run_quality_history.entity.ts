@@ -1,46 +1,49 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 
 @Entity('run_quality_history')
 export class RunQualityHistory {
 
-    @PrimaryGeneratedColumn({
-        name: 'run_quality_history_id',
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn({ name: 'run_quality_history_id' })
     runQualityHistoryId: number;
 
-    @ManyToOne(type => Run, run => run.runQualityHistory)
-    @PrimaryColumn({ type: 'int' })
+    @ManyToOne(
+        type => Run,
+        run => run.runQualityHistories,
+        {
+            primary: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
-    @Column({
-        type: 'enum',
-        enum: ['test'],
-    })
-    subsystem: 'test';
-
-    @Column({
-        name: 'fk_changed_by_user_id',
-        type: 'int'
-    })
-    fkChangedByUserId: number;
+    @ManyToOne(
+        type => User,
+        user => user.runQualityHistories,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_changed_by_user_id' })
+    user: User;
 
     @Column({
         name: 'change_time',
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        precision: 0,
     })
     changeTime: Date;
 
     @Column({
-        name: 'end_of_run_season',
         type: 'enum',
         enum: ['test'],
     })
-    endOfRunSeason: 'test';
-
-    @ManyToOne(type => User, user => user.runQualityHistory)
-    user: User;
+    runQuality: 'test';
 }
