@@ -55,7 +55,7 @@ export class LogService {
         } else {
             return await sqlQuery
                 .where('title like :title', {
-                    title: searchterm ? '%${searchterm}%' : '%'
+                    title: searchterm ? `%${searchterm}%` : '%'
                 })
                 .andWhere('subtype like :sub', {
                     sub: subType ? subType : '%'
