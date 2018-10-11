@@ -5,7 +5,6 @@ import { plainToClass } from 'class-transformer';
 import { Run } from 'entities/run.entity';
 import { CreateRunDto } from 'dtos/create.run.dto';
 import { isNullOrUndefined } from 'util';
-import FilterBuilder from './FilterBuilder';
 
 @Injectable()
 export class RunService {
@@ -37,61 +36,38 @@ export class RunService {
      * @param timeTrgStart for filtering on when the TRG-system has started the run.
      * @param timeTrgEnd for filtering on when the TRG-system has ended the run.
      */
-    // returns Promise<Run[]>
-    async findAll(query: any, config: any): Promise<Run[]> {
+    async findAll(
+        pageSize: number, pageNumber?: number,
+        runNumber?: number, time02Start?: string,
+        time02End?: string, timeTrgStart?: string, timeTrgEnd?: string
+    ): Promise<Run[]> {
+
         const sqlQuery = this.repository.createQueryBuilder();
 
-        const queryWithFilters = query;
-        delete queryWithFilters.pageNumber;
-        delete queryWithFilters.pageSize;
-
-        const mySuperQuery = new FilterBuilder(sqlQuery);
-        mySuperQuery.addFilters(queryWithFilters, config);
-        console.log(mySuperQuery.getSelectQueryBuilder().getSql());
-
-        return await mySuperQuery.getSelectQueryBuilder()
-            .skip((query.pageNumber || 0) * query.pageSize)
-            .take(query.pageSize)
-            .getMany();
-
-        // if (!(runNumber === null || runNumber === undefined)) {
-        //     return await sqlQuery
-        //         .where('run_number = :id', { id: runNumber })
-        //         .getMany()
-        //         .then(res => Promise.resolve(res))
-        //         .catch(err => Promise.reject(err));
-        // } else {
-
-        // query.map((q: object) => {
-        //     const keyString = Object.keys(q)[0];
-        //     switch (keyString) {
-        //         case 'time_o2_start':
-        //             sqlQuery.where(`${keyString} >= ${q[keyString]}`);
-        //             break;
-        //         default:
-        //             return 0;
-        //     }
-        // });
-
-        // return await sqlQuery;
-        // return await sqlQuery
-        //     .where('time_o2_start >= :startO2', {
-        //         startO2: time02Start ? decodeURIComponent(time02Start) : '1970-01-01'
-        //     })
-        //     .andWhere('run_number = :id', { id: runNumber })
-        //     .andWhere('time_o2_end <= :endO2', {
-        //         endO2: time02End ? time02End.replace('%3A', ':') : '2999-01-01'
-        //     })
-        //     .andWhere('time_trg_start >= :startTrg', {
-        //         startTrg: timeTrgStart ? timeTrgStart.replace('%3A', ':') : '1970-01-01'
-        //     })
-        //     .andWhere('time_trg_end <= :endTrg', {
-        //         endTrg: timeTrgEnd ? timeTrgEnd.replace('%3A', ':') : '2999-01-01'
-        //     })
-        //     .skip((pageNumber || 0) * pageSize)
-        //     .take(pageSize)
-        //     .getMany();
-        // }
+        if (!isNullOrUndefined(runNumber)) {
+            return await sqlQuery
+                .where('run_number = :id', { runNumber })
+                .getMany()
+                .then(res => Promise.resolve(res))
+                .catch(err => Promise.reject(err));
+        } else {
+            return await sqlQuery
+                .where('time_o2_start >= :startO2', {
+                    startO2: time02Start ? time02Start.replace('%3A', ':')  : '1970-01-01'
+                })
+                .andWhere('time_o2_end <= :endO2', {
+                    endO2: time02End ? time02End.replace('%3A', ':') : '2999-01-01'
+                })
+                .andWhere('time_trg_start >= :startTrg', {
+                    startTrg: timeTrgStart ? timeTrgStart.replace('%3A', ':') : '1970-01-01'
+                })
+                .andWhere('time_trg_end <= :endTrg', {
+                    endTrg: timeTrgEnd ? timeTrgEnd.replace('%3A', ':') : '2999-01-01'
+                })
+                .skip((pageNumber || 0) * pageSize)
+                .take(pageSize)
+                .getMany();
+        }
     }
 
     /**
