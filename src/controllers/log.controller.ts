@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
  *
@@ -5,8 +6,9 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
-import { Get, Post, Controller, Body, Param } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { Get, Post, Controller, Body, Param, Query } from '@nestjs/common';
+import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+
 import { LogService } from 'services/log.service';
 import { CreateLogDto } from 'dtos/create.log.dto';
 import { Log } from 'entities/log.entity';
@@ -31,8 +33,19 @@ export class LogController {
      * Get all logs. /logs
      */
     @Get()
-    async findAll() {
-        return await this.logservice.findAllLogs();
+    @ApiImplicitQuery({ name: 'pageSize', required: false })
+    @ApiImplicitQuery({ name: 'pageNumber', required: false })
+    @ApiImplicitQuery({ name: 'logId', required: false })
+    @ApiImplicitQuery({ name: 'searchterm', required: false })
+    @ApiImplicitQuery({ name: 'subType', required: false, enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'] })
+    @ApiImplicitQuery({ name: 'origin', required: false, enum: ['human', 'process'] })
+    @ApiImplicitQuery({ name: 'creationTime', required: false })
+    async findAll(@Query('pageSize') pageSize: number = 25, @Query() query?: any) {
+        return await this.logservice.findAll(
+            pageSize, query.pageNumber,
+            query.logId, query.searchterm,
+            query.subType, query.origin,
+            query.creationTime);
     }
 
     /**
