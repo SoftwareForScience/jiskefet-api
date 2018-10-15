@@ -1,41 +1,58 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
 
-@Entity('epn_role_sessions')
+@Entity('epn_role_session')
 export class EpnRoleSession {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    session_number: number;
+    @PrimaryGeneratedColumn({ name: 'session_number' })
+    sessionNumber: number;
 
-    @PrimaryColumn({ type: 'char', length: 16 })
-    epn_role_name: string;
-
-    @ManyToOne(type => Run, run => run.epnRoleSession, {
-        eager: true,
+    @PrimaryColumn({
+        name: 'epn_role_name',
+        type: 'char',
+        length: 16
     })
-    @JoinColumn({ name: 'run_number' })
-    @PrimaryColumn({ type: 'bigint' })
+    epnRoleName: string;
+
+    @ManyToOne(
+        type => Run, run => run.epnRoleSessions,
+        {
+            primary: true,
+            eager: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
-    @Column()
-    epn_hostname: string;
+    @Column({ name: 'epn_hostname' })
+    epnHostname: string;
 
-    @Column()
-    n_subtimeframes: number;
+    @Column({ name: 'n_subtimeframes' })
+    nSubtimeframes: number;
 
-    @Column()
-    bytes_in: number;
+    @Column({ name: 'bytes_in' })
+    bytesIn: number;
 
-    @Column()
-    bytes_out: number;
-
-    @Column({ type: 'timestamp' })
-    session_start: string;
+    @Column({ name: 'bytes_out' })
+    bytesOut: number;
 
     @Column({
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
+        name: 'session_start',
+        precision: 0,
     })
-    session_end: string;
+    sessionStart: Date;
 
+    @Column({
+        name: 'session_end',
+        precision: 0,
+    })
+    sessionEnd: Date;
 }

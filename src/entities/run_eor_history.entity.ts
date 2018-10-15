@@ -1,14 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, Timestamp, ManyToOne } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
+import { Run } from './run.entity';
 
 @Entity('run_eor_history')
 export class RunEorHistory {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    eor_history_id: number;
+    @PrimaryGeneratedColumn({ name: 'eor_history_id' })
+    eorHistoryId: number;
 
-    @PrimaryColumn({ type: 'int' })
-    fk_run_number: number;
+    @ManyToOne(
+        type => Run,
+        run => run.runQualityHistories,
+        {
+            primary: true
+        }
+    )
+    @JoinColumn({ name: 'fk_run_number' })
+    run: Run;
 
     @PrimaryColumn({
         type: 'enum',
@@ -16,15 +32,26 @@ export class RunEorHistory {
     })
     subsystem: 'test';
 
-    @ManyToOne(type => User, user => user.runEorHistory)
+    @ManyToOne(
+        type => User,
+        user => user.runEorHistories,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_changed_by_user_id' })
     user: User;
 
-    @Column({ type: 'timestamp' })
-    change_time: Timestamp;
+    @Column({
+        name: 'change_time',
+        precision: 0,
+    })
+    changeTime: Date;
 
     @Column({
+        name: 'end_of_run_reason',
         type: 'enum',
         enum: ['test'],
     })
-    end_of_run_reason: 'test';
+    endOfRunReason: 'test';
 }

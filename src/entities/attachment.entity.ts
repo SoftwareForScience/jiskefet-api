@@ -1,27 +1,53 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('attachments')
+@Entity('attachment')
 export class Attachment {
 
-    @PrimaryGeneratedColumn({ type: 'bigint' })
-    file_id: number;
+    @PrimaryGeneratedColumn({ name: 'file_id' })
+    fileId: number;
 
-    @ManyToOne(type => Log, log => log.attachment)
+    @ManyToOne(
+        type => Log,
+        log => log.attachments,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'fk_log_id' })
     log: Log;
 
-    @Column({ type: 'timestamp' })
-    creation_time: string;
+    @Column({
+        name: 'creation_time',
+        precision: 0,
+    })
+    creationTime: Date;
 
     @Column()
     title: string;
 
-    @Column()
-    file_mime: string;
+    @Column({ name: 'file_mime' })
+    fileMime: string;
 
-    @Column({ type: 'blob' })
-    file_data: number;
+    @Column({
+        name: 'file_data',
+        type: 'blob'
+    })
+    fileData: number;
 
-    @Column({ type: 'char', length: 16 })
-    file_md5: string;
+    @Column({
+        name: 'file_md5',
+        type: 'char',
+        length: 16,
+        nullable: true
+    })
+    fileMD5: string;
 }

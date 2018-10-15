@@ -1,31 +1,52 @@
-import { Column, Entity, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+
+import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
 
-@Entity('intervention_logs')
+@Entity('intervention_log')
 export class InterventionLog {
 
-    @OneToOne(type => Log, {
-        eager: true,
-    })
+    @OneToOne(
+        type => Log,
+        {
+            primary: true,
+            eager: true,
+        }
+    )
     @JoinColumn({ name: 'log_id' })
-    @PrimaryColumn({ type: 'bigint' })
     log: Log;
 
-    @Column({ type: 'timestamp' })
-    time_of_call: string;
-
     @Column({
-        type: 'enum',
-        enum: ['test'],
+        name: 'time_of_call',
+        precision: 0,
+        nullable: true
     })
-    intervention_type: 'test';
+    timeOfCall: Date;
+
+    @Column({
+        name: 'intervention_type',
+        type: 'enum',
+        enum: ['test'],
+        nullable: true
+    })
+    interventionType: 'test';
 
     @Column({
         type: 'enum',
         enum: ['test'],
+        nullable: true
     })
     location: 'test';
 
-    @Column()
-    action_taken: string;
+    @Column({
+        name: 'action_taken',
+        nullable: true
+    })
+    actionTaken: string;
 }
