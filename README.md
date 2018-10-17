@@ -79,3 +79,25 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Dependencies
+
+The project depends on the following packages in order to run properly.
+
+```JSON
+{
+  "@nestjs/common": "^5.1.0",
+    "@nestjs/core": "^5.1.0",
+    "@nestjs/swagger": "^2.5.1",
+    "@nestjs/typeorm": "^5.2.1",
+    "class-transformer": "^0.1.9",
+    "class-validator": "^0.9.1",
+    "dotenv": "^6.0.0",
+    "mssql": "^4.2.1",
+    "mysql": "^2.16.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.2.2",
+    "typeorm": "^0.2.7",
+    "typescript": "^3.0.1"
+}
+```
