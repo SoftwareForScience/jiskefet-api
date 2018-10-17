@@ -86,6 +86,7 @@ The project depends on the following packages in order to run properly.
 
 ```JSON
 {
+    "dependencies": {
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
     "@nestjs/swagger": "^2.5.1",
@@ -99,5 +100,26 @@ The project depends on the following packages in order to run properly.
     "rxjs": "^6.2.2",
     "typeorm": "^0.2.7",
     "typescript": "^3.0.1"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^5.1.0",
+    "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.1",
+    "@types/node": "^10.7.1",
+    "@types/supertest": "^2.0.5",
+    "jest": "^23.5.0",
+    "nodemon": "^1.18.3",
+    "prettier": "^1.14.2",
+    "rimraf": "^2.6.2",
+    "supertest": "^3.1.0",
+    "ts-jest": "^23.1.3",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.5.0",
+    "tslint": "5.11.0",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0",
+    "webpack-node-externals": "^1.7.2"
+  }
 }
 ```
