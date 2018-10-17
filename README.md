@@ -86,7 +86,7 @@ The project depends on the following packages in order to run properly.
 
 ```JSON
 {
-  "@nestjs/common": "^5.1.0",
+    "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
     "@nestjs/swagger": "^2.5.1",
     "@nestjs/typeorm": "^5.2.1",
