@@ -6,8 +6,8 @@ how this is done to make a reproduction of data possible and thereby a validatio
 Jiskefet project.  
 
 This is the **back-end API** for the Jiskefet project.   
-The **front-end UI** can be found here: https://github.com/BastiaanReinalda/jiskefet-ui  
-And the **Ansible playbook** to deploy the application can be found here: https://github.com/misharigot/sfs-ansible
+The **front-end UI** can be found here: https://github.com/SoftwareForScience/jiskefet-ui  
+And the **Ansible playbook** to deploy the application can be found here: https://github.com/SoftwareForScience/sfs-ansible
 
 ## Installation
 
