@@ -9,9 +9,9 @@
 import { Get, Post, Controller, Body, Param, Query } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 
-import { LogService } from 'services/log.service';
-import { CreateLogDto } from 'dtos/create.log.dto';
-import { Log } from 'entities/log.entity';
+import { LogService } from '../services/log.service';
+import { CreateLogDto } from '../dtos/create.log.dto';
+import { Log } from '../entities/log.entity';
 
 @ApiUseTags('logs')
 @Controller('logs')

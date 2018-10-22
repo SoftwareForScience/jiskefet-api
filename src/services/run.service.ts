@@ -10,8 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { Run } from 'entities/run.entity';
-import { CreateRunDto } from 'dtos/create.run.dto';
+import { Run } from '../entities/run.entity';
+import { CreateRunDto } from '../dtos/create.run.dto';
 import { isNullOrUndefined } from 'util';
 
 @Injectable()
