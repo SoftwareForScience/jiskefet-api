@@ -13,7 +13,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const envConfig = 'envConfig';
-  const portNumber = 'PORT_NUMBER';
+  const portNumber = 'PORT';
 
   const app = await NestFactory.create(AppModule);
   app.enableCors();
