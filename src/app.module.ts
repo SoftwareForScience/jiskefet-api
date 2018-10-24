@@ -16,7 +16,7 @@ import { RunService } from './services/run.service';
 import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
-import { ConfigModule } from './configs/config.module';
+import { ConfigModule } from './modules/config.module';
 
 @Module({
   imports: [

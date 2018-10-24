@@ -13,7 +13,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const envConfig = 'envConfig';
-  const portNumber = 'PORT';
+  const port = 'PORT';
 
   const app = await NestFactory.create(AppModule);
   app.enableCors();
@@ -32,6 +32,12 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('doc', app, document);
-  await app.listen(app.get('ConfigService')[envConfig][portNumber]);
+  let portNumber;
+  if (process.env.NODE_ENV !== undefined) {
+    portNumber = app.get('ConfigService')[envConfig][port];
+  } else {
+    portNumber = 3000;
+  }
+  await app.listen(portNumber);
 }
 bootstrap();
