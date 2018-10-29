@@ -77,7 +77,9 @@ export class LogService {
      * @param id unique identifier for a Log.
      */
     async findLogById(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
+        return await this.repository
+            .createQueryBuilder('log')
+            .leftJoinAndSelect('log.runs', 'runs')
             .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
