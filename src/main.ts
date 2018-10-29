@@ -15,6 +15,9 @@ import { AppModule } from './app.module';
 const runLocal = true;
 
 async function bootstrap() {
+  const envConfig = 'envConfig';
+  const port = 'PORT';
+
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
@@ -25,11 +28,10 @@ async function bootstrap() {
   });
 
   const options = new DocumentBuilder()
-      .setTitle('ALICE-Bookkeeping')
-      .setVersion('1.0')
-      .addTag('logs')
-      .addTag('runs');
-
+    .setTitle('ALICE-Bookkeeping')
+    .setVersion('1.0')
+    .addTag('logs')
+    .addTag('runs');
   if (runLocal) {
     options.setDescription('Running locally');
     const document = SwaggerModule.createDocument(app, options.build());
@@ -41,7 +43,12 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
   }
-
-  await app.listen(3000);
+  let portNumber;
+  if (process.env.NODE_ENV !== undefined) {
+    portNumber = app.get('ConfigService')[envConfig][port];
+  } else {
+    portNumber = 3000;
+  }
+  await app.listen(portNumber);
 }
 bootstrap();

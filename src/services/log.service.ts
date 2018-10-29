@@ -10,8 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { Log } from 'entities/log.entity';
-import { CreateLogDto } from 'dtos/create.log.dto';
+import { Log } from '../entities/log.entity';
+import { CreateLogDto } from '../dtos/create.log.dto';
 import { isNullOrUndefined } from 'util';
 
 @Injectable()

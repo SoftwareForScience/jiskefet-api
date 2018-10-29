@@ -8,9 +8,9 @@
 
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LogService } from 'services/log.service';
-import { LogController } from 'controllers/log.controller';
-import { Log } from 'entities/log.entity';
+import { LogService } from '../services/log.service';
+import { LogController } from '../controllers/log.controller';
+import { Log } from '../entities/log.entity';
 
 @Global()
 @Module({

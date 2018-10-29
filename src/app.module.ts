@@ -10,18 +10,20 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RunModule } from 'modules/run.module';
-import { RunController } from 'controllers/run.controller';
-import { RunService } from 'services/run.service';
-import { LogController } from 'controllers/log.controller';
-import { LogService } from 'services/log.service';
-import { LogModule } from 'modules/log.module';
+import { RunModule } from './modules/run.module';
+import { RunController } from './controllers/run.controller';
+import { RunService } from './services/run.service';
+import { LogController } from './controllers/log.controller';
+import { LogService } from './services/log.service';
+import { LogModule } from './modules/log.module';
+import { ConfigModule } from './modules/config.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
-    LogModule
+    LogModule,
+    ConfigModule
   ],
   controllers: [AppController, RunController, LogController],
   providers: [AppService, RunService, LogService],
