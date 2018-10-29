@@ -11,11 +11,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RunModule } from 'modules/run.module';
-import { RunController } from 'controllers/run.controller';
-import { RunService } from 'services/run.service';
-import { LogController } from 'controllers/log.controller';
-import { LogService } from 'services/log.service';
-import { LogModule } from 'modules/log.module';
+import { RunController } from './controllers/run.controller';
+import { RunService } from './services/run.service';
+import { LogController } from './controllers/log.controller';
+import { LogService } from './services/log.service';
+import { LogModule } from './modules/log.module';
 
 @Module({
   imports: [
