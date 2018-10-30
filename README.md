@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/SoftwareForScience/jiskefet-api.svg?branch=develop)](https://travis-ci.com/SoftwareForScience/jiskefet-api)
+
 ## Description
 This bookkeeping system is a system for A Large Ion Collider Experiment
 (ALICE) to keep track of what is happening to the data produced by the detectors. The electric signals produced by the various detectors which
