@@ -82,44 +82,50 @@ $ npm run test:cov
 
 ## Dependencies
 
-The project depends on the following packages in order to run properly.
+The project depends on the following packages in order to *run* properly:
 
-```JSON
-{
-   "dependencies": {
-    "@nestjs/common": "^5.1.0",
-    "@nestjs/core": "^5.1.0",
-    "@nestjs/swagger": "^2.5.1",
-    "@nestjs/typeorm": "^5.2.1",
-    "class-transformer": "^0.1.9",
-    "class-validator": "^0.9.1",
-    "dotenv": "^6.0.0",
-    "mssql": "^4.2.1",
-    "mysql": "^2.16.0",
-    "reflect-metadata": "^0.1.12",
-    "rxjs": "^6.2.2",
-    "typeorm": "^0.2.7",
-    "typescript": "^3.0.1"
-  },
-  "devDependencies": {
-    "@nestjs/testing": "^5.1.0",
-    "@types/express": "^4.16.0",
-    "@types/jest": "^23.3.1",
-    "@types/node": "^10.7.1",
-    "@types/supertest": "^2.0.5",
-    "jest": "^23.5.0",
-    "nodemon": "^1.18.3",
-    "prettier": "^1.14.2",
-    "rimraf": "^2.6.2",
-    "supertest": "^3.1.0",
-    "ts-jest": "^23.1.3",
-    "ts-loader": "^4.4.2",
-    "ts-node": "^7.0.1",
-    "tsconfig-paths": "^3.5.0",
-    "tslint": "5.11.0",
-    "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0",
-    "webpack-node-externals": "^1.7.2"
-  }
-}
+The framework chosen to develop this api in is called NestJS. NestJS has built in
+functionality to create a scalable and loosely-coupled architecture. The Docs can
+be found [here](https://docs.nestjs.com/)
+```
+"@nestjs/common": "^5.1.0"
+"@nestjs/core": "^5.1.0"
+"@nestjs/swagger": "^2.5.1"
+"@nestjs/typeorm": "^5.2.1"
+```
+
+In order to validate and transform data coming in through HTTP requests, the
+following packages are used:
+```
+"class-transformer": "^0.1.9"
+"class-validator": "^0.9.1"
+```
+
+Dotenv is a zero-dependency module that loads environment variables 
+from a .env file into process.env.
+```
+"dotenv": "^6.0.0"
+```
+
+In order to acces the mariaDB database, the node.js driver for mysql
+is used. It is written in JavaScript, does not require compiling,
+and is 100% MIT licensed.
+```
+"mssql": "^4.2.1"
+"mysql": "^2.16.0"
+```
+
+The following packages are dependencies of NestJS.
+```
+"reflect-metadata": "^0.1.12"
+"rxjs": "^6.2.2"
+"typeorm": "^0.2.7"
+```
+
+TypeScript is a language for application-scale JavaScript. TypeScript 
+adds optional types to JavaScript that support tools for large-scale 
+JavaScript applications for any browser, for any host, on any OS.
+TypeScript compiles to readable, standards-based JavaScript
+```
+"typescript": "^3.0.1"
 ```
