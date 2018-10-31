@@ -6,13 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query } from '@nestjs/common';
-
+import { Get, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
+import { ValidationPipe } from 'common/validation.pipe';
 
 @ApiUseTags('runs')
 @Controller('runs')
@@ -24,6 +24,7 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
+    @UsePipes(ValidationPipe)
     async create(@Body() request: CreateRunDto) {
         request.timeO2Start = new Date();
         request.timeTrgStart = new Date();

@@ -6,12 +6,12 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query } from '@nestjs/common';
+import { Get, Post, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
-
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
+import { ValidationPipe } from 'common/validation.pipe';
 
 @ApiUseTags('logs')
 @Controller('logs')
@@ -24,6 +24,7 @@ export class LogController {
      * @param request CreateLogDto from frontend.
      */
     @Post()
+    @UsePipes(ValidationPipe)
     async create(@Body() request: CreateLogDto) {
         request.creationTime = new Date();
         await this.logservice.create(request);

@@ -11,90 +11,106 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsDate } from 'class-validator';
+import { IsInt, IsString, IsEnum, IsDateString } from 'class-validator';
+import { RunType } from 'enums/run.runtype.enum';
+import { RunQuality } from 'enums/run.runquality.enum';
 export class CreateRunDto {
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
-    @IsDate() timeO2Start: Date;
+    @IsDateString()
+    timeO2Start: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
-    @IsDate() timeTrgStart: Date;
+    @IsDateString()
+    timeTrgStart: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
-    @IsDate() timeO2End: Date;
+    @IsDateString()
+    timeO2End: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
-    @IsDate() timeTrgEnd: Date;
+    @IsDateString()
+    timeTrgEnd: Date;
 
     @ApiModelProperty({
         example: ['test'],
         description: 'What kind of run.',
     })
+    @IsEnum(RunType, { each: true })
     readonly runType: [];
 
     @ApiModelProperty({
         example: ['test'],
         description: 'The quality of the run.',
     })
+    @IsEnum(RunQuality, { each: true })
     readonly runQuality: [];
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
         description: 'The id of the activity.',
     })
-    @IsString() readonly activityId: string;
+    @IsString()
+    readonly activityId: string;
 
     @ApiModelProperty({
         example: 16,
         description: 'Number of detectors during run.',
     })
-    @IsInt() readonly nDetectors: number;
+    @IsInt()
+    readonly nDetectors: number;
 
     @ApiModelProperty({
         example: 7,
         description: 'Number of FLPs that computed data',
     })
-    @IsInt() readonly nFlps: number;
+    @IsInt()
+    readonly nFlps: number;
 
     @ApiModelProperty({
         example: 8,
         description: 'Number of EPNs that stored data',
     })
-    @IsInt() readonly nEpns: number;
+    @IsInt()
+    readonly nEpns: number;
 
     @ApiModelProperty({
         example: 2,
         description: 'Number of timeframes',
     })
-    @IsInt() readonly nTimeframes: number;
+    @IsInt()
+    readonly nTimeframes: number;
 
     @ApiModelProperty({
         example: 4,
         description: 'Number of subtimeframes',
     })
-    @IsInt() readonly nSubtimeframes: number;
+    @IsInt()
+    readonly nSubtimeframes: number;
 
     @ApiModelProperty({
         example: 5,
         description: 'Amount of bytes read out',
     })
-    @IsInt() readonly bytesReadOut: number;
+    @IsInt()
+    readonly bytesReadOut: number;
 
     @ApiModelProperty({
         example: 12,
         description: 'What builder was used.',
     })
-    @IsInt() readonly bytesTimeframeBuilder: number;
+    @IsInt()
+    readonly bytesTimeframeBuilder: number;
 }
