@@ -74,14 +74,11 @@ typeorm migration:revert
 ## Testing
 
 ```bash
-# unit tests
+# Run tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Open code coverage stats from latest test run
+$ npm run showcoverage
 ```
 
 ## Dependencies
