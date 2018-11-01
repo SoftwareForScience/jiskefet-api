@@ -2,3 +2,6 @@ coverage:
   precision: 2
   round: down
   range: "50..70"
+ignore:
+ - "src/entities"
+ 
