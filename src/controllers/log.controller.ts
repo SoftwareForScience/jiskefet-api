@@ -24,9 +24,9 @@ export class LogController {
      * @param request CreateLogDto from frontend.
      */
     @Post()
-    async create(@Body() request: CreateLogDto) {
+    async create(@Body() request: CreateLogDto): Promise<Log> {
         request.creationTime = new Date();
-        await this.logservice.create(request);
+        return await this.logservice.create(request);
     }
 
     /**
