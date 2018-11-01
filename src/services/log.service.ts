@@ -85,17 +85,4 @@ export class LogService {
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
     }
-
-    /**
-     * Handler for getting a specific Log item with belonging Runs from db.
-     * @param id unique identifier for a Log.
-     */
-    async findLogWithRuns(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
-            .leftJoinAndSelect('log.runs', 'run')
-            .where('log_id = :id', { id })
-            .getOne()
-            .then(res => Promise.resolve(res))
-            .catch(err => Promise.reject(err));
-    }
 }
