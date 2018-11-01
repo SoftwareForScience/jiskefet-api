@@ -1,5 +1,7 @@
-[![Build Status](https://travis-ci.com/SoftwareForScience/jiskefet-api.svg?branch=develop)](https://travis-ci.com/SoftwareForScience/jiskefet-api)
+[![Build Status](https://travis-ci.com/SoftwareForScience/jiskefet-api.svg?branch=master)](https://travis-ci.com/SoftwareForScience/jiskefet-api)
+[![codecov](https://codecov.io/gh/SoftwareForScience/jiskefet-api/branch/master/graph/badge.svg)](https://codecov.io/gh/SoftwareForScience/jiskefet-api)
 
+# Jiskefet API
 ## Description
 This bookkeeping system is a system for A Large Ion Collider Experiment
 (ALICE) to keep track of what is happening to the data produced by the detectors. The electric signals produced by the various detectors which
@@ -72,14 +74,11 @@ typeorm migration:revert
 ## Testing
 
 ```bash
-# unit tests
+# Run tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Open code coverage stats from latest test run
+$ npm run showcoverage
 ```
 
 ## Dependencies

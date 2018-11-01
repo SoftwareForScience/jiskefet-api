@@ -19,8 +19,7 @@ export class RunService {
 
     private readonly repository: Repository<Run>;
 
-    constructor(@InjectRepository(Run)
-    repository: Repository<Run>) {
+    constructor(@InjectRepository(Run) repository: Repository<Run>) {
         this.repository = repository;
     }
 
