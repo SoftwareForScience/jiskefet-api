@@ -16,16 +16,18 @@ import { Origin } from 'enums/log.origin.enum';
 export class CreateLogDto {
 
     @ApiModelProperty({
-        example: ['run'],
+        example: 'run',
         description: 'What kind of log is it?',
+        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
     // each:true makes sure in the case more than one subtype is chosen they are all validated
     @IsEnum(SubType, { each: true, message: 'Each value in subtype must be a valid enum value' })
     subtype: [];
 
     @ApiModelProperty({
-        example: ['human'],
+        example: 'human',
         description: 'Where did the log come from?',
+        enum: ['human', 'process']
     })
     @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
     origin: [];
@@ -46,4 +48,10 @@ export class CreateLogDto {
     })
     @IsString()
     text: string;
+
+    @ApiModelProperty({
+        example: '8',
+        description: 'Attached run numbers of this log',
+    })
+    runs: number[];
 }

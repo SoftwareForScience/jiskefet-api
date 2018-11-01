@@ -27,7 +27,7 @@ export class LogController {
     @UsePipes(ValidationPipe)
     async create(@Body() request: CreateLogDto) {
         request.creationTime = new Date();
-        await this.logservice.create(request);
+        return await this.logservice.create(request);
     }
 
     /**
@@ -56,14 +56,5 @@ export class LogController {
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
         return await this.logservice.findLogById(id);
-    }
-
-    /**
-     * Find a specific Log with the belonging Runs. /logs/id/runs
-     * @param logId unique identifier for a Log item.
-     */
-    @Get(':id/runs')
-    async findWithRuns(@Param('id') id: number): Promise<Log> {
-        return await this.logservice.findLogWithRuns(id);
     }
 }

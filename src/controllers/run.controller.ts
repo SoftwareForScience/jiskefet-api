@@ -30,7 +30,7 @@ export class RunController {
         request.timeTrgStart = new Date();
         request.timeO2End = new Date();
         request.timeTrgEnd = new Date();
-        await this.runService.create(request);
+        return await this.runService.create(request);
     }
 
     /**

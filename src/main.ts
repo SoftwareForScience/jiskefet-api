@@ -11,13 +11,14 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+const envConfig = 'envConfig';
+const port = 'PORT';
+const usePrefix = 'USE_API_PREFIX';
 // A boolean to set the swagger api for debugging purposes
-const runLocal = true;
+let useApiPrefix = false;
 
 async function bootstrap() {
-  const envConfig = 'envConfig';
-  const port = 'PORT';
-
+  let portNumber;
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
@@ -27,27 +28,26 @@ async function bootstrap() {
     next();
   });
 
+  if (process.env.NODE_ENV) {
+    portNumber = app.get('ConfigService')[envConfig][port];
+    useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
+  } else {
+    portNumber = 3000;
+  }
+
   const options = new DocumentBuilder()
     .setTitle('ALICE-Bookkeeping')
     .setVersion('1.0')
     .addTag('logs')
     .addTag('runs');
-  if (runLocal) {
-    options.setDescription('Running locally');
+  if (!useApiPrefix) {
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
   } else {
     // set /api as basePath for non local
-    options.setDescription('Running in VM');
     options.setBasePath('/api');
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
-  }
-  let portNumber;
-  if (process.env.NODE_ENV !== undefined) {
-    portNumber = app.get('ConfigService')[envConfig][port];
-  } else {
-    portNumber = 3000;
   }
   await app.listen(portNumber);
 }
