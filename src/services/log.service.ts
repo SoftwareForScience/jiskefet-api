@@ -76,20 +76,9 @@ export class LogService {
      * @param id unique identifier for a Log.
      */
     async findLogById(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
-            .where('log_id = :id', { id })
-            .getOne()
-            .then(res => Promise.resolve(res))
-            .catch(err => Promise.reject(err));
-    }
-
-    /**
-     * Returns a Log by id with its Run relations.
-     * @param id unique identifier for a Log.
-     */
-    async findLogWithRuns(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
-            .leftJoinAndSelect('log.runs', 'run')
+        return await this.repository
+            .createQueryBuilder('log')
+            .leftJoinAndSelect('log.runs', 'runs')
             .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
