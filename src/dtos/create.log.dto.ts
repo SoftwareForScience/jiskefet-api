@@ -9,8 +9,8 @@
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsEnum, IsEmpty, IsString } from 'class-validator';
-import { SubType } from 'enums/log.subtype.enum';
-import { Origin } from 'enums/log.origin.enum';
+import { SubType } from '../enums/log.subtype.enum';
+import { Origin } from '../enums/log.origin.enum';
 
 @Entity('logs')
 export class CreateLogDto {
@@ -31,9 +31,6 @@ export class CreateLogDto {
     })
     @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
     origin: string;
-
-    @IsEmpty({ message: 'creationTime not allowed in request body.' })
-    creationTime: Date;
 
     @ApiModelProperty({
         example: 'log for run 12',

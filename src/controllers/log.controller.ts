@@ -11,7 +11,7 @@ import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
-import { ValidationPipe } from 'common/validation.pipe';
+import { ValidationPipe } from '../common/validation.pipe';
 
 @ApiUseTags('logs')
 @Controller('logs')
@@ -26,7 +26,6 @@ export class LogController {
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() request: CreateLogDto): Promise<Log> {
-        request.creationTime = new Date();
         return await this.logservice.create(request);
     }
 

@@ -12,8 +12,8 @@
 
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsInt, IsString, IsEnum, IsDateString } from 'class-validator';
-import { RunType } from 'enums/run.runtype.enum';
-import { RunQuality } from 'enums/run.runquality.enum';
+import { RunType } from '../enums/run.runtype.enum';
+import { RunQuality } from '../enums/run.runquality.enum';
 export class CreateRunDto {
 
     @ApiModelProperty({

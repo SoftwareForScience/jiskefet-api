@@ -29,6 +29,7 @@ export class LogService {
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
         const LogEntity = plainToClass(Log, createLogDto);
+        LogEntity.creationTime = new Date();
         await this.repository.save(LogEntity);
         return LogEntity;
     }

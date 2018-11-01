@@ -12,7 +12,7 @@ import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
-import { ValidationPipe } from 'common/validation.pipe';
+import { ValidationPipe } from '../common/validation.pipe';
 
 @ApiUseTags('runs')
 @Controller('runs')
