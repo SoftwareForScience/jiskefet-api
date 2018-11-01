@@ -42,4 +42,10 @@ export class CreateLogDto {
         description: 'describes the log in depth',
     })
     text: string;
+
+    @ApiModelProperty({
+        example: '8',
+        description: 'Attached run numbers of this log',
+    })
+    runs: number[];
 }

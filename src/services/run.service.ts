@@ -83,7 +83,9 @@ export class RunService {
      * @param id unique identifier for a Run.
      */
     async findById(id: number): Promise<Run> {
-        return await this.repository.createQueryBuilder()
+        return await this.repository
+            .createQueryBuilder('run')
+            .leftJoinAndSelect('run.logs', 'logs')
             .where('run_number = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
