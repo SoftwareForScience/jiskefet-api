@@ -6,4 +6,5 @@ install:
 scripts:
   - tslint -c tslint.json 'src/**/*.ts'
   - npm test
+after_success: 
   - codecov -f coverage/*.json
