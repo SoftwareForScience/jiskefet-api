@@ -5,7 +5,6 @@
   "author": "Jiskefet Dev Team",
   "license": "GPL-3.0",
   "scripts": {
-    "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
@@ -13,8 +12,9 @@
     "start:prod": "node dist/main.js",
     "start:hmr": "node dist/server",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "nyc ./node_modules/.bin/mocha -r ts-node/register ./test/**/*.*spec.ts",
+    "test": "nyc ./node_modules/.bin/mocha -r ts-node/register ./test/*/*.*spec.ts",
     "posttest": "nyc report --reporter=json > coverage/coverage.json",
+    "showcoverage": "open ./coverage/index.html",
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
@@ -47,7 +47,6 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
     "nyc": "^13.1.0",
-    "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
     "sinon": "^7.1.0",
     "supertest": "^3.1.0",
