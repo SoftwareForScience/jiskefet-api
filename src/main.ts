@@ -13,7 +13,7 @@ import { AppModule } from './app.module';
 
 const envConfig = 'envConfig';
 const port = 'PORT';
-const usePrefix = 'USE_PREFIX';
+const usePrefix = 'USE_API_PREFIX';
 // A boolean to set the swagger api for debugging purposes
 let useApiPrefix = false;
 
@@ -28,7 +28,7 @@ async function bootstrap() {
     next();
   });
 
-  if (process.env.NODE_ENV !== undefined) {
+  if (process.env.NODE_ENV) {
     portNumber = app.get('ConfigService')[envConfig][port];
     useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
   } else {
@@ -41,12 +41,10 @@ async function bootstrap() {
     .addTag('logs')
     .addTag('runs');
   if (!useApiPrefix) {
-    options.setDescription('Running without prefix to endpoint');
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
   } else {
     // set /api as basePath for non local
-    options.setDescription('Running with /api prefix to endpoint');
     options.setBasePath('/api');
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
