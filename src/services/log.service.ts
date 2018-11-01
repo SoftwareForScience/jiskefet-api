@@ -19,8 +19,7 @@ export class LogService {
 
     private readonly repository: Repository<Log>;
 
-    constructor(@InjectRepository(Log)
-    repository: Repository<Log>) {
+    constructor(@InjectRepository(Log) repository: Repository<Log>) {
         this.repository = repository;
     }
 
