@@ -5,11 +5,16 @@
 // import { Repository } from 'typeorm';
 // import { getRepositoryToken } from '@nestjs/typeorm';
 // import { Log } from '../../src/entities/log.entity';
+// import sinon from 'sinon';
+// import { create } from 'domain';
 
 // // This repo is not reached for some reason, and it uses create in the real repo.
 // const mockRepository = {
 //     create(log: Log) {
 //         return log;
+//     },
+//     save() {
+//         return 'hi';
 //     }
 // };
 
@@ -35,6 +40,7 @@
 
 //     describe('create()', () => {
 //         let log: CreateLogDto;
+//         let createLog: any;
 
 //         beforeEach(() => {
 //             log = new CreateLogDto();
@@ -43,11 +49,25 @@
 //             log.subtype = 'run';
 //             log.origin = 'human';
 //             log.creationTime = new Date('2018-10-29T18:13:24.789Z');
+
+//             createLog = sinon.stub(new LogService(new Repository()), 'create' as any);
+//         });
+
+//         afterEach(() => {
+//             createLog.restore();
 //         });
 
 //         it('should return a Log', () => {
-//             return chai.expect(logService.create(log)).to.not.be.null;
+//             createLog(log).yields(log);
 //         });
 
 //     });
+
+//     // describe('findAll()', () => {
+
+//     //     it('should return a Log', () => {
+//     //         return chai.expect(logService.create(log)).to.not.be.null;
+//     //     });
+
+//     // });
 // });

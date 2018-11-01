@@ -25,8 +25,8 @@ export class LogService {
     }
 
     /**
-     * Handler for saving a Log entity in db.
-     * @param createLogDto class that carries the request data for a Log.
+     * Saves a Log entity in db by converting the given CreateLogDto to a Log.
+     * @param createLogDto class that carries the request body for a Log.
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
         const LogEntity = plainToClass(Log, createLogDto);
@@ -35,7 +35,7 @@ export class LogService {
     }
 
     /**
-     * Handler for getting all Logs from db.
+     * Returns all Logs from the db.
      */
     async findAll(
         pageSize: number, pageNumber?: number,
@@ -73,7 +73,7 @@ export class LogService {
     }
 
     /**
-     * Handler for getting a specific Log item from db.
+     * Returns a Log by id from the db.
      * @param id unique identifier for a Log.
      */
     async findLogById(id: number): Promise<Log> {
@@ -85,7 +85,7 @@ export class LogService {
     }
 
     /**
-     * Handler for getting a specific Log item with belonging Runs from db.
+     * Returns a Log by id with its Run relations.
      * @param id unique identifier for a Log.
      */
     async findLogWithRuns(id: number): Promise<Log> {

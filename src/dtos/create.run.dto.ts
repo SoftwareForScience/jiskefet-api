@@ -42,13 +42,13 @@ export class CreateRunDto {
         example: ['test'],
         description: 'What kind of run.',
     })
-    readonly runType: [];
+    readonly runType: string;
 
     @ApiModelProperty({
         example: ['test'],
         description: 'The quality of the run.',
     })
-    readonly runQuality: [];
+    readonly runQuality: string;
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
