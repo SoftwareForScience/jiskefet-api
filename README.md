@@ -1,6 +1,10 @@
 [![Build Status](https://travis-ci.com/SoftwareForScience/jiskefet-api.svg?branch=master)](https://travis-ci.com/SoftwareForScience/jiskefet-api)
 [![codecov](https://codecov.io/gh/SoftwareForScience/jiskefet-api/branch/master/graph/badge.svg)](https://codecov.io/gh/SoftwareForScience/jiskefet-api)
 
+## Remove this:
+feature/16-testing:  
+[![codecov](https://codecov.io/gh/SoftwareForScience/jiskefet-api/branch/feature/16-testing/graph/badge.svg)](https://codecov.io/gh/SoftwareForScience/jiskefet-api)
+
 # Jiskefet API
 ## Description
 This bookkeeping system is a system for A Large Ion Collider Experiment

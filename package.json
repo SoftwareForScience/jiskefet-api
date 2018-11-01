@@ -1,9 +1,9 @@
 {
-  "name": "back-end-api",
+  "name": "jiskefet-api",
   "version": "0.0.0",
-  "description": "Hackaton-quest-board",
-  "author": "",
-  "license": "MIT",
+  "description": "Bookkeeping API for A Large Ion Collider Experiment (ALICE).",
+  "author": "Jiskefet Dev Team",
+  "license": "GPL-3.0",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
@@ -13,7 +13,8 @@
     "start:prod": "node dist/main.js",
     "start:hmr": "node dist/server",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "./node_modules/.bin/mocha -r ts-node/register ./test/**/*.*spec.ts",
+    "test": "nyc ./node_modules/.bin/mocha -r ts-node/register ./test/**/*.*spec.ts",
+    "posttest": "nyc report --reporter=json > coverage/coverage.json",
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "codecov": "^3.1.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
+    "nyc": "^13.1.0",
     "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
     "sinon": "^7.1.0",
@@ -57,18 +59,17 @@
     "webpack-cli": "^3.1.0",
     "webpack-node-externals": "^1.7.2"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
     ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
   }
 }
