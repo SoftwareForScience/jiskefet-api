@@ -30,7 +30,7 @@ export class CreateLogDto {
     @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
     origin: [];
 
-    @IsEmpty({ message: 'No Date can be given from the frontend.' })
+    @IsEmpty({ message: 'creationTime not allowed in request body.' })
     creationTime: Date;
 
     @ApiModelProperty({
