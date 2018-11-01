@@ -50,7 +50,8 @@ describe('LogController', () => {
             origin: 'human',
             creationTime: new Date('2000-01-01'),
             title: 'test log',
-            text: 'text of test log'
+            text: 'text of test log',
+            runs: [8]
         };
 
         it('should return status 201', () => {
