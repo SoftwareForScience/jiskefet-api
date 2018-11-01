@@ -15,3 +15,28 @@ Mocha itself is pretty barebones and it needs additional libraries that help wit
 
 ### Sinon
 [Sinon](https://sinonjs.org/) provides test-doubles (spies, stubs and mocks) for Mocha.
+
+# Test coverage
+[Istanbul](https://istanbul.js.org/) is used for test coverage reports. [nyc](https://github.com/istanbuljs/nyc) is istanbul's CLI. 
+
+Running `nyc` in front of your test command will execute your tests with mocha and then make a coverage report inside the *coverage* directory. 
+
+Just run `$ npm run test` to also run nyc in front of your mocha tests.
+
+## View coverage report
+To view the coverage report in your browser:
+
+```
+$ npm run showcoverage
+```
+
+Which executes:
+```JS
+// package.json
+{
+    "scripts": {
+        // other scripts ..
+        "showcoverage": "open ./coverage/index.html"
+    }
+}
+```

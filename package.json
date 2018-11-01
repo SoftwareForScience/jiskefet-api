@@ -13,7 +13,6 @@
     "start:hmr": "node dist/server",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "nyc ./node_modules/.bin/mocha -r ts-node/register ./test/*/*.*spec.ts",
-    "posttest": "nyc report --reporter=json > coverage/coverage.json",
     "showcoverage": "open ./coverage/index.html",
     "webpack": "webpack --config webpack.config.js"
   },
