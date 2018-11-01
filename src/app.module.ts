@@ -17,15 +17,19 @@ import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
 import { ConfigModule } from './modules/config.module';
+import { AttachmentModule } from 'modules/attachment.module';
+import { AttachmentController } from 'controllers/attachment.controller';
+import { AttachmentService } from 'services/attachment.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
-    ConfigModule
+    ConfigModule,
+    AttachmentModule
   ],
-  controllers: [AppController, RunController, LogController],
-  providers: [AppService, RunService, LogService],
+  controllers: [AppController, RunController, LogController, AttachmentController],
+  providers: [AppService, RunService, LogService, AttachmentService],
 })
 export class AppModule { }

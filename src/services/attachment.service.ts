@@ -33,4 +33,16 @@ export class AttachmentService {
         await this.repository.save(AttachmentEntity);
         return AttachmentEntity;
     }
+
+    /**
+     * Handler for getting a specific Run item from db.
+     * @param id unique identifier for a Run.
+     */
+    async findAttachmentsByLogId(id: number): Promise<Attachment[]> {
+        return await this.repository.createQueryBuilder()
+            .where('fk_log_id = :id', { id })
+            .getMany()
+            .then(res => Promise.resolve(res))
+            .catch(err => Promise.reject(err));
+    }
 }

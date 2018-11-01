@@ -6,15 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Post, Controller, Body } from '@nestjs/common';
+import { Post, Controller, Body, Get, Param } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 
-@ApiUseTags('attachment')
-@Controller('attachment')
+@ApiUseTags('attachments')
+@Controller('attachments')
 export class AttachmentController {
 
     constructor(private readonly attachmentservice: AttachmentService) { }
@@ -27,5 +27,14 @@ export class AttachmentController {
     async create(@Body() request: CreateAttachmentDto) {
         request.creationTime = new Date();
         await this.attachmentservice.create(request);
+    }
+
+    /**
+     * Find all Attachments that belong to a certain log item. /logs/id
+     * @param id unique identifier for a Log item.
+     */
+    @Get(':id/logs')
+    async findById(@Param('id') id: number): Promise<Attachment[]> {
+        return await this.attachmentservice.findAttachmentsByLogId(id);
     }
 }

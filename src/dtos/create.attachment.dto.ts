@@ -13,26 +13,20 @@ export class CreateAttachmentDto {
     creationTime: Date;
 
     @ApiModelProperty({
-        example: ['run'],
+        example: 'run',
         description: 'What kind of log is it?',
     })
     title: string;
 
     @ApiModelProperty({
-        example: ['run'],
+        example: 'run',
         description: 'What kind of log is it?',
     })
     fileMime: string;
 
     @ApiModelProperty({
-        example: ['run'],
+        example: '23144132412314344',
         description: 'What kind of log is it?',
     })
-    fileData: number;
-
-    @ApiModelProperty({
-        example: ['run'],
-        description: 'What kind of log is it?',
-    })
-    fileMD5: string;
+    fileData: string;
 }
