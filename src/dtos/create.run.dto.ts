@@ -49,14 +49,14 @@ export class CreateRunDto {
         description: 'What kind of run.',
     })
     @IsEnum(RunType, { each: true })
-    readonly runType: [];
+    readonly runType: string;
 
     @ApiModelProperty({
         example: ['test'],
         description: 'The quality of the run.',
     })
     @IsEnum(RunQuality, { each: true })
-    readonly runQuality: [];
+    readonly runQuality: string;
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
