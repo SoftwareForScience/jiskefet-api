@@ -42,18 +42,19 @@ export class LogService {
         logId?: number, searchterm?: string,
         subType?: string, origin?: string,
         creationTime?: string
-    ): Promise<Log[]> {
 
+    ): Promise<any> {
         const sqlQuery = this.repository.createQueryBuilder();
+        let [logs, count] = [[], 0];
 
         if (!isNullOrUndefined(logId)) {
             return await sqlQuery
                 .where('log_id = :id', { id: logId })
-                .getMany()
+                .getManyAndCount()
                 .then(res => Promise.resolve(res))
                 .catch(err => Promise.reject(err));
         } else {
-            return await sqlQuery
+            [logs, count] = await sqlQuery
                 .where('title like :title', {
                     title: searchterm ? `%${searchterm}%` : '%'
                 })
@@ -68,8 +69,10 @@ export class LogService {
                 })
                 .skip((pageNumber || 0) * pageSize)
                 .take(pageSize)
-                .getMany();
+                .getManyAndCount();
         }
+        const result = {logs, count};
+        return result;
     }
 
     /**

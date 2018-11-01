@@ -48,18 +48,18 @@ export class RunService {
         pageSize: number, pageNumber?: number,
         runNumber?: number, time02Start?: string,
         time02End?: string, timeTrgStart?: string, timeTrgEnd?: string
-    ): Promise<Run[]> {
-
+    ): Promise<any> {
         const sqlQuery = this.repository.createQueryBuilder();
+        let [runs, count] = [[], 0];
 
         if (!isNullOrUndefined(runNumber)) {
-            return await sqlQuery
+            [runs, count] = await sqlQuery
                 .where('run_number = :id', { id: runNumber })
-                .getMany()
+                .getManyAndCount()
                 .then(res => Promise.resolve(res))
                 .catch(err => Promise.reject(err));
         } else {
-            return await sqlQuery
+            [runs, count] = await sqlQuery
                 .where('time_o2_start >= :startO2', {
                     startO2: time02Start ? time02Start.replace('%3A', ':') : '1970-01-01'
                 })
@@ -74,8 +74,10 @@ export class RunService {
                 })
                 .skip((pageNumber || 0) * pageSize)
                 .take(pageSize)
-                .getMany();
+                .getManyAndCount();
         }
+        const result = {runs, count};
+        return result;
     }
 
     /**
