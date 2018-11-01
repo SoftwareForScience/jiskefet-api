@@ -7,16 +7,18 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Log } from '../../src/entities/log.entity';
 import { expect } from 'chai';
+import { CreateLogDto } from '../../src/dtos/create.log.dto';
+import { plainToClass } from 'class-transformer';
 
-const mockRepository = {
-    findAll() {
-        return ['Log1', 'Log2'];
-    }
-};
+const mockRepository = { };
 
 describe('LogController', () => {
     let app: INestApplication;
-    const logService = { findAll: () => ['test'] };
+    const logService = {
+        findAll: () => ['test'],
+        findLogById: () => ({ test: 'test' }),
+        create: (logToCreate: CreateLogDto): Log => plainToClass(Log, logToCreate)
+    };
 
     before(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -42,6 +44,41 @@ describe('LogController', () => {
         await app.close();
     });
 
+    describe('POST /logs', () => {
+        const logToPost: CreateLogDto = {
+            subtype: 'run',
+            origin: 'human',
+            creationTime: new Date('2000-01-01'),
+            title: 'test log',
+            text: 'text of test log'
+        };
+
+        it('should return status 201', () => {
+            return request(app.getHttpServer())
+                .post(`/logs`)
+                .send(logToPost)
+                .expect(201);
+        });
+
+        it('should return JSON', () => {
+            return request(app.getHttpServer())
+                .post(`/logs`)
+                .send(logToPost)
+                .expect('Content-Type', /json/);
+        });
+
+        it('should return an object', () => {
+            return request(app.getHttpServer())
+                .post(`/logs`)
+                .send(logToPost)
+                .set('Accept', 'application/json')
+                .then(response => {
+                    expect(response.body).to.be.an('object');
+                    expect(response.body.title).to.equal('test log');
+                });
+        });
+    });
+
     describe('GET /logs', () => {
         it('should return status 200', () => {
             return request(app.getHttpServer())
@@ -53,14 +90,38 @@ describe('LogController', () => {
         it('should return JSON', () => {
             return request(app.getHttpServer())
                 .get('/logs')
+                .expect(200)
                 .expect('Content-Type', /json/);
         });
 
         it('should return an array', () => {
-            const req = request(app.getHttpServer())
-                .get('/logs');
+            return request(app.getHttpServer())
+                .get('/logs')
+                .then(response => {
+                    expect(response.body).to.be.an('array');
+                });
+        });
+    });
 
-            expect(req).to.be.an('object');
+    describe('GET /logs/{id}', () => {
+        it('should return status 200', () => {
+            return request(app.getHttpServer())
+                .get(`/logs/${1}`)
+                .expect(200);
+        });
+
+        it('should return JSON', () => {
+            return request(app.getHttpServer())
+                .get(`/logs/${1}`)
+                .expect('Content-Type', /json/);
+        });
+
+        it('should return an object', () => {
+            return request(app.getHttpServer())
+                .get(`/logs/${1}`)
+                .then(response => {
+                    expect(response.body).to.be.an('object');
+                });
         });
     });
 });
