@@ -10,7 +10,7 @@ import { expect } from 'chai';
 import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { plainToClass } from 'class-transformer';
 
-const mockRepository = { };
+const mockRepository = {};
 
 describe('LogController', () => {
     let app: INestApplication;
@@ -48,7 +48,6 @@ describe('LogController', () => {
         const logToPost: CreateLogDto = {
             subtype: 'run',
             origin: 'human',
-            creationTime: new Date('2000-01-01'),
             title: 'test log',
             text: 'text of test log',
             runs: [8]

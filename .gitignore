@@ -66,3 +66,4 @@ dist
 
 ormconfig.json
 environments/*.env
+src/migration/*.ts
