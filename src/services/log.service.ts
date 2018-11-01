@@ -10,8 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { Log } from 'entities/log.entity';
-import { CreateLogDto } from 'dtos/create.log.dto';
+import { Log } from '../entities/log.entity';
+import { CreateLogDto } from '../dtos/create.log.dto';
 import { isNullOrUndefined } from 'util';
 
 @Injectable()
@@ -19,14 +19,13 @@ export class LogService {
 
     private readonly repository: Repository<Log>;
 
-    constructor(@InjectRepository(Log)
-    repository: Repository<Log>) {
+    constructor(@InjectRepository(Log) repository: Repository<Log>) {
         this.repository = repository;
     }
 
     /**
-     * Handler for saving a Log entity in db.
-     * @param createLogDto class that carries the request data for a Log.
+     * Saves a Log entity in db by converting the given CreateLogDto to a Log.
+     * @param createLogDto class that carries the request body for a Log.
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
         const LogEntity = plainToClass(Log, createLogDto);
@@ -35,7 +34,7 @@ export class LogService {
     }
 
     /**
-     * Handler for getting all Logs from db.
+     * Returns all Logs from the db.
      */
     async findAll(
         pageSize: number, pageNumber?: number,
@@ -73,24 +72,13 @@ export class LogService {
     }
 
     /**
-     * Handler for getting a specific Log item from db.
+     * Returns a Log by id from the db.
      * @param id unique identifier for a Log.
      */
     async findLogById(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
-            .where('log_id = :id', { id })
-            .getOne()
-            .then(res => Promise.resolve(res))
-            .catch(err => Promise.reject(err));
-    }
-
-    /**
-     * Handler for getting a specific Log item with belonging Runs from db.
-     * @param id unique identifier for a Log.
-     */
-    async findLogWithRuns(id: number): Promise<Log> {
-        return await this.repository.createQueryBuilder()
-            .leftJoinAndSelect('log.runs', 'run')
+        return await this.repository
+            .createQueryBuilder('log')
+            .leftJoinAndSelect('log.runs', 'runs')
             .where('log_id = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))

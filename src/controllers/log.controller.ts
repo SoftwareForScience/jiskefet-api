@@ -9,9 +9,9 @@
 import { Get, Post, Controller, Body, Param, Query } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 
-import { LogService } from 'services/log.service';
-import { CreateLogDto } from 'dtos/create.log.dto';
-import { Log } from 'entities/log.entity';
+import { LogService } from '../services/log.service';
+import { CreateLogDto } from '../dtos/create.log.dto';
+import { Log } from '../entities/log.entity';
 
 @ApiUseTags('logs')
 @Controller('logs')
@@ -24,9 +24,9 @@ export class LogController {
      * @param request CreateLogDto from frontend.
      */
     @Post()
-    async create(@Body() request: CreateLogDto) {
+    async create(@Body() request: CreateLogDto): Promise<Log> {
         request.creationTime = new Date();
-        await this.logservice.create(request);
+        return await this.logservice.create(request);
     }
 
     /**
@@ -55,14 +55,5 @@ export class LogController {
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
         return await this.logservice.findLogById(id);
-    }
-
-    /**
-     * Find a specific Log with the belonging Runs. /logs/id/runs
-     * @param logId unique identifier for a Log item.
-     */
-    @Get(':id/runs')
-    async findWithRuns(@Param('id') id: number): Promise<Log> {
-        return await this.logservice.findLogWithRuns(id);
     }
 }

@@ -1,6 +1,10 @@
 language: node_js
 node_js:
- - 'stable'
+  - 'stable'
 install:
- - npm install
-script: tslint -c tslint.json 'src/**/*.ts'
+  - npm install
+scripts:
+  - tslint -c tslint.json 'src/**/*.ts'
+  - npm test
+after_success: 
+  - codecov -f coverage/*.json

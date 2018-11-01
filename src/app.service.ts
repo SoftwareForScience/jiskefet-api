@@ -11,6 +11,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   root(): string {
-    return 'Hello World!';
+    return 'Welcome to the Jiskefet API. Go to /doc for the Swagger API documentation.';
   }
 }

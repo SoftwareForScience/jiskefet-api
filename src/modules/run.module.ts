@@ -8,9 +8,9 @@
 
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RunService } from 'services/run.service';
-import { RunController } from 'controllers/run.controller';
-import { Run } from 'entities/run.entity';
+import { RunService } from '../services/run.service';
+import { RunController } from '../controllers/run.controller';
+import { Run } from '../entities/run.entity';
 
 @Global()
 @Module({

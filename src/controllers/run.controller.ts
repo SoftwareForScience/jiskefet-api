@@ -10,8 +10,8 @@ import { Get, Controller, Body, Param, Query } from '@nestjs/common';
 
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
-import { RunService } from 'services/run.service';
-import { CreateRunDto } from 'dtos/create.run.dto';
+import { RunService } from '../services/run.service';
+import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
 
 @ApiUseTags('runs')
@@ -29,7 +29,7 @@ export class RunController {
         request.timeTrgStart = new Date();
         request.timeO2End = new Date();
         request.timeTrgEnd = new Date();
-        await this.runService.create(request);
+        return await this.runService.create(request);
     }
 
     /**

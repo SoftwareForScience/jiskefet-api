@@ -8,22 +8,24 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsDate } from 'class-validator';
+import { IsDate, IsEnum } from 'class-validator';
 
 @Entity('logs')
 export class CreateLogDto {
 
     @ApiModelProperty({
-        example: ['run'],
+        example: 'run',
         description: 'What kind of log is it?',
+        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
-    subtype: [];
+    subtype: string;
 
     @ApiModelProperty({
-        example: ['human'],
+        example: 'human',
         description: 'Where did the log come from?',
+        enum: ['human', 'process']
     })
-    origin: [];
+    origin: string;
 
     @ApiModelProperty({
         example: new Date(),
@@ -42,4 +44,10 @@ export class CreateLogDto {
         description: 'describes the log in depth',
     })
     text: string;
+
+    @ApiModelProperty({
+        example: '8',
+        description: 'Attached run numbers of this log',
+    })
+    runs: number[];
 }

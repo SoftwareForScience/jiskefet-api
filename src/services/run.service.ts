@@ -10,8 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { Run } from 'entities/run.entity';
-import { CreateRunDto } from 'dtos/create.run.dto';
+import { Run } from '../entities/run.entity';
+import { CreateRunDto } from '../dtos/create.run.dto';
 import { isNullOrUndefined } from 'util';
 
 @Injectable()
@@ -19,8 +19,7 @@ export class RunService {
 
     private readonly repository: Repository<Run>;
 
-    constructor(@InjectRepository(Run)
-    repository: Repository<Run>) {
+    constructor(@InjectRepository(Run) repository: Repository<Run>) {
         this.repository = repository;
     }
 
@@ -83,7 +82,9 @@ export class RunService {
      * @param id unique identifier for a Run.
      */
     async findById(id: number): Promise<Run> {
-        return await this.repository.createQueryBuilder()
+        return await this.repository
+            .createQueryBuilder('run')
+            .leftJoinAndSelect('run.logs', 'logs')
             .where('run_number = :id', { id })
             .getOne()
             .then(res => Promise.resolve(res))
