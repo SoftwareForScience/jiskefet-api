@@ -8,38 +8,47 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsDate } from 'class-validator';
+import { IsEnum, IsEmpty, IsString } from 'class-validator';
+import { SubType } from '../enums/log.subtype.enum';
+import { Origin } from '../enums/log.origin.enum';
 
 @Entity('logs')
 export class CreateLogDto {
 
     @ApiModelProperty({
-        example: ['run'],
+        example: 'run',
         description: 'What kind of log is it?',
+        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
-    subtype: [];
+    // each:true makes sure in the case more than one subtype is chosen they are all validated
+    @IsEnum(SubType, { each: true, message: 'Each value in subtype must be a valid enum value' })
+    subtype: string;
 
     @ApiModelProperty({
-        example: ['human'],
+        example: 'human',
         description: 'Where did the log come from?',
+        enum: ['human', 'process']
     })
-    origin: [];
-
-    @ApiModelProperty({
-        example: new Date(),
-        description: 'Date of creation',
-    })
-    @IsDate() creationTime: Date;
+    @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
+    origin: string;
 
     @ApiModelProperty({
         example: 'log for run 12',
         description: 'describes the log in short',
     })
+    @IsString()
     title: string;
 
     @ApiModelProperty({
         example: 'lorum ipsum',
         description: 'describes the log in depth',
     })
+    @IsString()
     text: string;
+
+    @ApiModelProperty({
+        example: '8',
+        description: 'Attached run numbers of this log',
+    })
+    runs: number[];
 }
