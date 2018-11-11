@@ -38,41 +38,41 @@ export class LogService {
      * Handler for getting all Logs from db.
      */
     async findAll(
-        pageSize: number, pageNumber?: number,
-        logId?: number, searchterm?: string,
-        subType?: string, origin?: string,
-        creationTime?: string
+        pageSize: number,
+        pageNumber?: number,
+        logId?: number,
+        searchterm?: string,
+        subType?: string,
+        origin?: string,
+        creationTime?: string,
+        orderBy?: string,
+        orderDirection?: 'ASC' | 'DESC'
 
-    ): Promise<any> {
-        const sqlQuery = this.repository.createQueryBuilder();
-        let [logs, count] = [[], 0];
-
-        if (!isNullOrUndefined(logId)) {
-            return await sqlQuery
-                .where('log_id = :id', { id: logId })
-                .getManyAndCount()
-                .then(res => Promise.resolve(res))
-                .catch(err => Promise.reject(err));
-        } else {
-            [logs, count] = await sqlQuery
-                .where('title like :title', {
-                    title: searchterm ? `%${searchterm}%` : '%'
-                })
-                .andWhere('subtype like :sub', {
-                    sub: subType ? subType : '%'
-                })
-                .andWhere('origin like :orig', {
-                    orig: origin ? origin : '%'
-                })
-                .andWhere('creation_time >= :createTime', {
-                    createTime: creationTime ? creationTime.replace('%3A', ':') : '1970-01-01 21:45:43'
-                })
-                .skip((pageNumber || 0) * pageSize)
-                .take(pageSize)
-                .getManyAndCount();
+    ): Promise<{ logs: Log[], count: number }> {
+        const where = await this.repository.createQueryBuilder()
+            .where('title like :title', {
+                title: searchterm ? `%${searchterm}%` : '%'
+            })
+            .andWhere('subtype like :sub', {
+                sub: subType ? subType : '%'
+            })
+            .andWhere('origin like :orig', {
+                orig: origin ? origin : '%'
+            })
+            .andWhere('creation_time >= :createTime', {
+                createTime: creationTime ? creationTime.replace('%3A', ':') : '1970-01-01 21:45:43'
+            });
+        if (logId) {
+            await where.andWhere('log_id = :id', {
+                id: logId
+            });
         }
-        const result = {logs, count};
-        return result;
+        const result = await where
+            .orderBy(orderBy, orderDirection)
+            .skip((pageNumber - 1 || 0) * pageSize)
+            .take(pageSize)
+            .getManyAndCount();
+        return {logs: result[0], count: result[1]};
     }
 
     /**

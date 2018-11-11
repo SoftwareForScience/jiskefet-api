@@ -40,12 +40,19 @@ export class LogController {
     @ApiImplicitQuery({ name: 'subType', required: false, enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'] })
     @ApiImplicitQuery({ name: 'origin', required: false, enum: ['human', 'process'] })
     @ApiImplicitQuery({ name: 'creationTime', required: false })
+    @ApiImplicitQuery({ name: 'orderBy', required: false })
+    @ApiImplicitQuery({ name: 'orderDirection', required: false, enum: ['ASC', 'DESC'] })
     async findAll(@Query() query?: any) {
         return await this.logservice.findAll(
-            query.pageSize || 25, query.pageNumber,
-            query.logId, query.searchterm,
-            query.subType, query.origin,
-            query.creationTime);
+            query.pageSize || 25,
+            query.pageNumber,
+            query.logId,
+            query.searchterm,
+            query.subType,
+            query.origin,
+            query.orderBy,
+            query.orderDirection
+        );
     }
 
     /**
