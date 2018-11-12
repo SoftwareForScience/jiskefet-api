@@ -17,15 +17,18 @@ import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
 import { ConfigModule } from './modules/config.module';
+import { AuthModule } from './modules/auth.module';
+import { AuthService } from 'services/auth.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
-    ConfigModule
+    ConfigModule,
+    AuthModule
   ],
   controllers: [AppController, RunController, LogController],
-  providers: [AppService, RunService, LogService],
+  providers: [AppService, RunService, LogService, AuthService],
 })
 export class AppModule { }
