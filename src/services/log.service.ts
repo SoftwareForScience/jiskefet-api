@@ -6,13 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Log } from '../entities/log.entity';
 import { CreateLogDto } from '../dtos/create.log.dto';
-import { isNullOrUndefined } from 'util';
+import * as _ from 'lodash';
 
 @Injectable()
 export class LogService {
@@ -49,6 +49,9 @@ export class LogService {
         orderDirection?: 'ASC' | 'DESC'
 
     ): Promise<{ logs: Log[], count: number }> {
+        if (pageNumber < 1) {
+            throw new BadRequestException('Page number cannot be lower than 1.');
+        }
         const where = await this.repository.createQueryBuilder()
             .where('title like :title', {
                 title: searchterm ? `%${searchterm}%` : '%'
@@ -68,7 +71,7 @@ export class LogService {
             });
         }
         const result = await where
-            .orderBy(orderBy, orderDirection)
+            .orderBy(_.snakeCase(orderBy), orderDirection)
             .skip((pageNumber - 1 || 0) * pageSize)
             .take(pageSize)
             .getManyAndCount();

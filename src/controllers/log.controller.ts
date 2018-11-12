@@ -50,6 +50,7 @@ export class LogController {
             query.searchterm,
             query.subType,
             query.origin,
+            query.creationTime,
             query.orderBy,
             query.orderDirection
         );
