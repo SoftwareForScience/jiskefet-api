@@ -40,12 +40,12 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('logs')
     .addTag('runs');
-  if (!useApiPrefix) {
+  if (useApiPrefix === true) {
+    // set /api as basePath for non local
+    options.setBasePath('/api');
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
   } else {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
   }

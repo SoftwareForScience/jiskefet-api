@@ -41,7 +41,7 @@ export class AuthService {
         OAuth2 = oauth2.create(credentials);
 
         authorizationUri = OAuth2.authorizationCode.authorizeURL({
-            redirect_uri: 'http://localhost:3000/callback',
+            redirect_uri: config.get('REDIRECT_URI'),
             // lookup what scope and state is used for
             // scope: '<scope>',
             // state: '<state>'

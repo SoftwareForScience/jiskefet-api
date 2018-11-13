@@ -23,7 +23,6 @@ export class AppController {
 
   @Get('/auth')
   async Auth(@Req() request: any, @Res() response: any) {
-    console.log('hit /auth');
     await this.authService.auth(request, response);
   }
 
