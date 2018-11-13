@@ -19,7 +19,9 @@ export class Attachment {
         type => Log,
         log => log.attachments,
         {
-            nullable: true
+            nullable: true,
+            cascade: ['insert']
+
         }
     )
     @JoinColumn({ name: 'fk_log_id' })

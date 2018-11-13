@@ -9,6 +9,7 @@
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsDate } from 'class-validator';
+import { Attachment } from 'entities/attachment.entity';
 
 @Entity('logs')
 export class CreateLogDto {
@@ -42,4 +43,6 @@ export class CreateLogDto {
         description: 'describes the log in depth',
     })
     text: string;
+
+    attachments: Attachment[];
 }
