@@ -21,12 +21,11 @@ export class AttachmentController {
 
     /**
      * Post a new Attachment. /attachments
-     * @param request CreateAttachmentDto from frontend.
+     * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post()
-    async create(@Body() request: CreateAttachmentDto) {
-        request.creationTime = new Date();
-        await this.attachmentservice.create(request);
+    async create(@Body() createAttachmentDto: CreateAttachmentDto) {
+        await this.attachmentservice.create(createAttachmentDto);
     }
 
     /**
@@ -35,6 +34,11 @@ export class AttachmentController {
      */
     @Get(':id/logs')
     async findById(@Param('id') id: number): Promise<Attachment[]> {
-        return await this.attachmentservice.findAttachmentsByLogId(id);
+        const attachments = await this.attachmentservice.findAttachmentsByLogId(id);
+        // testing purposes
+        for (const iterator of attachments) {
+            iterator.fileData = 'base64;' + iterator.fileData;
+        }
+        return attachments;
     }
 }
