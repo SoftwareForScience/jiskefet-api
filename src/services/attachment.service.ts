@@ -28,6 +28,7 @@ export class AttachmentService {
      * @param createAttachmentDto class that carries the request data for a Attachment.
      */
     async create(createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
+        createAttachmentDto.creationTime = new Date();
         const AttachmentEntity = plainToClass(Attachment, createAttachmentDto);
         await this.repository.save(AttachmentEntity);
         return AttachmentEntity;
