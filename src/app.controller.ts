@@ -22,8 +22,8 @@ export class AppController {
   }
 
   @Get('/auth')
-  async Auth(@Req() request: any, @Res() response: any) {
-    await this.authService.auth(request, response);
+  async Auth(@Res() response: any) {
+    await this.authService.auth(response);
   }
 
   @Get('/callback')

@@ -26,6 +26,7 @@
         "dotenv": "^6.0.0",
         "mysql": "^2.16.0",
         "reflect-metadata": "^0.1.12",
+        "request": "^2.88.0",
         "rxjs": "^6.2.2",
         "simple-oauth2": "^2.2.1",
         "typeorm": "^0.2.7",

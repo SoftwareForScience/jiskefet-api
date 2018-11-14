@@ -7,8 +7,9 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import * as oauth2 from 'simple-oauth2';
 import { ConfigService } from './config.service';
+import * as oauth2 from 'simple-oauth2';
+import * as request from 'request';
 
 const credentials: oauth2.ModuleOptions = {
     client: {
@@ -22,7 +23,7 @@ const credentials: oauth2.ModuleOptions = {
     }
 };
 
-let OAuth2;
+let OAuth2Instance;
 let authorizationUri;
 
 @Injectable()
@@ -38,17 +39,19 @@ export class AuthService {
         credentials.auth.authorizePath = config.get('AUTH_PATH');
 
         // initialize
-        OAuth2 = oauth2.create(credentials);
+        OAuth2Instance = oauth2.create(credentials);
 
-        authorizationUri = OAuth2.authorizationCode.authorizeURL({
+        authorizationUri = OAuth2Instance.authorizationCode.authorizeURL({
             redirect_uri: config.get('REDIRECT_URI'),
-            // scope: '<scope>', // used to limit access to resources, e.g. ['READ', 'WRITE'] https://www.oauth.com/oauth2-servers/scope/defining-scopes/
-            // state: '<state>' // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
+            // used to limit access to resources, e.g. ['READ', 'WRITE'] https://www.oauth.com/oauth2-servers/scope/defining-scopes/
+            // scope: '<scope>',
+            // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
+            state: config.get('AUTH_STATE'),
         });
     }
 
     // lookup type definition
-    async auth(req: any, res: any) {
+    async auth(res: any) {
         console.log(`authorization uri is: ${authorizationUri}`);
         res.redirect(authorizationUri);
     }
@@ -61,28 +64,30 @@ export class AuthService {
         };
 
         try {
-            const result = await OAuth2.authorizationCode.getToken(options);
+            const result = await OAuth2Instance.authorizationCode.getToken(options);
+            const accessTokenObject = OAuth2Instance.accessToken.create(result);
+            console.log('created access token object is');
+            console.log(accessTokenObject);
 
-            console.log(`The resulting token is: ${result}`);
-
-            const token = OAuth2.accessToken.create(result);
-            const dtoken = token.token.access_token;
-            console.log(dtoken);
+            const dtoken = accessTokenObject.token.access_token;
+            console.log(`access_token is ${dtoken}`);
             const getCall = {
                 url: 'https://api.github.com/user?access_token=' + dtoken,
                 headers: {
                     'User-Agent': 'request'
                 }
             };
-            const requestap = require('request');
-            requestap(getCall, (error, response, body) => {
-                res.send('Hallo : ' + JSON.parse(body).name);
-                res.status(200);
 
+            // mock request to retrieve user
+            request(getCall, (error, response, body: any) => {
+                res.status(200).send(JSON.parse(body));
+                console.log(`error is: ${error}`);
+                console.log('response is:');
+                console.log(response);
                 console.log(body);
             });
 
-            return res.status(200).json(token);
+            // await res.status(200).json(accessTokenObject);
         } catch (error) {
             console.error(`Access Token Error ${error.message}`);
             return res.status(500).json('Authentication failed');
