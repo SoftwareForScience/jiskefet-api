@@ -28,14 +28,13 @@ export class LogService {
      * @param createLogDto class that carries the request body for a Log.
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
-        createLogDto.creationTime = new Date();
-        if (createLogDto.attachments) {
-            for (const attachment of createLogDto.attachments) {
-                attachment.creationTime = createLogDto.creationTime;
-            }
-        }
         const LogEntity = plainToClass(Log, createLogDto);
         LogEntity.creationTime = new Date();
+        if (LogEntity.attachments) {
+            for (const attachment of LogEntity.attachments) {
+                attachment.creationTime = LogEntity.creationTime;
+            }
+        }
         await this.repository.save(LogEntity);
         return LogEntity;
     }
