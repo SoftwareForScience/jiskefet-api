@@ -42,9 +42,8 @@ export class AuthService {
 
         authorizationUri = OAuth2.authorizationCode.authorizeURL({
             redirect_uri: config.get('REDIRECT_URI'),
-            // lookup what scope and state is used for
-            // scope: '<scope>',
-            // state: '<state>'
+            // scope: '<scope>', // used to limit access to resources, e.g. ['READ', 'WRITE'] https://www.oauth.com/oauth2-servers/scope/defining-scopes/
+            // state: '<state>' // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
         });
     }
 
@@ -58,15 +57,15 @@ export class AuthService {
         const code = req.query.code;
         console.log(`code is: ${code}`);
         const options = {
-            code,
+            code
         };
 
         try {
-            const result = await oauth2.authorizationCode.getToken(options);
+            const result = await OAuth2.authorizationCode.getToken(options);
 
             console.log(`The resulting token is: ${result}`);
 
-            const token = oauth2.accessToken.create(result);
+            const token = OAuth2.accessToken.create(result);
             const dtoken = token.token.access_token;
             console.log(dtoken);
             const getCall = {
@@ -83,7 +82,7 @@ export class AuthService {
                 console.log(body);
             });
 
-            // return res.status(200).json(token)
+            return res.status(200).json(token);
         } catch (error) {
             console.error(`Access Token Error ${error.message}`);
             return res.status(500).json('Authentication failed');
