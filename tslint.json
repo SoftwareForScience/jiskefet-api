@@ -38,15 +38,9 @@
             "never-prefix"
         ],
         "jsdoc-format": true,
-        "jsx-boolean-value": [
-            "never"
-        ],
-        "jsx-no-lambda": false,
-        "jsx-no-multiline-js": false,
-        "jsx-curly-spacing": false,
         "label-position": true,
         "max-line-length": [
-            false,
+            true,
             120
         ],
         "member-ordering": [
@@ -85,7 +79,7 @@
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
-        "no-empty": false,
+        "no-empty": true,
         "no-eval": true,
         "no-shadowed-variable": true,
         "no-string-literal": true,
@@ -94,6 +88,7 @@
         "no-reference": true,
         "no-trailing-whitespace": true,
         "no-unused-expression": true,
+        "no-unsafe-any": true,
         "no-var-keyword": true,
         "ordered-imports": false,
         "object-literal-sort-keys": false,
@@ -136,7 +131,9 @@
         "typedef": [
             true,
             "parameter",
-            "property-declaration"
+            "property-declaration",
+            "arrow-parameter",
+            "member-variable-declaration"
         ],
         "typedef-whitespace": [
             true,
