@@ -16,7 +16,7 @@ const envConfig = 'envConfig';
 const port = 'PORT';
 const usePrefix = 'USE_API_PREFIX';
 // A boolean to set the swagger api for debugging purposes
-let useApiPrefix: boolean = false;
+let useApiPrefix: number = 0;
 
 async function bootstrap() {
   let portNumber;
@@ -32,7 +32,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV) {
     portNumber = app.get('ConfigService')[envConfig][port];
-    useApiPrefix = Boolean(app.get('ConfigService')[envConfig][usePrefix]);
+    useApiPrefix = Number(app.get('ConfigService')[envConfig][usePrefix]);
   } else {
     portNumber = 3000;
   }
@@ -43,7 +43,7 @@ async function bootstrap() {
     .addTag('logs')
     .addTag('runs');
 
-  if (useApiPrefix === true) {
+  if (useApiPrefix === 1) {
     // set /api as basePath for non local
     options.setBasePath('/api');
     options.setDescription('Running with /api prefix');
