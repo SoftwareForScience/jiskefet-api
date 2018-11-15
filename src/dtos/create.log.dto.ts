@@ -47,7 +47,10 @@ export class CreateLogDto {
     @IsString()
     text: string;
 
-    attachments: Attachment[];
+    @ApiModelProperty({
+        description: 'Attachments of this log',
+    })
+    attachments?: Attachment[];
 
     @ApiModelProperty({
         example: '8',

@@ -25,7 +25,7 @@ export class LogController {
      */
     @Post()
     async create(@Body() createLogDto: CreateLogDto) {
-        await this.logservice.create(createLogDto);
+        return await this.logservice.create(createLogDto);
     }
 
     /**
