@@ -11,7 +11,7 @@ import { AppModule } from './app.module';
 
 declare const module: any;
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   await app.listen(3000);
 
