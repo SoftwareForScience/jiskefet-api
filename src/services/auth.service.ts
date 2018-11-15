@@ -19,6 +19,7 @@ import { User } from '../entities/user.entity';
 export class AuthService {
     private oauth2Client;
     private authorizationUri;
+    private cookieName = 'token';
 
     private oauth2config: oauth2.ModuleOptions = {
         client: {
@@ -56,6 +57,7 @@ export class AuthService {
         });
     }
 
+    // sends user to the authorization uri
     async auth(res: Response) {
         res.redirect(this.authorizationUri);
     }
@@ -71,7 +73,6 @@ export class AuthService {
             const accessTokenObject = this.oauth2Client.accessToken.create(result);
 
             const innerAccessToken: string = accessTokenObject.token.access_token;
-            console.log(`access_token is ${innerAccessToken}`);
             const getCall = {
                 url: 'https://api.github.com/user?access_token=' + innerAccessToken,
                 headers: {
@@ -90,10 +91,10 @@ export class AuthService {
                 // only send save user request if it has an external id
                 if (tempUser.externalUserId) {
                     await this.userService.saveUser(tempUser).then(() => {
-                        console.log(this.validateUser(innerAccessToken));
+                        this.validateUser(innerAccessToken);
                     }).then(() => {
                         res.set('Authorization', `Bearer ${innerAccessToken}`);
-                        res.cookie('token', `${innerAccessToken}`);
+                        res.cookie(this.cookieName, `${innerAccessToken}`);
                         return res.redirect(this.config.get('REDIRECT_URI'));
                         // res.send({
                         //     success: true,
@@ -109,8 +110,8 @@ export class AuthService {
     }
 
     async logout(res: Response) {
-        res.clearCookie('token');
-        return res.redirect(this.config.get('HOME_URL'));
+        res.clearCookie(this.cookieName);
+        return res.redirect(this.config.get('HOME_URI'));
     }
 
     async validateUser(token: string): Promise<User> {

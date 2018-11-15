@@ -31,7 +31,6 @@ export class UserService {
     async saveUser(createUserDto: CreateUserDto): Promise<User> {
         const userEntity = plainToClass(User, createUserDto);
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
-        console.log(`received token is: ${createUserDto.token}`);
         // update user if exists
         if (typeof foundUser === 'object' ) {
             foundUser.token = userEntity.token;
@@ -58,7 +57,6 @@ export class UserService {
     }
 
     async findUserByToken(token: string): Promise<User> {
-        console.log(`received token is: ${token}`);
         return await this.repository.createQueryBuilder()
             .where('token = :token', { token })
             .getOne();
