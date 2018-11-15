@@ -7,13 +7,15 @@
  */
 
 import { Module } from '@nestjs/common';
-import { ConfigModule } from './config.module';
 import { AuthService } from '../services/auth.service';
+import { PassportModule } from '@nestjs/passport';
+import { HttpStrategy } from '../strategies/http.strategy';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [AuthService],
+    imports: [
+        PassportModule.register({ defaultStrategy: 'bearer' })],
+    providers: [AuthService, HttpStrategy],
     exports: [AuthModule],
 })
 
-export class AuthModule { }
+export class AuthModule {}

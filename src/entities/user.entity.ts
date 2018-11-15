@@ -23,6 +23,12 @@ export class User {
     userId: number;
 
     @Column({
+        name: 'external_id',
+        type: 'int'
+    })
+    externalUserId: number;
+
+    @Column({
         name: 'sams_id',
         type: 'int'
     })

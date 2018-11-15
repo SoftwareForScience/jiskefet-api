@@ -7,56 +7,61 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from './config.service';
 import * as oauth2 from 'simple-oauth2';
 import * as request from 'request';
-
-const credentials: oauth2.ModuleOptions = {
-    client: {
-        id: '<id>',
-        secret: '<secret>'
-    },
-    auth: {
-        tokenHost: '<token_host>',
-        tokenPath: '<token_path>',
-        authorizePath: '<authorize_path>'
-    }
-};
-
-let OAuth2Instance;
-let authorizationUri;
+import { Request, Response } from 'express';
+import { ConfigService } from './config.service';
+import { UserService } from './user.service';
+import { CreateUserDto } from '../dtos/create.user.dto';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class AuthService {
-    constructor(config: ConfigService) {
+    private oauth2Client;
+    private authorizationUri;
+
+    private oauth2config: oauth2.ModuleOptions = {
+        client: {
+            id: '<id>',
+            secret: '<secret>'
+        },
+        auth: {
+            tokenHost: '<token_host>',
+            tokenPath: '<token_path>',
+            authorizePath: '<authorize_path>'
+        }
+    };
+
+    constructor(
+        private readonly config: ConfigService,
+        private readonly userService: UserService) {
         // set client
-        credentials.client.id = config.get('CLIENT_ID');
-        credentials.client.secret = config.get('CLIENT_SECRET');
+        this.oauth2config.client.id = this.config.get('CLIENT_ID');
+        this.oauth2config.client.secret = this.config.get('CLIENT_SECRET');
 
         // set authentication host
-        credentials.auth.tokenHost = config.get('AUTH_TOKEN_HOST');
-        credentials.auth.tokenPath = config.get('AUTH_TOKEN_PATH');
-        credentials.auth.authorizePath = config.get('AUTH_PATH');
+        this.oauth2config.auth.tokenHost = this.config.get('AUTH_TOKEN_HOST');
+        this.oauth2config.auth.tokenPath = this.config.get('AUTH_TOKEN_PATH');
+        this.oauth2config.auth.authorizePath = this.config.get('AUTH_PATH');
 
         // initialize
-        OAuth2Instance = oauth2.create(credentials);
+        this.oauth2Client = oauth2.create(this.oauth2config);
 
-        authorizationUri = OAuth2Instance.authorizationCode.authorizeURL({
-            redirect_uri: config.get('REDIRECT_URI'),
+        this.authorizationUri = this.oauth2Client.authorizationCode.authorizeURL({
+            redirect_uri: this.config.get('CALLBACK_URI'),
             // used to limit access to resources, e.g. ['READ', 'WRITE'] https://www.oauth.com/oauth2-servers/scope/defining-scopes/
             // scope: '<scope>',
             // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
-            state: config.get('AUTH_STATE'),
+            state: this.config.get('AUTH_STATE'),
         });
     }
 
-    // lookup type definition
-    async auth(res: any) {
-        console.log(`authorization uri is: ${authorizationUri}`);
-        res.redirect(authorizationUri);
+    async auth(res: Response) {
+        console.log(`authorization uri is: ${this.authorizationUri}`);
+        res.redirect(this.authorizationUri);
     }
 
-    async callback(req: any, res: any) {
+    async callback(req: Request, res: Response) {
         const code = req.query.code;
         console.log(`code is: ${code}`);
         const options = {
@@ -64,38 +69,51 @@ export class AuthService {
         };
 
         try {
-            const result = await OAuth2Instance.authorizationCode.getToken(options);
-            const accessTokenObject = OAuth2Instance.accessToken.create(result);
+            const result = await this.oauth2Client.authorizationCode.getToken(options);
+            const accessTokenObject = this.oauth2Client.accessToken.create(result);
             console.log('created access token object is');
             console.log(accessTokenObject);
 
-            const dtoken = accessTokenObject.token.access_token;
-            console.log(`access_token is ${dtoken}`);
+            const innerAccessToken: string = accessTokenObject.token.access_token;
+            console.log(`access_token is ${innerAccessToken}`);
             const getCall = {
-                url: 'https://api.github.com/user?access_token=' + dtoken,
+                url: 'https://api.github.com/user?access_token=' + innerAccessToken,
                 headers: {
                     'User-Agent': 'request'
                 }
             };
 
             // mock request to retrieve user
-            request(getCall, (error, response, body: any) => {
-                res.status(200).send(JSON.parse(body));
-                console.log(`error is: ${error}`);
-                console.log('response is:');
-                console.log(response);
-                console.log(body);
+            request(getCall, async (error, response, body: any) => {
+                const jsonBody = JSON.parse(body);
+                const tempUser: CreateUserDto = {
+                    externalUserId: jsonBody.id,
+                    token: innerAccessToken,
+                    avatarUrl: jsonBody.avatar_url
+                };
+                console.log('mapped temporary user is: ');
+                console.log(tempUser);
+                // only send save user request if it has an external id
+                if (tempUser.externalUserId) {
+                    await this.userService.saveUser(tempUser).then(() => {
+                        console.log(this.validateUser(innerAccessToken));
+                    });
+                }
+                return res.redirect(this.config.get('REDIRECT_URI'));
             });
-
-            // await res.status(200).json(accessTokenObject);
         } catch (error) {
             console.error(`Access Token Error ${error.message}`);
             return res.status(500).json('Authentication failed');
         }
     }
 
-    async success(req: any, res: any) {
-        console.log('success');
-        res.send('');
+    async logout() {
+    }
+
+    async validateUser(token: string): Promise<User> {
+        console.log('validating user');
+        // Validate if token passed along with HTTP request
+        // is associated with any registered account in the database
+        return await this.userService.findUserByToken(token);
     }
 }

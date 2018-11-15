@@ -7,17 +7,14 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { ConfigService } from '../services/config.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../entities/user.entity';
+import { UserService } from '../services/user.service';
 
 @Global()
 @Module({
-    providers: [
-        {
-            provide: ConfigService,
-            useValue: new ConfigService(`environments/${process.env.NODE_ENV}.env`),
-        },
-    ],
-    exports: [ConfigService],
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
+  exports: [UserService],
 })
-
-export class ConfigModule { }
+export class UserModule { }

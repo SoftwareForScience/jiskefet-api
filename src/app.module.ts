@@ -19,16 +19,20 @@ import { LogModule } from './modules/log.module';
 import { ConfigModule } from './modules/config.module';
 import { AuthModule } from './modules/auth.module';
 import { AuthService } from 'services/auth.service';
+import { AuthContoller } from 'controllers/auth.controller';
+import { UserModule } from './modules/user.module';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
+    UserModule,
     ConfigModule,
-    AuthModule
+    AuthModule,
   ],
-  controllers: [AppController, RunController, LogController],
-  providers: [AppService, RunService, LogService, AuthService],
+  controllers: [AppController, RunController, LogController, AuthContoller],
+  providers: [AppService, RunService, LogService, UserService, AuthService],
 })
 export class AppModule { }
