@@ -10,6 +10,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
 
 const envConfig = 'envConfig';
 const port = 'PORT';
@@ -21,6 +22,7 @@ async function bootstrap() {
   let portNumber;
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.use(cookieParser());
 
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);

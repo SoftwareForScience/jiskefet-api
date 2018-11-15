@@ -57,13 +57,11 @@ export class AuthService {
     }
 
     async auth(res: Response) {
-        console.log(`authorization uri is: ${this.authorizationUri}`);
         res.redirect(this.authorizationUri);
     }
 
     async callback(req: Request, res: Response) {
         const code = req.query.code;
-        console.log(`code is: ${code}`);
         const options = {
             code
         };
@@ -71,8 +69,6 @@ export class AuthService {
         try {
             const result = await this.oauth2Client.authorizationCode.getToken(options);
             const accessTokenObject = this.oauth2Client.accessToken.create(result);
-            console.log('created access token object is');
-            console.log(accessTokenObject);
 
             const innerAccessToken: string = accessTokenObject.token.access_token;
             console.log(`access_token is ${innerAccessToken}`);
@@ -91,27 +87,33 @@ export class AuthService {
                     token: innerAccessToken,
                     avatarUrl: jsonBody.avatar_url
                 };
-                console.log('mapped temporary user is: ');
-                console.log(tempUser);
                 // only send save user request if it has an external id
                 if (tempUser.externalUserId) {
                     await this.userService.saveUser(tempUser).then(() => {
                         console.log(this.validateUser(innerAccessToken));
+                    }).then(() => {
+                        res.set('Authorization', `Bearer ${innerAccessToken}`);
+                        res.cookie('token', `${innerAccessToken}`);
+                        return res.redirect(this.config.get('REDIRECT_URI'));
+                        // res.send({
+                        //     success: true,
+                        //     innerAccessToken
+                        // });
                     });
                 }
-                return res.redirect(this.config.get('REDIRECT_URI'));
             });
         } catch (error) {
-            console.error(`Access Token Error ${error.message}`);
+            // console.error(`Access Token Error ${error.message}`);
             return res.status(500).json('Authentication failed');
         }
     }
 
-    async logout() {
+    async logout(res: Response) {
+        res.clearCookie('token');
+        return res.redirect(this.config.get('HOME_URL'));
     }
 
     async validateUser(token: string): Promise<User> {
-        console.log('validating user');
         // Validate if token passed along with HTTP request
         // is associated with any registered account in the database
         return await this.userService.findUserByToken(token);

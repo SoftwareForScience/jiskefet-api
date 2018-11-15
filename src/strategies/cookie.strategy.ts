@@ -1,18 +1,19 @@
 
-import { Strategy } from 'passport-http-bearer';
+import { Strategy } from 'passport-cookie';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class HttpStrategy extends PassportStrategy(Strategy) {
+export class CookieStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super();
   }
 
-  // Http strategy only fires when the http request contains a header named 'Authorization'
+  // TODO: rename cookie
+  // Cookie strategy only fires when a request contains a cookie with the name 'token'
   async validate(token: string) {
-    console.log('hit http strategy');
+    console.log('hit cookie strategy');
     const user = await this.authService.validateUser(token);
     if (!user) {
       throw new UnauthorizedException();

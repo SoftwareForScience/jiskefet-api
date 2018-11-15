@@ -10,11 +10,13 @@ import { Module } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { HttpStrategy } from '../strategies/http.strategy';
+import { CookieStrategy } from '../strategies/cookie.strategy';
 
 @Module({
     imports: [
-        PassportModule.register({ defaultStrategy: 'bearer' })],
-    providers: [AuthService, HttpStrategy],
+        PassportModule.register({ defaultStrategy: 'bearer' }),
+        PassportModule.register({ defaultStrategy: 'cookie'})],
+    providers: [AuthService, HttpStrategy, CookieStrategy],
     exports: [AuthModule],
 })
 
