@@ -109,6 +109,8 @@ export class Log {
     })
     runs: Run[];
 
-    @OneToMany(type => Attachment, attachment => attachment.log)
+    @OneToMany(type => Attachment, attachment => attachment.log, {
+        cascade: ['insert']
+    })
     attachments: Attachment[];
 }

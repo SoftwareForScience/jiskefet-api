@@ -19,7 +19,9 @@ export class Attachment {
         type => Log,
         log => log.attachments,
         {
-            nullable: false
+            nullable: true,
+            cascade: ['insert']
+
         }
     )
     @JoinColumn({ name: 'fk_log_id' })
@@ -39,9 +41,9 @@ export class Attachment {
 
     @Column({
         name: 'file_data',
-        type: 'blob'
+        type: 'longblob'
     })
-    fileData: number;
+    fileData: string;
 
     @Column({
         name: 'file_md5',
