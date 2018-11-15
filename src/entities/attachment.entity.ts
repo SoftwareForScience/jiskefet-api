@@ -41,7 +41,7 @@ export class Attachment {
 
     @Column({
         name: 'file_data',
-        type: 'blob'
+        type: 'longblob'
     })
     fileData: string;
 

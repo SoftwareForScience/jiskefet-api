@@ -8,14 +8,15 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import bodyParser = require('body-parser');
 
 declare const module: any;
 
+/**
+ * This module is for hotloading the app while developing.
+ * It reloads the app when changes are made to the code.
+ */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   await app.listen(3000);
 
   if (module.hot) {
