@@ -6,13 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
-import { ValidationPipe } from '../common/validation.pipe';
+import { QueryRunDto } from '../dtos/query.run.dto';
 
 @ApiUseTags('runs')
 @Controller('runs')
@@ -25,7 +25,7 @@ export class RunController {
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() request: CreateRunDto) {
+    async create(@Body() request: CreateRunDto): Promise<Run> {
         request.timeO2Start = new Date();
         request.timeTrgStart = new Date();
         request.timeO2End = new Date();
@@ -39,19 +39,8 @@ export class RunController {
      * @param query optional filters
      */
     @Get()
-    @ApiImplicitQuery({ name: 'pageSize', required: false })
-    @ApiImplicitQuery({ name: 'pageNumber', required: false })
-    @ApiImplicitQuery({ name: 'runNumber', required: false })
-    @ApiImplicitQuery({ name: 'timeO2Start', required: false })
-    @ApiImplicitQuery({ name: 'timeO2End', required: false })
-    @ApiImplicitQuery({ name: 'timeTrgStart', required: false })
-    @ApiImplicitQuery({ name: 'timeTrgEnd', required: false })
-    async findAll(@Query() query?: any): Promise<Run[]> {
-        return await this.runService.findAll(
-            query.pageSize || 25, query.pageNumber,
-            query.runNumber, query.timeO2Start,
-            query.timeO2End, query.timeTrgStart,
-            query.timeTrgEnd);
+    async findAll(@Query() query?: QueryRunDto): Promise<{runs: Run[], count: number}> {
+        return await this.runService.findAll(query);
     }
 
     /**
@@ -62,5 +51,4 @@ export class RunController {
     async findById(@Param('id') id: number): Promise<Run> {
         return await this.runService.findById(id);
     }
-
 }

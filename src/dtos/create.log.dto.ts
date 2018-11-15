@@ -8,13 +8,12 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsEmpty, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 
 @Entity('logs')
 export class CreateLogDto {
-
     @ApiModelProperty({
         example: 'run',
         description: 'What kind of log is it?',

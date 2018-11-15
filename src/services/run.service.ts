@@ -12,7 +12,9 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Run } from '../entities/run.entity';
 import { CreateRunDto } from '../dtos/create.run.dto';
-import { isNullOrUndefined } from 'util';
+import { QueryRunDto } from '../dtos/query.run.dto';
+import { OrderDirection } from '../enums/orderDirection.enum';
+import * as _ from 'lodash';
 
 @Injectable()
 export class RunService {
@@ -34,49 +36,91 @@ export class RunService {
     }
 
     /**
-     * Handler for getting Runs from db.
-     * @param pageSize the amount of Runs to return.
-     * @param pageNumber this number times the pageSize is the amount of Runs to skip.
-     * @param runNumber for filtering on specific run_number.
-     * @param time02Start for filtering on when the 02-system has started the run.
-     * @param time02End for filtering on when the 02-system has ended the run.
-     * @param timeTrgStart for filtering on when the TRG-system has started the run.
-     * @param timeTrgEnd for filtering on when the TRG-system has ended the run.
+     * Returns runs from the db, filtered by the optional query.
+     * @param query QueryRunDto
      */
-    async findAll(
-        pageSize: number, pageNumber?: number,
-        runNumber?: number, time02Start?: string,
-        time02End?: string, timeTrgStart?: string, timeTrgEnd?: string
-    ): Promise<any> {
-        const sqlQuery = this.repository.createQueryBuilder();
-        let [runs, count] = [[], 0];
+    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], count: number }> {
+        let query = await this.repository.createQueryBuilder()
+            .where('run_type like :runType', {
+                runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'
+            })
+            .andWhere('run_quality like :runQuality', {
+                runQuality: queryRunDto.runQuality ? queryRunDto.runQuality : '%'
+            });
 
-        if (!isNullOrUndefined(runNumber)) {
-            [runs, count] = await sqlQuery
-                .where('run_number = :id', { id: runNumber })
-                .getManyAndCount()
-                .then(res => Promise.resolve(res))
-                .catch(err => Promise.reject(err));
-        } else {
-            [runs, count] = await sqlQuery
-                .where('time_o2_start >= :startO2', {
-                    startO2: time02Start ? time02Start.replace('%3A', ':') : '1970-01-01'
-                })
-                .andWhere('time_o2_end <= :endO2', {
-                    endO2: time02End ? time02End.replace('%3A', ':') : '2999-01-01'
-                })
-                .andWhere('time_trg_start >= :startTrg', {
-                    startTrg: timeTrgStart ? timeTrgStart.replace('%3A', ':') : '1970-01-01'
-                })
-                .andWhere('time_trg_end <= :endTrg', {
-                    endTrg: timeTrgEnd ? timeTrgEnd.replace('%3A', ':') : '2999-01-01'
-                })
-                .skip((pageNumber || 0) * pageSize)
-                .take(pageSize)
-                .getManyAndCount();
+        // o2 start
+        if (queryRunDto.startTimeO2Start) {
+            await query.andWhere('time_o2_start >= :startTimeO2Start', {
+                startTimeO2Start: queryRunDto.startTimeO2Start
+            });
         }
-        const result = {runs, count};
-        return result;
+
+        if (queryRunDto.endTimeO2Start) {
+            await query.andWhere('time_o2_start <= :endTimeO2Start', {
+                endTimeO2Start: queryRunDto.endTimeO2Start
+            });
+        }
+
+        // trg start
+        if (queryRunDto.startTimeTrgStart) {
+            await query.andWhere('time_trg_start >= :startTimeTrgStart', {
+                startTimeTrgStart: queryRunDto.startTimeTrgStart
+            });
+        }
+
+        if (queryRunDto.endTimeTrgStart) {
+            await query.andWhere('time_o2_start <= :endTimeTrgStart', {
+                endTimeTrgStart: queryRunDto.endTimeTrgStart
+            });
+        }
+
+        // trg end
+        if (queryRunDto.startTimeTrgEnd) {
+            await query.andWhere('time_trg_end >= :startTimeTrgEnd', {
+                startTimeTrgEnd: queryRunDto.startTimeTrgEnd
+            });
+        }
+
+        if (queryRunDto.endTimeTrgEnd) {
+            await query.andWhere('time_trg_end <= :endTimeTrgEnd', {
+                endTimeTrgEnd: queryRunDto.endTimeTrgEnd
+            });
+        }
+
+        // o2 end
+        if (queryRunDto.startTimeO2End) {
+            await query.andWhere('time_o2_end >= :startTimeO2End', {
+                startTimeO2End: queryRunDto.startTimeO2End
+            });
+        }
+
+        if (queryRunDto.endTimeO2End) {
+            await query.andWhere('time_o2_end <= :endTimeO2End', {
+                endTimeO2End: queryRunDto.endTimeO2End
+            });
+        }
+
+        if (queryRunDto.runNumber) {
+            await query.andWhere('run_number = :runNumber', { runNumber: queryRunDto.runNumber });
+        }
+
+        if (queryRunDto.activityId) {
+            await query.andWhere('activity_id = :activityId', { activityId: queryRunDto.activityId });
+        }
+
+        if (queryRunDto.orderBy) {
+            query = query.orderBy(
+                _.snakeCase(queryRunDto.orderBy).replace('o_2', 'o2'),
+                queryRunDto.orderDirection || OrderDirection.asc
+            );
+        }
+
+        const result = await query
+            .skip((+queryRunDto.pageNumber - 1 || 0) * +queryRunDto.pageSize)
+            .take(+queryRunDto.pageSize)
+            .getManyAndCount();
+
+        return { runs: result[0], count: result[1] };
     }
 
     /**
@@ -89,7 +133,7 @@ export class RunService {
             .leftJoinAndSelect('run.logs', 'logs')
             .where('run_number = :id', { id })
             .getOne()
-            .then(res => Promise.resolve(res))
-            .catch(err => Promise.reject(err));
+            .then((res: Run) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
     }
 }
