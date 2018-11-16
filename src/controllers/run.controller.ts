@@ -6,13 +6,14 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UsePipes, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
 import { ValidationPipe } from '../common/validation.pipe';
+import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 
 @ApiUseTags('runs')
 @Controller('runs')
@@ -63,4 +64,13 @@ export class RunController {
         return await this.runService.findById(id);
     }
 
+    /**
+     * Link a log to a run.
+     * @param request LinkLogToRunDto
+     */
+    @Patch(':id/logs')
+    @UsePipes(ValidationPipe)
+    async linkLogToRun(@Param('id') runNumber: number, @Body() request: LinkLogToRunDto) {
+        return await this.runService.linkLogToRun(runNumber, request);
+    }
 }

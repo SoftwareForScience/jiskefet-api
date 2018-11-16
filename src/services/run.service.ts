@@ -13,14 +13,22 @@ import { plainToClass } from 'class-transformer';
 import { Run } from '../entities/run.entity';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { isNullOrUndefined } from 'util';
+import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
+import { LogService } from './log.service';
+import { Log } from '../entities/log.entity';
 
 @Injectable()
 export class RunService {
 
     private readonly repository: Repository<Run>;
+    private readonly logRepository: Repository<Log>;
 
-    constructor(@InjectRepository(Run) repository: Repository<Run>) {
+    constructor(
+        @InjectRepository(Run) repository: Repository<Run>,
+        @InjectRepository(Log) logRepostiory: Repository<Log>
+    ) {
         this.repository = repository;
+        this.logRepository = logRepostiory;
     }
 
     /**
@@ -89,5 +97,16 @@ export class RunService {
             .getOne()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
+    }
+
+    /**
+     * Link a log to a run.
+     * @param linkLogToRunDto
+     */
+    async linkLogToRun(runNumber: number, linkLogToRunDto: LinkLogToRunDto): Promise<void> {
+        const run = await this.findById(runNumber);
+        const log = await this.logRepository.findOne(linkLogToRunDto.logId);
+        run.logs = [...run.logs, log];
+        await this.repository.save(run);
     }
 }
