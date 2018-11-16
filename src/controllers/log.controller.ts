@@ -23,12 +23,12 @@ export class LogController {
 
     /**
      * Post a new Log item. /logs
-     * @param request CreateLogDto from frontend.
+     * @param createLogDto CreateLogDto from frontend.
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() request: CreateLogDto): Promise<Log> {
-        return await this.logService.create(request);
+    async create(@Body() createLogDto: CreateLogDto): Promise<Log> {
+        return await this.logService.create(createLogDto);
     }
 
     /**

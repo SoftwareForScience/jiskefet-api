@@ -10,6 +10,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import bodyParser = require('body-parser');
 
 const envConfig = 'envConfig';
 const port = 'PORT';
@@ -27,6 +28,9 @@ async function bootstrap(): Promise<void> {
     res.header('Access-Control-Allow-Credentials', true);
     next();
   });
+
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   if (process.env.NODE_ENV) {
     portNumber = app.get('ConfigService')[envConfig][port];
