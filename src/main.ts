@@ -19,41 +19,41 @@ const usePrefix = 'USE_API_PREFIX';
 let useApiPrefix: number = 0;
 
 async function bootstrap() {
-  let portNumber;
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  app.use(cookieParser());
+    let portNumber;
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    app.use(cookieParser());
 
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    next();
-  });
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Credentials', true);
+        next();
+    });
 
-  if (process.env.NODE_ENV) {
-    portNumber = app.get('ConfigService')[envConfig][port];
-    useApiPrefix = Number(app.get('ConfigService')[envConfig][usePrefix]);
-  } else {
-    portNumber = 3000;
-  }
+    if (process.env.NODE_ENV) {
+        portNumber = app.get('ConfigService')[envConfig][port];
+        useApiPrefix = Number(app.get('ConfigService')[envConfig][usePrefix]);
+    } else {
+        portNumber = 3000;
+    }
 
-  const options = new DocumentBuilder()
-    .setTitle('ALICE-Bookkeeping')
-    .setVersion('1.0')
-    .addTag('logs')
-    .addTag('runs');
+    const options = new DocumentBuilder()
+        .setTitle('ALICE-Bookkeeping')
+        .setVersion('1.0')
+        .addTag('logs')
+        .addTag('runs');
 
-  if (useApiPrefix === 1) {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
-    options.setDescription('Running with /api prefix');
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
-  } else {
-    options.setDescription('Running without /api prefix');
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
-  }
-  await app.listen(portNumber);
+    if (useApiPrefix === 1) {
+        // set /api as basePath for non local
+        options.setBasePath('/api');
+        options.setDescription('Running with /api prefix');
+        const document = SwaggerModule.createDocument(app, options.build());
+        SwaggerModule.setup('doc', app, document);
+    } else {
+        options.setDescription('Running without /api prefix');
+        const document = SwaggerModule.createDocument(app, options.build());
+        SwaggerModule.setup('doc', app, document);
+    }
+    await app.listen(portNumber);
 }
 bootstrap();
