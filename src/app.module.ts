@@ -16,10 +16,9 @@ import { RunService } from './services/run.service';
 import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
-import { ConfigModule } from './modules/config.module';
 import { AuthModule } from './modules/auth.module';
-import { AuthService } from 'services/auth.service';
-import { AuthContoller } from 'controllers/auth.controller';
+import { AuthService } from './services/auth.service';
+import { AuthContoller } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
 
@@ -29,7 +28,6 @@ import { UserService } from './services/user.service';
     RunModule,
     LogModule,
     UserModule,
-    ConfigModule,
     AuthModule,
   ],
   controllers: [AppController, RunController, LogController, AuthContoller],

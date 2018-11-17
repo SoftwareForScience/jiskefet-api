@@ -12,14 +12,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 
-const envConfig = 'envConfig';
-const port = 'PORT';
-const usePrefix = 'USE_API_PREFIX';
-// A boolean to set the swagger api for debugging purposes
-let useApiPrefix: number = 0;
-
 async function bootstrap() {
-    let portNumber;
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     app.use(cookieParser());
@@ -30,20 +23,13 @@ async function bootstrap() {
         next();
     });
 
-    if (process.env.NODE_ENV) {
-        portNumber = app.get('ConfigService')[envConfig][port];
-        useApiPrefix = Number(app.get('ConfigService')[envConfig][usePrefix]);
-    } else {
-        portNumber = 3000;
-    }
-
     const options = new DocumentBuilder()
         .setTitle('ALICE-Bookkeeping')
         .setVersion('1.0')
         .addTag('logs')
         .addTag('runs');
 
-    if (useApiPrefix === 1) {
+    if (process.env.USE_API_PREFIX) {
         // set /api as basePath for non local
         options.setBasePath('/api');
         options.setDescription('Running with /api prefix');
@@ -54,6 +40,7 @@ async function bootstrap() {
         const document = SwaggerModule.createDocument(app, options.build());
         SwaggerModule.setup('doc', app, document);
     }
-    await app.listen(portNumber);
+
+    await app.listen(process.env.PORT);
 }
 bootstrap();

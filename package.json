@@ -5,16 +5,11 @@
     "author": "Jiskefet Dev Team",
     "license": "GPL-3.0",
     "scripts": {
-        "start": "ts-node -r tsconfig-paths/register src/main.ts",
-        "start:dev": "nodemon",
-        "start:debug": "nodemon --config nodemon-debug.json",
-        "prestart:prod": "rimraf dist && tsc",
-        "start:prod": "node dist/main.js",
-        "start:hmr": "node dist/server",
+        "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts",
+        "dev": "nodemon --exec 'ts-node -r dotenv/config src/main.ts' src/main.ts",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "test": "nyc mocha",
-        "showcoverage": "open ./coverage/index.html",
-        "webpack": "webpack --config webpack.config.js"
+        "showcoverage": "open ./coverage/index.html"
     },
     "dependencies": {
         "@nestjs/common": "^5.1.0",
@@ -25,7 +20,7 @@
         "class-transformer": "^0.1.9",
         "class-validator": "^0.9.1",
         "cookie-parser": "^1.4.3",
-        "dotenv": "^6.0.0",
+        "dotenv": "^6.1.0",
         "express": "^4.16.4",
         "mysql": "^2.16.0",
         "passport": "^0.4.0",

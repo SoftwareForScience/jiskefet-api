@@ -18,28 +18,34 @@ And the **Ansible playbook** to deploy the application can be found here: https:
 ```bash
 $ npm install
 ```
+
+### Set db config
+
 Copy **ormconfig.json.dist** as **ormconfig.json**.
 ```bash
+# Create ormconfig.json file
 $ cp ormconfig.json.dist ormconfig.json
 ```
+Change **ormconfig.json** to your own variables.
 
-Change **ormconfig.json** to your own db settings.
+### Set env variables
+
+Copy the environment template that corresponds to your current environment:
+
+```bash
+# Create .env file
+$ cp ./environments/{YOUR_ENV}.env.template .env
+```
+
+Change **.env** to your own variables.
 
 ## Running the app
 
 ```bash
-# development
 $ npm run start
 
-# watch mode
-$ npm run start:dev
-
-# incremental rebuild (webpack)
-$ npm run webpack
-$ npm run start:hmr
-
-# production mode
-$ npm run start:prod
+# or for development (watch mode)
+$ npm run dev
 ```
 
 ## Database migration workflow
