@@ -9,7 +9,7 @@ export class AuthContoller {
 
     @Get('/auth')
     async auth(@Res() response: Response) {
-        await this.authService.auth(response);
+        return await this.authService.auth(response);
     }
 
     @Get('/callback')

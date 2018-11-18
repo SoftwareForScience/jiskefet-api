@@ -55,6 +55,8 @@ export class AuthService {
             // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
             state: process.env.AUTH_STATE,
         });
+        console.log('auth uri');
+        console.log(this.authorizationUri);
     }
 
     public async signIn(token: string): Promise<string> {
