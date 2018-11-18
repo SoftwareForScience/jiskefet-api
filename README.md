@@ -50,31 +50,27 @@ $ npm run dev
 
 ## Database migration workflow
 Automatic migration generation creates a new migration file and writes all sql queries that must be executed to make a new database or to update the database.
-It is needed to specify where the dependency is located, that is the reason it's needed to put the following command infront of the normal typeorm command.
-```bash
-$ node_modules/ts-node/dist/bin.js node_modules/typeorm/cli.js
-```
 
 To check what sql queries are going to be made when changes are made in the entities is as follows
 ```bash
-typeorm schema:log
+$ npm run typeorm schema:log
 ```
 
 To generate a migration file use the following command
 ```bash
-typeorm migration:generate -n 'name-of-migration-file'
+$ npm run typeorm migration:generate -n 'name-of-migration-file'
 ```
 The file that will be created can be found at the path chosen in ormconfig.json, the default path stated in the dist is *src/migration/*.
 The rule of thumb is to generate a migration after each entity change.
 
 To execute all pending migrations use following command
 ```bash
-typeorm migration:run
+$ npm run typeorm migration:run
 ```
 
 To revert the most recently executed migration use the following command
 ```bash
-typeorm migration:revert
+$ npm run typeorm migration:revert
 ```
 
 ## Testing
