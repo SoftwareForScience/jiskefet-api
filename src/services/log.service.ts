@@ -12,16 +12,23 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Log } from '../entities/log.entity';
 import { CreateLogDto } from '../dtos/create.log.dto';
-import * as _ from 'lodash';
+import { Run } from '../entities/run.entity';
+import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
+import _ from 'lodash';
 
 @Injectable()
 export class LogService {
     private readonly repository: Repository<Log>;
+    private readonly runRepository: Repository<Run>;
 
-    constructor(@InjectRepository(Log) repository: Repository<Log>) {
+    constructor(
+        @InjectRepository(Log) repository: Repository<Log>,
+        @InjectRepository(Run) runRepository: Repository<Run>
+    ) {
         this.repository = repository;
+        this.runRepository = runRepository;
     }
 
     /**
@@ -97,5 +104,16 @@ export class LogService {
             .getOne()
             .then((res: Log) => Promise.resolve(res))
             .catch((err: string) => Promise.reject(err));
+    }
+
+    /**
+     * Link a run to a log.
+     * @param linkRunToLogDto
+     */
+    async linkRunToLog(logId: number, linkRunToLogDto: LinkRunToLogDto): Promise<void> {
+        const log = await this.findLogById(logId);
+        const run = await this.runRepository.findOne(linkRunToLogDto.runNumber);
+        log.runs = [...log.runs, run];
+        await this.repository.save(log);
     }
 }

@@ -6,14 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
+import { Get, Post, Controller, Body, Param, Query, UsePipes, Patch, ValidationPipe } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
-import { ValidationPipe } from '@nestjs/common';
+import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
-import * as _ from 'lodash';
 
 @ApiUseTags('logs')
 @Controller('logs')
@@ -27,8 +26,8 @@ export class LogController {
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() createLogDto: CreateLogDto): Promise<Log> {
-        return await this.logService.create(createLogDto);
+    async create(@Body() request: CreateLogDto): Promise<Log> {
+        return await this.logService.create(request);
     }
 
     /**
@@ -47,5 +46,15 @@ export class LogController {
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
         return await this.logService.findLogById(id);
+    }
+
+    /**
+     * Link a run to a log.
+     * @param request LinkLogToRunDto
+     */
+    @Patch(':id/runs')
+    @UsePipes(ValidationPipe)
+    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
+        return await this.logService.linkRunToLog(logId, request);
     }
 }
