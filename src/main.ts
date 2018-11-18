@@ -18,7 +18,7 @@ const usePrefix = 'USE_API_PREFIX';
 // A boolean to set the swagger api for debugging purposes
 let useApiPrefix = false;
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   let portNumber;
   const app = await NestFactory.create(AppModule);
   app.enableCors();

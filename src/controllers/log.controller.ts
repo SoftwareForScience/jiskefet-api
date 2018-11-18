@@ -7,44 +7,37 @@
  */
 
 import { Get, Post, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
-import { ValidationPipe } from '../common/validation.pipe';
+import { ValidationPipe } from '@nestjs/common';
+import { QueryLogDto } from '../dtos/query.log.dto';
+import * as _ from 'lodash';
 
 @ApiUseTags('logs')
 @Controller('logs')
 export class LogController {
 
-    constructor(private readonly logservice: LogService) { }
+    constructor(private readonly logService: LogService) { }
 
     /**
      * Post a new Log item. /logs
      * @param createLogDto CreateLogDto from frontend.
      */
     @Post()
-    async create(@Body() createLogDto: CreateLogDto) {
-        return await this.logservice.create(createLogDto);
+    @UsePipes(ValidationPipe)
+    async create(@Body() createLogDto: CreateLogDto): Promise<Log> {
+        return await this.logService.create(createLogDto);
     }
 
     /**
      * Get all logs. /logs
      */
     @Get()
-    @ApiImplicitQuery({ name: 'pageSize', required: false })
-    @ApiImplicitQuery({ name: 'pageNumber', required: false })
-    @ApiImplicitQuery({ name: 'logId', required: false })
-    @ApiImplicitQuery({ name: 'searchterm', required: false })
-    @ApiImplicitQuery({ name: 'subType', required: false, enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'] })
-    @ApiImplicitQuery({ name: 'origin', required: false, enum: ['human', 'process'] })
-    @ApiImplicitQuery({ name: 'creationTime', required: false })
-    async findAll(@Query() query?: any) {
-        return await this.logservice.findAll(
-            query.pageSize || 25, query.pageNumber,
-            query.logId, query.searchterm,
-            query.subType, query.origin,
-            query.creationTime);
+    @UsePipes(ValidationPipe)
+    async findAll(@Query() query?: QueryLogDto): Promise<{ logs: Log[], count: number }> {
+        return await this.logService.findAll(query);
     }
 
     /**
@@ -53,6 +46,6 @@ export class LogController {
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
-        return await this.logservice.findLogById(id);
+        return await this.logService.findLogById(id);
     }
 }

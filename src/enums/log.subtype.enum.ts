@@ -1,3 +1,7 @@
 export enum SubType {
-    'run', 'subsystem', 'announcement', 'intervention', 'comment'
+    run = 'run',
+    subsystem = 'subsystem',
+    announcement = 'announcement',
+    intervention = 'intervention',
+    comment = 'comment'
 }
