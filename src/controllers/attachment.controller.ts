@@ -24,8 +24,8 @@ export class AttachmentController {
      * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post()
-    async create(@Body() createAttachmentDto: CreateAttachmentDto) {
-        await this.attachmentservice.create(createAttachmentDto);
+    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
+        return await this.attachmentservice.create(createAttachmentDto);
     }
 
     /**

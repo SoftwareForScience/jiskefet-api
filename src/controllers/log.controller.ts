@@ -6,13 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query, UsePipes, Patch } from '@nestjs/common';
+import { Get, Post, Controller, Body, Param, Query, UsePipes, Patch, ValidationPipe } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
-import { ValidationPipe } from '../common/validation.pipe';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
+import { QueryLogDto } from 'dtos/query.log.dto';
 
 @ApiUseTags('logs')
 @Controller('logs')
@@ -34,19 +34,9 @@ export class LogController {
      * Get all logs. /logs
      */
     @Get()
-    @ApiImplicitQuery({ name: 'pageSize', required: false })
-    @ApiImplicitQuery({ name: 'pageNumber', required: false })
-    @ApiImplicitQuery({ name: 'logId', required: false })
-    @ApiImplicitQuery({ name: 'searchterm', required: false })
-    @ApiImplicitQuery({ name: 'subType', required: false, enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'] })
-    @ApiImplicitQuery({ name: 'origin', required: false, enum: ['human', 'process'] })
-    @ApiImplicitQuery({ name: 'creationTime', required: false })
-    async findAll(@Query() query?: any) {
-        return await this.logService.findAll(
-            query.pageSize || 25, query.pageNumber,
-            query.logId, query.searchterm,
-            query.subType, query.origin,
-            query.creationTime);
+    @UsePipes(ValidationPipe)
+    async findAll(@Query() query?: QueryLogDto): Promise<{ logs: Log[], count: number }> {
+        return await this.logService.findAll(query);
     }
 
     /**
@@ -64,7 +54,7 @@ export class LogController {
      */
     @Patch(':id/runs')
     @UsePipes(ValidationPipe)
-    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto) {
+    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
         return await this.logService.linkRunToLog(logId, request);
     }
 }
