@@ -6,15 +6,11 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { CreateLogDto } from '../dtos/create.log.dto';
-import { isNullOrUndefined } from 'util';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from 'dtos/create.user.dto';
-import { ApiGatewayTimeoutResponse } from '@nestjs/swagger';
 
 export class UserService {
 
@@ -29,10 +25,13 @@ export class UserService {
      * @param createUserDto simple object that saves the oath_id
      */
     async saveUser(createUserDto: CreateUserDto): Promise<User> {
-        const userEntity = plainToClass(User, createUserDto);
+        console.log('saving user');
+
+        const userEntity: User = plainToClass(User, createUserDto);
+        userEntity.samsId = 123;
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
         // update user if exists
-        if (typeof foundUser === 'object' ) {
+        if (typeof foundUser === 'object') {
             foundUser.token = userEntity.token;
             await this.repository.save(foundUser);
             return foundUser;
