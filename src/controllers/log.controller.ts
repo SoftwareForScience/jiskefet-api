@@ -7,12 +7,12 @@
  */
 
 import { Get, Post, Controller, Body, Param, Query, UsePipes, Patch, ValidationPipe } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
-import { QueryLogDto } from 'dtos/query.log.dto';
+import { QueryLogDto } from '../dtos/query.log.dto';
 
 @ApiUseTags('logs')
 @Controller('logs')

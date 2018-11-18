@@ -8,12 +8,12 @@
 
 import { Get, Controller, Body, Param, Query, UsePipes, Patch, ValidationPipe } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
-import { QueryRunDto } from 'dtos/query.run.dto';
+import { QueryRunDto } from '../dtos/query.run.dto';
 
 @ApiUseTags('runs')
 @Controller('runs')

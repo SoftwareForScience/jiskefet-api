@@ -14,8 +14,8 @@ import { Run } from '../entities/run.entity';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { Log } from '../entities/log.entity';
-import { QueryRunDto } from 'dtos/query.run.dto';
-import { OrderDirection } from 'enums/orderDirection.enum';
+import { QueryRunDto } from '../dtos/query.run.dto';
+import { OrderDirection } from '../enums/orderDirection.enum';
 import _ from 'lodash';
 
 @Injectable()

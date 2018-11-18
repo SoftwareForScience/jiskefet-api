@@ -8,7 +8,6 @@
 
 import { Post, Controller, Body, Get, Param } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
-
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
