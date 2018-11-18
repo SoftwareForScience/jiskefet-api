@@ -6,14 +6,17 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { Get, Post, Controller, Body, Param, Query, UsePipes, UseGuards } from '@nestjs/common';
+import { ApiUseTags, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
 import { ValidationPipe } from '../common/validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('logs')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('logs')
 export class LogController {
 

@@ -12,7 +12,8 @@ import * as request from 'request';
 import * as oauth2 from 'simple-oauth2';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../dtos/create.user.dto';
-
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,10 @@ export class AuthService {
         }
     };
 
-    constructor(private readonly userService: UserService) {
+    constructor(
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService,
+    ) {
         // set client
         this.oAuth2Config.client.id = process.env.CLIENT_ID;
         this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
@@ -51,6 +55,17 @@ export class AuthService {
             // state prevents CSRF attacks https://security.stackexchange.com/questions/104167/what-to-use-as-state-in-oauth2-authorization-code-grant-workflow
             state: process.env.AUTH_STATE,
         });
+    }
+
+    public async signIn(token: string): Promise<string> {
+        // In the real-world app you shouldn't expose this method publicly
+        // instead, return a token once you verify user credentials
+        const user: JwtPayload = { token };
+        return this.jwtService.sign(user);
+    }
+
+    public async validateUserJwt(payload: JwtPayload): Promise<any> {
+        return await this.userService.findOneByToken(payload.token);
     }
 
     /**
@@ -72,8 +87,13 @@ export class AuthService {
         try {
             const authGrant: string = req.query.code;
             const accessToken = await this.getToken(authGrant);
+            const jwt = this.signIn(accessToken);
+            console.log('\naccessToken: ' + accessToken);
+            console.log('\njwt: ' + await jwt);
+            console.log('\ndecoded jwt: ');
+            console.log(this.jwtService.decode(await jwt, {}));
             await this.getResource(accessToken, res, (user: CreateUserDto) => {
-                this.validateUser(user);
+                this.validateUser(accessToken, user);
             });
         } catch (error) {
             // console.error(`Access Token Error ${error.message}`);
@@ -111,32 +131,39 @@ export class AuthService {
         return res.redirect(process.env.HOME_URI);
     }
 
-    public async validateUser(tempUser: CreateUserDto): Promise<void> {
-         // only send save user request if it has an external id
-        console.log('tempUser inside validateUser');
+    // public async validateUser(tempUser: CreateUserDto): Promise<void> {
+        //  // only send save user request if it has an external id
+        // console.log('tempUser inside validateUser');
 
-        console.log(tempUser);
+        // console.log(tempUser);
 
-        await this.userService.saveUser(tempUser);
+        // await this.userService.saveUser(tempUser);
 
         // if (tempUser && tempUser.externalUserId) {
-        //     // await this.userService.saveUser(tempUser);
+        //     await this.userService.saveUser(tempUser);
         //         // this.validateUser(token);
 
-        //     // await response.set('Authorization', `Bearer ${token}`);
-        //     // await response.cookie(this.cookieName, `${token}`);
-        //     // return await response.redirect(process.env.REDIRECT_URI);
-        //     //     // res.send({
-        //     //     //     success: true,
-        //     //     //     innerAccessToken
-        //     //     // });
+        //     await response.set('Authorization', `Bearer ${token}`);
+        //     await response.cookie(this.cookieName, `${token}`);
+        //     return await response.redirect(process.env.REDIRECT_URI);
+        //         // res.send({
+        //         //     success: true,
+        //         //     innerAccessToken
+        //         // });
 
         // }
-        // // Validate if token passed along with HTTP request
-        // // is associated with any registered account in the database
-        // return await this.userService.findUserByToken(token);
-    }
+        // // // Validate if token passed along with HTTP request
+        // // // is associated with any registered account in the database
+        // // return await this.userService.findUserByToken(token);
+    // }
 
+    public async validateUser(token: string, user: CreateUserDto): Promise<any> {
+        const foundUser = await this.userService.findOneByToken(token);
+        if (!foundUser) {
+            this.userService.saveUser(user);
+        }
+        return await this.userService.findOneByToken(token);
+    }
     /**
      * POST to authorization server for token by giving the authorization grant (code).
      * @param code string

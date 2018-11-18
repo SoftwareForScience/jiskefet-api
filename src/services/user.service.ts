@@ -25,9 +25,8 @@ export class UserService {
      * @param createUserDto simple object that saves the oath_id
      */
     async saveUser(createUserDto: CreateUserDto): Promise<User> {
-        console.log('saving user');
-
         const userEntity: User = plainToClass(User, createUserDto);
+        // Todo: change this
         userEntity.samsId = 123;
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
         // update user if exists
@@ -55,7 +54,7 @@ export class UserService {
             .getOne();
     }
 
-    async findUserByToken(token: string): Promise<User> {
+    async findOneByToken(token: string): Promise<User> {
         return await this.repository.createQueryBuilder()
             .where('token = :token', { token })
             .getOne();

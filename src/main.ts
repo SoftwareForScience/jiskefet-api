@@ -27,19 +27,19 @@ async function bootstrap() {
         .setTitle('ALICE-Bookkeeping')
         .setVersion('1.0')
         .addTag('logs')
-        .addTag('runs');
+        .addTag('runs')
+        .addBearerAuth();
 
-    if (process.env.USE_API_PREFIX) {
+    if (process.env.USE_API_PREFIX === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
         options.setDescription('Running with /api prefix');
-        const document = SwaggerModule.createDocument(app, options.build());
-        SwaggerModule.setup('doc', app, document);
     } else {
         options.setDescription('Running without /api prefix');
-        const document = SwaggerModule.createDocument(app, options.build());
-        SwaggerModule.setup('doc', app, document);
     }
+
+    const document = SwaggerModule.createDocument(app, options.build());
+    SwaggerModule.setup('doc', app, document);
 
     await app.listen(process.env.PORT);
 }
