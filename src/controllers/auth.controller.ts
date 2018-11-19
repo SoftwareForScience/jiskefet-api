@@ -1,30 +1,23 @@
-import { Get, Controller, UseGuards, Req, Res } from '@nestjs/common';
+import { Get, Controller, UseGuards, Req, Res, Query } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiImplicitQuery } from '@nestjs/swagger';
 
 @Controller()
 export class AuthContoller {
     constructor(private readonly authService: AuthService) { }
 
     @Get('/auth')
-    async auth(@Res() response: Response) {
-        return await this.authService.auth(response);
-    }
-
-    @Get('/callback')
-    async callback(@Req() req: Request, @Res() res: Response) {
-        await this.authService.callback(req, res);
+    @ApiImplicitQuery({ name: 'grant', required: false })
+    async auth(@Res() response: Response, @Query() query?: any) {
+        const grant = query.grant;
+        console.log('Auth grant received:' + grant);
+        await this.authService.auth(response, grant);
     }
 
     @Get('/logout')
     async logout(@Res() response: Response) {
         await this.authService.logout(response);
-    }
-
-    @Get('/secret')
-    @UseGuards(AuthGuard())
-    protected getSecret(): string {
-        return String('Secret password is : hunter12').toString();
     }
 }

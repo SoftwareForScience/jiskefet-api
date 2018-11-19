@@ -6,15 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { PassportModule } from '@nestjs/passport';
-import { HttpStrategy } from '../strategies/http.strategy';
-import { CookieStrategy } from '../strategies/cookie.strategy';
-import { UserModule } from './user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 
+@Global()
 @Module({
     imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -24,11 +22,9 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
             signOptions: {
                 expiresIn: 3600,
             },
-        }),
-        UserModule
+        })
     ],
-    providers: [AuthService, HttpStrategy, CookieStrategy, JwtStrategy],
+    providers: [AuthService, JwtStrategy],
     exports: [AuthModule],
 })
-
 export class AuthModule {}

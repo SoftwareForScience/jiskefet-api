@@ -13,7 +13,7 @@ export class CreateUserDto {
     externalUserId: number;
     @ApiModelProperty({
         example: '4l1c3L4R93H4Dr0NC0LL1D3R',
-        description: 'Generated token from oauth provider',
+        description: 'Generated token from oauth provider, encoded as JWT.',
     })
     @IsString()
     token?: string;

@@ -6,15 +6,18 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UsePipes, UseGuards } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
 import { ValidationPipe } from '../common/validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('runs')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('runs')
 export class RunController {
     constructor(private readonly runService: RunService) { }

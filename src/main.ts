@@ -28,11 +28,7 @@ async function bootstrap() {
         .setVersion('1.0')
         .addTag('logs')
         .addTag('runs')
-        .addOAuth2(
-            'accessCode',
-            `https://github.com/login/oauth/authorize?response_type=code&client_id=be996226c8f6d408b35f&redirect_uri=http://localhost:3000/callback&state=yx_4404.!dcbR%40YR44yQ`,
-            'https://github.com/login/oauth/access_token'
-        );
+        .addBearerAuth();
 
     if (process.env.USE_API_PREFIX === 'true') {
         // set /api as basePath for non local
