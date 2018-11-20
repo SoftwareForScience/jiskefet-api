@@ -10,9 +10,29 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  root(): string {
-    return [
-      'Welcome to the Jiskefet API. Go to /doc for the Swagger API documentation.',
-      '</br>Hello, <a href="/auth">Log in with Github</a>'].join('');
-  }
+    root(): string {
+        return [
+            `
+            <h1 style="font-family: sans-serif; text-align: center; margin-top: 10rem;">
+                Welcome to the Jiskefet API
+                <br>
+                <br>
+                <a href="/doc/">
+                    <button type="button" style="
+                        font-size: 2rem;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        color: white;
+                        background-color: #89bf04;
+                        box-shadow: 0px 1px 2px 1px #00000021;
+                        border: 0px;
+                        cursor: pointer;
+                    ">
+                        Go to Swagger API doc
+                    </button>
+                </a>
+            </h1>
+            `
+        ].join('');
+    }
 }
