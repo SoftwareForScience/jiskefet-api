@@ -8,13 +8,13 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsEmpty, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
+import { Attachment } from 'entities/attachment.entity';
 
 @Entity('logs')
 export class CreateLogDto {
-
     @ApiModelProperty({
         example: 'run',
         description: 'What kind of log is it?',
@@ -45,6 +45,11 @@ export class CreateLogDto {
     })
     @IsString()
     text: string;
+
+    @ApiModelProperty({
+        description: 'Attachments of this log',
+    })
+    attachments?: Attachment[];
 
     @ApiModelProperty({
         example: '8',

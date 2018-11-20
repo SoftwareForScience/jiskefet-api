@@ -11,7 +11,11 @@ import { AppModule } from './app.module';
 
 declare const module: any;
 
-async function bootstrap() {
+/**
+ * This module is for hotloading the app while developing.
+ * It reloads the app when changes are made to the code.
+ */
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   await app.listen(3000);
 

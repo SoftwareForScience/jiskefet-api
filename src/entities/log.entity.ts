@@ -6,7 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    JoinTable,
+    OneToMany,
+    ManyToOne,
+    JoinColumn
+} from 'typeorm';
 import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
@@ -109,6 +118,8 @@ export class Log {
     })
     runs: Run[];
 
-    @OneToMany(type => Attachment, attachment => attachment.log)
+    @OneToMany(type => Attachment, attachment => attachment.log, {
+        cascade: ['insert']
+    })
     attachments: Attachment[];
 }
