@@ -17,15 +17,19 @@ import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
 import { ConfigModule } from './modules/config.module';
+import { SubSystemController } from 'controllers/subsystem.controller';
+import { SubSystemModule } from 'modules/subsystem.module';
+import { SubSystemService } from 'services/susbsystem.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
-    ConfigModule
+    ConfigModule,
+    SubSystemModule
   ],
-  controllers: [AppController, RunController, LogController],
-  providers: [AppService, RunService, LogService],
+  controllers: [AppController, RunController, LogController, SubSystemController],
+  providers: [AppService, RunService, LogService, SubSystemService],
 })
 export class AppModule { }
