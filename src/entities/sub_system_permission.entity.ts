@@ -6,9 +6,10 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
+import { SubSystemRole } from './sub_system_role.entity';
 
 @Entity('sub_system_permission')
 export class SubSystemPermission {
@@ -36,6 +37,18 @@ export class SubSystemPermission {
     @JoinColumn({ name: 'fk_subsystem_id' })
     subSystem: SubSystem;
 
+    @PrimaryColumn({
+        name: 'sub_system_token',
+        type: 'varchar'
+    })
+    subSystemToken: string;
+
+    @Column({
+        name: 'sub_system_description',
+        type: 'varchar'
+    })
+    subSystemDescription: string;
+
     @Column({
         name: 'is_member',
         type: 'tinyint'
@@ -47,4 +60,18 @@ export class SubSystemPermission {
         type: 'tinyint'
     })
     editEorReason: boolean;
+
+    @ManyToMany(type => SubSystemRole)
+    @JoinTable({
+        name: 'sub_system_permission_in_sub_system_role',
+        joinColumn: {
+            name: 'fk_sub_system_token',
+            referencedColumnName: 'subSystemToken'
+        },
+        inverseJoinColumn: {
+            name: 'fk_sub_system_role_id',
+            referencedColumnName: 'subSystemRoleId'
+        }
+    })
+    subSystemRoles: SubSystemRole[];
 }
