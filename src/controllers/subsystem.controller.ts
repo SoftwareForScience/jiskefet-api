@@ -8,7 +8,6 @@
 
 import { Get, Controller, Query } from '@nestjs/common';
 import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
-import { Run } from '../entities/run.entity';
 import { SubSystemService } from '../services/susbsystem.service';
 import { SubSystem } from 'entities/sub_system.entity';
 

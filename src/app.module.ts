@@ -23,6 +23,9 @@ import { SubSystemService } from 'services/susbsystem.service';
 import { AttachmentModule } from 'modules/attachment.module';
 import { AttachmentController } from 'controllers/attachment.controller';
 import { AttachmentService } from 'services/attachment.service';
+import { UserModule } from 'modules/user.module';
+import { UserController } from 'controllers/user.controller';
+import { UserService } from 'services/user.service';
 
 @Module({
   imports: [
@@ -31,9 +34,10 @@ import { AttachmentService } from 'services/attachment.service';
     LogModule,
     ConfigModule,
     AttachmentModule,
-    SubSystemModule
+    SubSystemModule,
+    UserModule
   ],
-  controllers: [AppController, RunController, LogController, AttachmentController, SubSystemController],
-  providers: [AppService, RunService, LogService, AttachmentService, SubSystemService],
+  controllers: [AppController, RunController, LogController, AttachmentController, SubSystemController, UserController],
+  providers: [AppService, RunService, LogService, AttachmentService, SubSystemService, UserService],
 })
 export class AppModule { }

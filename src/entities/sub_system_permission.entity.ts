@@ -44,10 +44,10 @@ export class SubSystemPermission {
     subSystemToken: string;
 
     @Column({
-        name: 'sub_system_description',
+        name: 'sub_system_token_description',
         type: 'varchar'
     })
-    subSystemDescription: string;
+    subSystemTokenDescription: string;
 
     @Column({
         name: 'is_member',
