@@ -20,16 +20,20 @@ import { ConfigModule } from './modules/config.module';
 import { AttachmentModule } from 'modules/attachment.module';
 import { AttachmentController } from 'controllers/attachment.controller';
 import { AttachmentService } from 'services/attachment.service';
+import { OverviewModule } from 'modules/overview.module';
+import { OverviewController } from 'controllers/overview.controller';
+import { OverviewService } from 'services/overview.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(),
-    RunModule,
-    LogModule,
-    ConfigModule,
-    AttachmentModule
-  ],
-  controllers: [AppController, RunController, LogController, AttachmentController],
-  providers: [AppService, RunService, LogService, AttachmentService],
+    imports: [
+        TypeOrmModule.forRoot(),
+        RunModule,
+        LogModule,
+        ConfigModule,
+        AttachmentModule,
+        OverviewModule
+    ],
+    controllers: [AppController, RunController, LogController, AttachmentController, OverviewController],
+    providers: [AppService, RunService, LogService, AttachmentService, OverviewService],
 })
 export class AppModule { }
