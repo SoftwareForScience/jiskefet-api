@@ -59,7 +59,7 @@ export class QueryRunDto {
         description: 'The id of the log.',
         required: false,
     })
-    @IsInt()
+    @IsNumberString()
     @IsOptional()
     runNumber?: string;
 

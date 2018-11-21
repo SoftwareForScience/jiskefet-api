@@ -62,7 +62,7 @@ export class QueryLogDto {
         description: 'The id of the log.',
         required: false,
     })
-    @IsInt()
+    @IsNumberString()
     @IsOptional()
     logId?: string;
 
