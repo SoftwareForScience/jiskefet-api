@@ -20,40 +20,40 @@ export class CreateSubSystemPermissionDto {
         description: 'Id of the user.',
     })
     @IsInt()
-    readonly userId: number;
+    userId: number;
 
     @ApiModelProperty({
         example: 8,
         description: 'Id of the subsystem.',
     })
     @IsInt()
-    readonly subSystemId: number;
+    subSystemId: number;
 
     @ApiModelProperty({
         example: true,
         description: 'If the user is a member.',
     })
     @IsBoolean()
-    readonly isMember: boolean;
+    isMember: boolean;
 
     @ApiModelProperty({
         example: true,
         description: 'Reason for the end of run.',
     })
     @IsBoolean()
-    readonly editEorReason: boolean;
+    editEorReason: boolean;
 
     @ApiModelProperty({
         example: '0f62642f-a46c-4c3a-925f-5070d8b0594e',
         description: 'A unique token for a subsystem linked to a user.',
     })
     @IsString()
-    readonly subSystemToken: string;
+    subSystemToken: string;
 
     @ApiModelProperty({
         example: 'Read and Write token for subsystem',
         description: 'A description for the subsystem.',
     })
     @IsString()
-    readonly subSystemTokenDescription: string;
+    subSystemTokenDescription: string;
 }

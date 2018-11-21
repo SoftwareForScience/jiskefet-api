@@ -8,9 +8,9 @@
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SubSystem } from 'entities/sub_system.entity';
-import { SubSystemService } from 'services/susbsystem.service';
-import { SubSystemController } from 'controllers/subsystem.controller';
+import { SubSystem } from '../entities/sub_system.entity';
+import { SubSystemService } from '../services/susbsystem.service';
+import { SubSystemController } from '../controllers/subsystem.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SubSystem])],

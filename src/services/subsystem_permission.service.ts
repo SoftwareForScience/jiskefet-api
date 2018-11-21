@@ -9,9 +9,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SubSystem } from 'entities/sub_system.entity';
-import { SubSystemPermission } from 'entities/sub_system_permission.entity';
-import { CreateSubSystemPermissionDto } from 'dtos/create.subsystemPermission.dto';
+import { SubSystemPermission } from '../entities/sub_system_permission.entity';
+import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { plainToClass } from 'class-transformer';
 
 @Injectable()
@@ -36,7 +35,7 @@ export class SubSystemPermissionService {
      */
     async findTokensByUserId(userId: number): Promise<SubSystemPermission[]> {
         return await this.repository.createQueryBuilder()
-            .where('fk_user_id: user_id', { user_id: userId })
+            .where('fk_user_id = :userId', { userId })
             .getMany();
     }
 

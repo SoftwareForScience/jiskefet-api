@@ -8,14 +8,16 @@
 
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'entities/user.entity';
-import { UserService } from 'services/user.service';
-import { UserController } from 'controllers/user.controller';
+import { User } from '../entities/user.entity';
+import { UserService } from '../services/user.service';
+import { UserController } from '../controllers/user.controller';
+import { SubSystemPermissionModule } from './subsystem_permission.module';
+import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  providers: [UserService],
+  imports: [TypeOrmModule.forFeature([User]), SubSystemPermissionModule],
+  providers: [UserService, SubSystemPermissionService],
   controllers: [UserController],
   exports: [UserService],
 })
