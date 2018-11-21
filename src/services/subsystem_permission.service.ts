@@ -18,7 +18,9 @@ export class SubSystemPermissionService {
 
     private readonly repository: Repository<SubSystemPermission>;
 
-    constructor(@InjectRepository(SubSystemPermission) repository: Repository<SubSystemPermission>) {
+    constructor(
+        @InjectRepository(SubSystemPermission) repository: Repository<SubSystemPermission>,
+    ) {
         this.repository = repository;
     }
 
@@ -43,9 +45,9 @@ export class SubSystemPermissionService {
      * Create a new token for a subsystem
      * @param subSystemPermissionDto
      */
-    async generateNewToken(
+    async saveTokenForSubSystemPermission(
         subSystemPermissionDto: CreateSubSystemPermissionDto): Promise<SubSystemPermission> {
-        const subSystem = plainToClass(SubSystemPermission, subSystemPermissionDto);
-        return this.repository.create(subSystem);
+        const newSubSystemPermission: SubSystemPermission = plainToClass(SubSystemPermission, subSystemPermissionDto);
+        return this.repository.save(newSubSystemPermission);
     }
 }

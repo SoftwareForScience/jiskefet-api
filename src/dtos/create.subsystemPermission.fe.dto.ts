@@ -11,25 +11,27 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsBoolean } from 'class-validator';
-import { User } from '../entities/user.entity';
-import { SubSystem } from '../entities/sub_system.entity';
+import { IsInt, IsString, IsBoolean } from 'class-validator';
 
-export class CreateSubSystemPermissionDto {
+/**
+ * This DTO is used for the front end, it takes userId instead of an user object.
+ * Same goes for the Subsystem, it takes an subsystemId instead of a subsystem object
+ */
+export class CreateSubSystemPermissionFeDto {
 
     @ApiModelProperty({
         example: 8,
         description: 'Id of the user.',
     })
-    // @IsInt()
-    user: User;
+    @IsInt()
+    userId: number;
 
     @ApiModelProperty({
         example: 8,
         description: 'Id of the subsystem.',
     })
-    // @IsInt()
-    subSystem: SubSystem;
+    @IsInt()
+    subSystem: number;
 
     @ApiModelProperty({
         example: true,
@@ -58,8 +60,4 @@ export class CreateSubSystemPermissionDto {
     })
     @IsString()
     subSystemTokenDescription: string;
-
-    constructor(data: CreateSubSystemPermissionDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }

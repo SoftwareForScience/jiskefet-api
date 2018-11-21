@@ -21,6 +21,14 @@ export class SubSystemService {
     }
 
     /**
+     * Find one subsystem by id
+     * @param subSystemId number
+     */
+    async findSubSystemById(subSystemId: number): Promise<SubSystem> {
+        return await this.repository.findOne(subSystemId);
+    }
+
+    /**
      * Handler for getting SubSystem from db.
      */
     async findAll(): Promise<SubSystem[]> {

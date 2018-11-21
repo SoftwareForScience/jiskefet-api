@@ -13,11 +13,15 @@ import { UserService } from '../services/user.service';
 import { UserController } from '../controllers/user.controller';
 import { SubSystemPermissionModule } from './subsystem_permission.module';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
+import { AuthService } from '../services/auth.service';
+import { BCryptService } from '../services/bcrypt.service';
+import { SubSystemModule } from './subsystem.module';
+import { SubSystemService } from '../services/susbsystem.service';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), SubSystemPermissionModule],
-  providers: [UserService, SubSystemPermissionService],
+  imports: [TypeOrmModule.forFeature([User]), SubSystemPermissionModule, SubSystemModule],
+  providers: [UserService, SubSystemPermissionService, AuthService, BCryptService, SubSystemService],
   controllers: [UserController],
   exports: [UserService],
 })
