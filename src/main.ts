@@ -10,18 +10,13 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import bodyParser = require('body-parser');
-
-const envConfig = 'envConfig';
-const port = 'PORT';
-const usePrefix = 'USE_API_PREFIX';
-// A boolean to set the swagger api for debugging purposes
-let useApiPrefix = false;
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap(): Promise<void> {
-  let portNumber;
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.use(cookieParser());
 
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -32,27 +27,24 @@ async function bootstrap(): Promise<void> {
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-  if (process.env.NODE_ENV) {
-    portNumber = app.get('ConfigService')[envConfig][port];
-    useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
-  } else {
-    portNumber = 3000;
-  }
-
   const options = new DocumentBuilder()
     .setTitle('ALICE-Bookkeeping')
     .setVersion('1.0')
     .addTag('logs')
-    .addTag('runs');
-  if (!useApiPrefix) {
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
-  } else {
+    .addTag('runs')
+    .addBearerAuth();
+
+  if (process.env.USE_API_PREFIX === 'true') {
     // set /api as basePath for non local
     options.setBasePath('/api');
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
+    options.setDescription('Running with /api prefix');
+  } else {
+    options.setDescription('Running without /api prefix');
   }
-  await app.listen(portNumber);
+
+  const document = SwaggerModule.createDocument(app, options.build());
+  SwaggerModule.setup('doc', app, document);
+
+  await app.listen(process.env.PORT);
 }
 bootstrap();

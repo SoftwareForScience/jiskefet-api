@@ -6,16 +6,19 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes, Patch, ValidationPipe } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UsePipes, UseGuards, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';
-import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
+import { AuthGuard } from '@nestjs/passport';
 import { QueryRunDto } from '../dtos/query.run.dto';
+import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 
 @ApiUseTags('runs')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('runs')
 export class RunController {
     constructor(private readonly runService: RunService) { }
@@ -25,7 +28,6 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
-    @UsePipes(ValidationPipe)
     async create(@Body() request: CreateRunDto): Promise<Run> {
         request.timeO2Start = new Date();
         request.timeTrgStart = new Date();
@@ -58,7 +60,6 @@ export class RunController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/logs')
-    @UsePipes(ValidationPipe)
     async linkLogToRun(@Param('id') runNumber: number, @Body() request: LinkLogToRunDto): Promise<void> {
         return await this.runService.linkLogToRun(runNumber, request);
     }

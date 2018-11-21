@@ -16,31 +16,41 @@ import { RunService } from './services/run.service';
 import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
-import { ConfigModule } from './modules/config.module';
 import { SubSystemController } from './controllers/subsystem.controller';
 import { SubSystemModule } from './modules/subsystem.module';
 import { SubSystemService } from './services/susbsystem.service';
 import { AttachmentModule } from './modules/attachment.module';
 import { AttachmentController } from './controllers/attachment.controller';
 import { AttachmentService } from './services/attachment.service';
-import { UserModule } from './modules/user.module';
 import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
 import { SubSystemPermissionModule } from './modules/subsystem_permission.module';
 import { SubSystemPermissionService } from './services/subsystem_permission.service';
+import { AuthModule } from './modules/auth.module';
+import { AuthService } from './services/auth.service';
+import { AuthContoller } from './controllers/auth.controller';
+import { UserModule } from './modules/user.module';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
-    ConfigModule,
     AttachmentModule,
     SubSystemModule,
     UserModule,
     SubSystemPermissionModule,
+    AuthModule
   ],
-  controllers: [AppController, RunController, LogController, AttachmentController, SubSystemController, UserController],
+  controllers: [
+    AppController,
+    RunController,
+    LogController,
+    AttachmentController,
+    SubSystemController,
+    UserController,
+    AuthContoller
+  ],
   providers: [
     AppService,
     RunService,
@@ -48,6 +58,8 @@ import { SubSystemPermissionService } from './services/subsystem_permission.serv
     AttachmentService,
     SubSystemService,
     UserService,
-    SubSystemPermissionService],
+    SubSystemPermissionService,
+    AuthService
+  ],
 })
 export class AppModule { }
