@@ -7,8 +7,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
-import * as request from 'request';
+import * as RequestPromise from 'request-promise';
 import * as oauth2 from 'simple-oauth2';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../dtos/create.user.dto';
@@ -16,6 +15,9 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { User } from '../entities/user.entity';
 
+/**
+ * Handles authorization via OAuth 2.
+ */
 @Injectable()
 export class AuthService {
     private oAuth2Client: oauth2.OAuthClient;
@@ -46,57 +48,45 @@ export class AuthService {
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
 
-    public async signIn(token: string): Promise<string> {
-        const user: JwtPayload = { token };
-        return this.jwtService.sign(user);
-    }
-
-    public async validateUserJwt(payload: JwtPayload): Promise<any> {
+    /**
+     * Returns the user that the JWT belongs to.
+     * @param payload JWT
+     */
+    public async validateUserJwt(payload: JwtPayload): Promise<User> {
         return await this.userService.findOneByToken(payload.token);
     }
 
     /**
-     * Authorize the user via GitHub by redirecting to GitHub's login page.
-     * The user logs in via GitHub and GitHub does a GET on
-     * our /callback endpoint with the authorization grant (or code).
+     * Authorize the user via the OAuth 2 provider by exchanging the grant for an access token.
+     * This token is then encoded as a JWT, exchanged for a user resource which is saved and finally returned.
      * @param response response
+     * @returns JWT string.
      */
-    public async auth(response: Response, grant: string) {
+    public async auth(grant: string): Promise<string> {
         if (!grant) {
-            throw response.status(500).json('Authentication failed, please provide an Authorization Grant as a query param.');
+            throw Error('Authentication failed, please provide an Authorization Grant.');
         }
         try {
             const accessToken = await this.getToken(grant);
-            const jwt = await this.signIn(accessToken);
+            const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
 
             console.log('\naccessToken: ' + accessToken);
             console.log('\njwt: ' + jwt);
 
-            // ~Begin Validate user, extract to separate function eventually
-            const user = await this.userService.findOneByToken(accessToken);
-            if (!user) {
-                await this.getResource(await accessToken, async (returnedUser: CreateUserDto) => {
-                    this.userService.saveUser(returnedUser);
-                    const foundUser: User = await this.userService.findOneByToken(accessToken);
-                    if (!foundUser) {
-                        throw response.status(500).json('Authentication failed, user not saved correctly.');
-                    }
-                });
-            }
-            response.send({ token: await jwt });
-            // ~End validate user
-
+            const user: CreateUserDto = await this.getResource(accessToken);
+            await this.userService.saveUser(user);
+            return jwt;
         } catch (error) {
-            throw response.status(500).json(`Authentication failed. ${error.message}`);
+            throw Error(`Authentication failed. ${error.message}`);
         }
     }
 
     /**
-     * Ask resource server for user info by giving access token.
-     * @param accessToken Access token
+     * Ask the resource server for user info by giving access token.
+     * @param accessToken Access token (non JWT)
      * @param res response object
      */
-    public async getResource(accessToken: string, callback: (user: CreateUserDto) => void): Promise<void> {
+    public async getResource(accessToken: string): Promise<CreateUserDto> {
         const getCall = {
             url: 'https://api.github.com/user?access_token=' + accessToken,
             headers: {
@@ -112,18 +102,16 @@ export class AuthService {
         //     }
         // };
 
-        request(getCall, (error, response, body) => {
+        return RequestPromise(getCall).then((body) => {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
                 externalUserId: jsonBody.id,
                 token: accessToken,
                 avatarUrl: jsonBody.avatar_url
             };
-            callback(createUserDto);
+            return createUserDto;
         });
     }
-
-    public async logout() { }
 
     /**
      * POST to authorization server for token by giving the authorization grant (code).
@@ -133,7 +121,7 @@ export class AuthService {
         const authorizationGrant = await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
         const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
         if (!accessTokenObject.token.access_token) {
-            throw new Error('Cannot get access token: GitHub did not accept grant given.');
+            throw new Error('Cannot get access token: Authentication Server did not accept grant given.');
         }
         return accessTokenObject.token.access_token;
     }

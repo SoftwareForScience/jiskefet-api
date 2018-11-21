@@ -11,7 +11,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { AuthService } from '../services/auth.service';
+import { User } from '../entities/user.entity';
 
+/**
+ * A PassportStrategy that verifies JWT's.
+ */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly authService: AuthService) {
@@ -21,11 +25,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: JwtPayload) {
-        console.log('Validating jwt');
+    /**
+     * Validate a JWT by checking if a user exists with the JWT given.
+     * This is an additional check besides verifying the JWT itself.
+     * @param payload The JWT.
+     */
+    async validate(payload: JwtPayload): Promise<User> {
         const user = await this.authService.validateUserJwt(payload);
-        console.log('user:');
-        console.log(await user);
         if (!user) {
             throw new UnauthorizedException();
         }
