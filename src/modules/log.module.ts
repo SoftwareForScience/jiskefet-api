@@ -11,8 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LogService } from '../services/log.service';
 import { LogController } from '../controllers/log.controller';
 import { Log } from '../entities/log.entity';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 
 @Global()
 @Module({
@@ -21,5 +19,4 @@ import { JwtModule } from '@nestjs/jwt';
     controllers: [LogController],
     exports: [LogService],
 })
-
 export class LogModule { }

@@ -63,22 +63,15 @@ export class AuthService {
      * @returns JWT string.
      */
     public async auth(grant: string): Promise<string> {
-        if (!grant) {
-            throw Error('Authentication failed, please provide an Authorization Grant.');
-        }
-        try {
-            const accessToken = await this.getToken(grant);
-            const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
+        const accessToken = await this.getToken(grant);
+        const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
 
-            console.log('\naccessToken: ' + accessToken);
-            console.log('\njwt: ' + jwt);
+        console.log('\naccessToken: ' + accessToken);
+        console.log('\njwt: ' + jwt);
 
-            const user: CreateUserDto = await this.getResource(accessToken);
-            await this.userService.saveUser(user);
-            return jwt;
-        } catch (error) {
-            throw Error(`Authentication failed. ${error.message}`);
-        }
+        const user: CreateUserDto = await this.getResource(accessToken);
+        await this.userService.saveUser(user);
+        return jwt;
     }
 
     /**
@@ -101,7 +94,6 @@ export class AuthService {
         //         'Authorization': `token ${accessToken}`
         //     }
         // };
-
         return RequestPromise(getCall).then((body) => {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
@@ -110,6 +102,8 @@ export class AuthService {
                 avatarUrl: jsonBody.avatar_url
             };
             return createUserDto;
+        }).catch((error) => {
+            throw new Error(error);
         });
     }
 
@@ -121,7 +115,8 @@ export class AuthService {
         const authorizationGrant = await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
         const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
         if (!accessTokenObject.token.access_token) {
-            throw new Error('Cannot get access token: Authentication Server did not accept grant given.');
+            throw new Error(accessTokenObject.token.error_description ||
+                'Cannot get access token: Authentication Server did not accept grant given.');
         }
         return accessTokenObject.token.access_token;
     }
