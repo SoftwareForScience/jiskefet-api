@@ -8,15 +8,13 @@
 
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LogService } from '../services/log.service';
-import { LogController } from '../controllers/log.controller';
-import { Log } from '../entities/log.entity';
+import { User } from '../entities/user.entity';
+import { UserService } from '../services/user.service';
 
 @Global()
 @Module({
-    imports: [TypeOrmModule.forFeature([Log])],
-    providers: [LogService],
-    controllers: [LogController],
-    exports: [LogService],
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
+  exports: [UserService],
 })
-export class LogModule { }
+export class UserModule { }
