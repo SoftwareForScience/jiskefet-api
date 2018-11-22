@@ -16,7 +16,7 @@ import { BCryptService } from '../services/bcrypt.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { User } from '../entities/user.entity';
-import { UserService } from 'services/user.service';
+import { UserService } from '../services/user.service';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -43,8 +43,6 @@ export class UserController {
     // send userId in body for a nicer url? aka github style https://github.com/settings/tokens
     @Get(':id/tokens')
     async findById(@Param('id') userId: number): Promise<SubSystemPermission[]> {
-        // set default to 1 for testing purposes
-        userId = 1;
         return await this.subSystemPermissionService.findTokensByUserId(userId);
     }
 

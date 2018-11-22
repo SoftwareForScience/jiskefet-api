@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { plainToClass } from 'class-transformer';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
-import { User } from '../entities/user.entity';
 
 @Injectable()
 export class SubSystemPermissionService {
@@ -47,9 +46,16 @@ export class SubSystemPermissionService {
      * @param userId number
      */
     async findTokensByUserId(userId: number): Promise<SubSystemPermission[]> {
-        return await this.repository.createQueryBuilder()
+        console.log('Doing findTokensByUserId');
+        const dingen = await this.repository.createQueryBuilder('sub_system_permission')
             .where('fk_user_id = :userId', { userId })
+            .select([
+                'sub_system_permission.sub_system_permission_id',
+                'sub_system_permission.sub_system_token_description'
+            ])
             .getMany();
+        console.log(dingen);
+        return dingen;
     }
 
     /**
