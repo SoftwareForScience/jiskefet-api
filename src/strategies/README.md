@@ -2,7 +2,7 @@
 
 ## JWT
 Jiskefet API currently uses a JWT implementation in order to authorize users and subsystems to the secured endpoints.  
-**The flow for an user:**  
+**The flow for a user:**  
 1. User signs in with (GitHub/ CERN) SSO.
 2. Back end returns a JWT token on successful sign in.
     * Token has an expiration field called `exp` displayed in epoch. Once the epoch time is reached, the token is automatically invalidated. This requires the user to re-authenticate in order to access the application.

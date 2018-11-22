@@ -54,10 +54,8 @@ export class UserController {
         const subSystemId = 1;
         const subSystem: SubSystem = await this.subSystemService.findSubSystemById(subSystemId);
         const uniqueId: string = uuid();
-
-        console.log(`generated uuid is: ${uniqueId}`);
         const hashedToken = await this.bcryptService.hashToken(uniqueId);
-        console.log(`hashed token is ${hashedToken}`);
+
         // map FeDto to the original Dto with user and subsystem objects.
         const newSubSystemPermission: CreateSubSystemPermissionDto = {
             user,
@@ -81,10 +79,6 @@ export class UserController {
 
         // create JWT
         const jwtToken: string = await this.authService.signSubSystem(jwtPayload);
-
-        console.log('creating jwt token with the following payload:');
-        console.log(jwtPayload);
-        console.log(`resulting token is \n${jwtToken}`);
 
         // send jwt back to user
         return jwtToken;

@@ -57,18 +57,21 @@ export class AuthService {
 
     /**
      * Creates a JWT for a subsystem that expires in specified time
-     * @param payload string
+     * @param {String} payload JWT payload
      */
     public async signSubSystem(payload: JwtPayload): Promise<string> {
         const token: JwtPayload = payload;
-        const expiresIn: string = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
-        return this.jwtService.sign(token, { expiresIn });
+        return this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
     }
 
     public async validateUserJwt(payload: JwtPayload): Promise<any> {
         return await this.userService.findOneByToken(payload.token);
     }
 
+    /**
+     * Validates the subsystem against the database
+     * @param {JwtPayload} payload JWT payload
+     */
     public async validateSubSystemJwt(payload: JwtPayload): Promise<any> {
         console.log('payload is:');
         console.log(payload);
@@ -83,19 +86,20 @@ export class AuthService {
         return null;
     }
 
-    // /**
-    //  * Function to verify JWT without hitting the database
-    //  * @param payload string
-    //  */
-    // public async validateJwt(payload: string): Promise<any> {
-    //     // check for exp maybe?
-    //     const result: any = await this.jwtService.verify(payload, { ignoreExpiration: true });
-    //     // if exp time is near, refresh/extend it using the refresh token
-    //     console.log('result is:');
-    //     console.log(await result);
-    //     console.log(`type is ${typeof (await result)}`);
-    //     return await this.jwtService.verify(payload);
-    // }
+    // TODO: incomming payload is only the body, not the whole JWT
+    /**
+     * Function to verify JWT without hitting the database
+     * @param {String} jwtToken Encoded JWT
+     */
+    public async validateJwt(jwtToken: string): Promise<any> {
+        console.log('incomming string:');
+        console.log(jwtToken);
+        const result: any = await this.jwtService.verify(jwtToken, { ignoreExpiration: true });
+        console.log('result is:');
+        console.log(await result);
+        console.log(`type is ${typeof (await result)}`);
+        return result;
+    }
 
     /**
      * Authorize the user via GitHub by redirecting to GitHub's login page.
