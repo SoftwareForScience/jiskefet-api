@@ -6,10 +6,11 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from 'dtos/get.overview.dto';
+import { QueryOverviewDto } from 'dtos/query.overview.dto';
 
 @ApiUseTags('overview')
 @Controller('overview')
@@ -22,8 +23,8 @@ export class OverviewController {
      * @param id unique identifier for a Log item.
      */
     @Get()
-    async find(): Promise<GetOverviewDto[]> {
-        const overview = await this.attachmentservice.find();
+    async find(@Query() query?: QueryOverviewDto): Promise<GetOverviewDto[]> {
+        const overview = await this.attachmentservice.find(query);
         return overview;
     }
 }
