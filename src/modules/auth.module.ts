@@ -18,13 +18,12 @@ import { AuthContoller } from '../controllers/auth.controller';
 @Module({
     imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
-        // Todo: needs env vars for secretKey and expiration time
         JwtModule.register({
-            secretOrPrivateKey: 'secretKey',
+            secretOrPrivateKey: process.env.JWT_SECRET_KEY,
             signOptions: {
-                expiresIn: 3600,
+                expiresIn: process.env.JWT_EXPIRE_TIME,
             },
-        })
+        }),
     ],
     providers: [AuthService, JwtStrategy, AuthUtility],
     controllers: [AuthContoller],
