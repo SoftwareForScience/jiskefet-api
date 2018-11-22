@@ -22,7 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: JwtPayload): Promise<any> {
-        console.log('Validating jwt');
         if (!payload.is_subsystem) {
             console.log('user validation');
             const user = await this.authService.validateUserJwt(payload);
@@ -33,8 +32,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             }
             return user;
         } else {
-            console.log('machine validation');
+            console.log('subsystem validation');
             const subSystem = await this.authService.validateSubSystemJwt(payload);
+            console.log('subsystem: ');
+            console.log(await subSystem);
             if (!subSystem) {
                 throw new UnauthorizedException();
             }
