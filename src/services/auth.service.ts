@@ -50,9 +50,19 @@ export class AuthService {
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
 
-    public async signIn(payload: JwtPayload): Promise<string> {
+    public async sign(payload: JwtPayload): Promise<string> {
         const token: JwtPayload = payload;
         return this.jwtService.sign(token);
+    }
+
+    /**
+     * Creates a JWT for a subsystem that expires in specified time
+     * @param payload string
+     */
+    public async signSubSystem(payload: JwtPayload): Promise<string> {
+        const token: JwtPayload = payload;
+        const expiresIn: string = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
+        return this.jwtService.sign(token, { expiresIn });
     }
 
     public async validateUserJwt(payload: JwtPayload): Promise<any> {
@@ -66,11 +76,26 @@ export class AuthService {
             await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id, 10));
         console.log('sub system is');
         console.log(await subSystem);
+        // now every request will be checked by bcrypt, which might result into a performance hit in the app.
         if (await this.bcryptService.checkToken(payload.token, subSystem.subSystemHash) === true) {
             return subSystem;
         }
         return null;
     }
+
+    // /**
+    //  * Function to verify JWT without hitting the database
+    //  * @param payload string
+    //  */
+    // public async validateJwt(payload: string): Promise<any> {
+    //     // check for exp maybe?
+    //     const result: any = await this.jwtService.verify(payload, { ignoreExpiration: true });
+    //     // if exp time is near, refresh/extend it using the refresh token
+    //     console.log('result is:');
+    //     console.log(await result);
+    //     console.log(`type is ${typeof (await result)}`);
+    //     return await this.jwtService.verify(payload);
+    // }
 
     /**
      * Authorize the user via GitHub by redirecting to GitHub's login page.
@@ -84,7 +109,7 @@ export class AuthService {
         }
         try {
             const accessToken = await this.getToken(grant);
-            const jwt = await this.signIn({ accessToken });
+            const jwt = await this.sign({ accessToken });
 
             console.log('\naccessToken: ' + accessToken);
             console.log('\njwt: ' + jwt);

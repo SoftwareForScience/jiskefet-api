@@ -19,9 +19,7 @@ export class BCryptService {
      * @param token string
      */
     async hashToken(token: string): Promise<string> {
-        console.log(`hashing token ${token}`);
         return bcrypt.hash(token, this.saltRounds).then((hash) => {
-            console.log(`hash is: ${hash}`);
             return hash;
         });
     }
@@ -32,11 +30,7 @@ export class BCryptService {
      * @param hash string
      */
     async checkToken(token: string, hash: string): Promise<boolean> {
-        console.log(`token value is \n${token} and hash value is \n ${hash}`);
         return bcrypt.compare(token, hash).then((res) => {
-            console.log('result is: ');
-            console.log(res);
-            console.log(`type of res is ${typeof (res)}`);
             return res;
         });
     }
