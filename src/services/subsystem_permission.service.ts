@@ -10,8 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
-import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { plainToClass } from 'class-transformer';
+import { CreateSubSystemPermissionFeDto } from '../dtos/create.subsystemPermission.fe.dto';
 
 @Injectable()
 export class SubSystemPermissionService {
@@ -66,8 +66,9 @@ export class SubSystemPermissionService {
      * @param subSystemPermissionDto
      */
     async saveTokenForSubSystemPermission(
-        subSystemPermissionDto: CreateSubSystemPermissionDto): Promise<SubSystemPermission> {
+        subSystemPermissionDto: CreateSubSystemPermissionFeDto): Promise<SubSystemPermission> {
         const newSubSystemPermission: SubSystemPermission = plainToClass(SubSystemPermission, subSystemPermissionDto);
+        console.log(newSubSystemPermission);
         return this.repository.save(newSubSystemPermission);
     }
 }
