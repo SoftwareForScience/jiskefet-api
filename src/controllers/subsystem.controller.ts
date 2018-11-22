@@ -6,15 +6,17 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Query } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
+import { Get, Controller, Param } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
 import { SubSystemService } from '../services/susbsystem.service';
-import { SubSystem } from 'entities/sub_system.entity';
+import { SubSystem } from '../entities/sub_system.entity';
+import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 
 @ApiUseTags('subsystems')
 @Controller('subsystems')
 export class SubSystemController {
-    constructor(private readonly subSystemService: SubSystemService) { }
+    constructor(
+        private readonly subSystemService: SubSystemService) { }
 
     /**
      * Get all subsystem
@@ -22,5 +24,14 @@ export class SubSystemController {
     @Get()
     async findAll(): Promise<SubSystem[]> {
         return await this.subSystemService.findAll();
+    }
+
+    /**
+     * Retrieve all the subsystems by id
+     * @param subSystemId number
+     */
+    @Get(':id')
+    async findById(@Param('id') subSystemId: number): Promise<SubSystem> {
+        return await this.subSystemService.findSubSystemById(subSystemId);
     }
 }

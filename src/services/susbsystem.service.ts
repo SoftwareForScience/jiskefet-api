@@ -25,7 +25,11 @@ export class SubSystemService {
      * @param subSystemId number
      */
     async findSubSystemById(subSystemId: number): Promise<SubSystem> {
-        return await this.repository.findOne(subSystemId);
+        return await this.repository.createQueryBuilder()
+            .where('subsystem_id = :subSystemId', { subSystemId })
+            .getOne()
+            .then((res: SubSystem) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
     }
 
     /**

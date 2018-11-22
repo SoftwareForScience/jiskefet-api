@@ -18,6 +18,6 @@ export class SubSystem {
     @Column({ name: 'subsystem_name' })
     subsystemName: string;
 
-    @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subSystem)
+    @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subsystem)
     subSystemPermissions: SubSystemPermission[];
 }
