@@ -8,7 +8,7 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, IsOptional, IsInt, IsNumberString, IsDateString } from 'class-validator';
+import { IsEnum, IsString, IsOptional, IsNumberString } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { OrderDirection } from '../enums/orderDirection.enum';
