@@ -14,22 +14,22 @@ export class CreateAttachmentDto {
     creationTime: Date;
 
     @ApiModelProperty({
-        example: 'run',
-        description: 'What kind of log is it?',
+        example: 'VeryImportantDocument.txt',
+        description: 'What is the name of the file?',
     })
     @IsString()
     title: string;
 
     @ApiModelProperty({
-        example: 'run',
-        description: 'What kind of log is it?',
+        example: 'text/plain',
+        description: 'What kind of file is it?',
     })
     @IsString()
     fileMime: string;
 
     @ApiModelProperty({
-        example: '23144132412314344',
-        description: 'What kind of log is it?',
+        example: 'VmVyeSBpbXBvcnRhbnQK',
+        description: 'The base64 encoded file data.',
     })
     @IsBase64()
     @IsByteLength(1, 5000000, {
