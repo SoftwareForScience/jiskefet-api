@@ -9,6 +9,7 @@ export class AuthContoller {
 
     @Get('/auth')
     @ApiImplicitQuery({ name: 'grant', required: false })
+    // tslint:disable-next-line:typedef
     async auth(@Res() response: Response, @Query() query?: any) {
         const grant = query.grant;
         console.log('Auth grant received:' + grant);

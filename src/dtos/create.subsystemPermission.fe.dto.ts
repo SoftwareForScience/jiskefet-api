@@ -31,7 +31,7 @@ export class CreateSubSystemPermissionFeDto {
         description: 'Id of the subsystem.',
     })
     @IsInt()
-    subSystem: number;
+    subsystemId: number;
 
     @ApiModelProperty({
         example: true,

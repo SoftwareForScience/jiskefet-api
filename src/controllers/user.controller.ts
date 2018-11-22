@@ -10,16 +10,13 @@ import { Get, Controller, Param, Post, Body } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { UserService } from '../services/user.service';
-import { User } from '../entities/user.entity';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
-import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { SubSystemService } from '../services/susbsystem.service';
-import { SubSystem } from '../entities/sub_system.entity';
-import { CreateSubSystemPermissionFeDto } from 'dtos/create.subsystemPermission.fe.dto';
-import { JwtPayload } from 'interfaces/jwt-payload.interface';
+import { CreateSubSystemPermissionFeDto } from '../dtos/create.subsystemPermission.fe.dto';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -48,27 +45,16 @@ export class UserController {
      * Generates a token and links it to the subsystem with permissions.
      */
     @Post(':id/tokens/new')
-    async generateTokenForSubsystem(/*@Body() request: CreateSubSystemPermissionFeDto*/): Promise<string> {
-        const userId = 1;
-        const user: User = await this.userService.findUserById(userId);
-        const subSystemId = 1;
-        const subSystem: SubSystem = await this.subSystemService.findSubSystemById(subSystemId);
+    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionFeDto): Promise<string> {
         const uniqueId: string = uuid();
         const hashedToken = await this.bcryptService.hashToken(uniqueId);
+        request.subSystemHash = hashedToken;
 
-        // map FeDto to the original Dto with user and subsystem objects.
-        const newSubSystemPermission: CreateSubSystemPermissionDto = {
-            user,
-            subSystem,
-            subSystemHash: hashedToken,
-            subSystemTokenDescription: 'random description',
-            editEorReason: true,
-            isMember: true
-        };
+        console.log(request);
 
         // save it to db
         const newSubSystem: SubSystemPermission =
-            await this.subSystemPermissionService.saveTokenForSubSystemPermission(newSubSystemPermission);
+            await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
 
         // add extra field to the jwt token to identify that a machine is making the request
         const jwtPayload: JwtPayload = {
