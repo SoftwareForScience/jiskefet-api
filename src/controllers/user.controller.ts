@@ -80,7 +80,7 @@ export class UserController {
         };
 
         // create JWT
-        const jwtToken: string = await this.authService.signIn(jwtPayload);
+        const jwtToken: string = await this.authService.signSubSystem(jwtPayload);
 
         console.log('creating jwt token with the following payload:');
         console.log(jwtPayload);
