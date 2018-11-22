@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { User } from '../entities/user.entity';
-import { CreateUserDto } from 'dtos/create.user.dto';
+import { CreateUserDto } from '../dtos/create.user.dto';
 
 export class UserService {
 

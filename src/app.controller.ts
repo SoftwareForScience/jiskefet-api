@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Req, Res } from '@nestjs/common';
+import { Get, Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 

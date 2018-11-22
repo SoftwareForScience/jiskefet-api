@@ -9,8 +9,8 @@
 import { Controller, Get, Query, Param } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { OverviewService } from '../services/overview.service';
-import { GetOverviewDto } from 'dtos/get.overview.dto';
-import { QueryOverviewDto } from 'dtos/query.overview.dto';
+import { GetOverviewDto } from '../dtos/get.overview.dto';
+import { QueryOverviewDto } from '../dtos/query.overview.dto';
 
 @ApiUseTags('overview')
 @Controller('overview')

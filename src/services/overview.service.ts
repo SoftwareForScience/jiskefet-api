@@ -9,10 +9,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SubSystem } from 'entities/sub_system.entity';
-import { GetOverviewDto } from 'dtos/get.overview.dto';
+import { SubSystem } from '../entities/sub_system.entity';
+import { GetOverviewDto } from '../dtos/get.overview.dto';
 import * as _ from 'lodash';
-import { QueryOverviewDto } from 'dtos/query.overview.dto';
+import { QueryOverviewDto } from '../dtos/query.overview.dto';
 
 @Injectable()
 export class OverviewService {
