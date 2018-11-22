@@ -16,20 +16,39 @@ import { RunService } from './services/run.service';
 import { LogController } from './controllers/log.controller';
 import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
-import { ConfigModule } from './modules/config.module';
-import { AttachmentModule } from 'modules/attachment.module';
-import { AttachmentController } from 'controllers/attachment.controller';
-import { AttachmentService } from 'services/attachment.service';
+import { AuthModule } from './modules/auth.module';
+import { AuthService } from './services/auth.service';
+import { AuthContoller } from './controllers/auth.controller';
+import { UserModule } from './modules/user.module';
+import { UserService } from './services/user.service';
+import { AuthUtility } from './utility/auth.utility';
+import { AttachmentController } from './controllers/attachment.controller';
+import { AttachmentService } from './services/attachment.service';
+import { AttachmentModule } from './modules/attachment.module';
+import { OverviewModule } from './modules/overview.module';
+import { OverviewController } from './controllers/overview.controller';
+import { OverviewService } from './services/overview.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     RunModule,
     LogModule,
-    ConfigModule,
-    AttachmentModule
+    UserModule,
+    AuthModule,
+    AttachmentModule,
+    OverviewModule
   ],
-  controllers: [AppController, RunController, LogController, AttachmentController],
-  providers: [AppService, RunService, LogService, AttachmentService],
+    controllers: [AppController, RunController, LogController, AttachmentController, AuthContoller, OverviewController],
+    providers: [
+      AppService,
+      RunService,
+      LogService,
+      UserService,
+      AttachmentService,
+      AuthService,
+      AuthUtility,
+      OverviewService
+    ],
 })
 export class AppModule { }

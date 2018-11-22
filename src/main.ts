@@ -12,47 +12,37 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import bodyParser = require('body-parser');
 
-const envConfig = 'envConfig';
-const port = 'PORT';
-const usePrefix = 'USE_API_PREFIX';
-// A boolean to set the swagger api for debugging purposes
-let useApiPrefix = false;
-
 async function bootstrap(): Promise<void> {
-    let portNumber;
     const app = await NestFactory.create(AppModule);
     app.enableCors();
+    // Increases the packet limit to 15MB instead of the default 100kb
+    app.use(bodyParser.json({ limit: 15000000 }));
+    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
 
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
         next();
     });
-    // Limits the packet size to 15MB
-    app.use(bodyParser.json({ limit: 15000000 }));
-    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
-
-    if (process.env.NODE_ENV) {
-        portNumber = app.get('ConfigService')[envConfig][port];
-        useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
-    } else {
-        portNumber = 3000;
-    }
 
     const options = new DocumentBuilder()
         .setTitle('ALICE-Bookkeeping')
         .setVersion('1.0')
         .addTag('logs')
-        .addTag('runs');
-    if (!useApiPrefix) {
-        const document = SwaggerModule.createDocument(app, options.build());
-        SwaggerModule.setup('doc', app, document);
-    } else {
+        .addTag('runs')
+        .addBearerAuth();
+
+    if (process.env.USE_API_PREFIX === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
-        const document = SwaggerModule.createDocument(app, options.build());
-        SwaggerModule.setup('doc', app, document);
+        options.setDescription('Running with /api prefix');
+    } else {
+        options.setDescription('Running without /api prefix');
     }
-    await app.listen(portNumber);
+
+    const document = SwaggerModule.createDocument(app, options.build());
+    SwaggerModule.setup('doc', app, document);
+
+    await app.listen(process.env.PORT);
 }
 bootstrap();
