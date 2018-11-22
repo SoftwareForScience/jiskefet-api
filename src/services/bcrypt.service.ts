@@ -33,14 +33,10 @@ export class BCryptService {
      */
     async checkToken(token: string, hash: string): Promise<boolean> {
         console.log(`token value is \n${token} and hash value is \n ${hash}`);
-        return bcrypt.compare(token, hash, (err, res) => {
+        return bcrypt.compare(token, hash).then((res) => {
             console.log('result is: ');
             console.log(res);
             console.log(`type of res is ${typeof (res)}`);
-
-            console.log('err is: ');
-            console.log(err);
-            console.log(`type of res is ${typeof (err)}`);
             return res;
         });
     }

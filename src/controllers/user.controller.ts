@@ -74,7 +74,7 @@ export class UserController {
 
         // add extra field to the jwt token to identify that a machine is making the request
         const jwtPayload: JwtPayload = {
-            ['token']: uuid(),
+            ['token']: uniqueId,
             ['is_subsystem']: 'true',
             ['permission_id']: newSubSystem.subSystemPermissionId.toString()
         };
