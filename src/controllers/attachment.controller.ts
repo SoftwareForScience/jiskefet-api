@@ -35,10 +35,13 @@ export class AttachmentController {
     @Get(':id/logs')
     async findById(@Param('id') id: number): Promise<Attachment[]> {
         const attachments = await this.attachmentservice.findAttachmentsByLogId(id);
-        // testing purposes
+
+        // returns the fileData as base64 string, this should be done in mysql query for faster results
         for (const iterator of attachments) {
             iterator.fileData = 'base64;' + iterator.fileData;
+
         }
+
         return attachments;
     }
 }
