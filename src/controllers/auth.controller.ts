@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Query, Headers, UnprocessableEntityException, HttpException, HttpStatus, InternalServerErrorException } from '@nestjs/common';
+import { Get, Controller, Query, Headers, UnprocessableEntityException, HttpException, HttpStatus, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { ApiImplicitQuery, ApiUseTags, ApiOperation, ApiResponse, ApiOkResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
@@ -72,7 +72,7 @@ export class AuthContoller {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
-                throw new InternalServerErrorException('No JWT could be found in headers.');
+                throw new BadRequestException('No JWT could be found in headers.');
             }
             return await this.authService.getGithubProfileInfo(jwt);
         } catch (error) {
