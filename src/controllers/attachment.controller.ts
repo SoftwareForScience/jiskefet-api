@@ -6,13 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Post, Controller, Body, Get, Param } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { Post, Controller, Body, Get, Param, UseGuards } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('attachments')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('attachments')
 export class AttachmentController {
 

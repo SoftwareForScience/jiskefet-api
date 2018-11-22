@@ -6,13 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Controller, Get, Query, Param } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { Controller, Get, Query, Param, UseGuards } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from '../dtos/get.overview.dto';
 import { QueryOverviewDto } from '../dtos/query.overview.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('overview')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('overview')
 export class OverviewController {
 
