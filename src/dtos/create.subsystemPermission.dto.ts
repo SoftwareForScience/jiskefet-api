@@ -21,15 +21,13 @@ export class CreateSubSystemPermissionDto {
         example: 8,
         description: 'Id of the user.',
     })
-    // @IsInt()
     user: User;
 
     @ApiModelProperty({
         example: 8,
         description: 'Id of the subsystem.',
     })
-    // @IsInt()
-    subSystem: SubSystem;
+    subsystem: SubSystem;
 
     @ApiModelProperty({
         example: true,

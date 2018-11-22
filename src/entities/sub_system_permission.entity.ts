@@ -13,7 +13,6 @@ import {
     JoinColumn,
     ManyToMany,
     JoinTable,
-    PrimaryColumn,
     PrimaryGeneratedColumn
 } from 'typeorm';
 import { SubSystem } from './sub_system.entity';
@@ -23,31 +22,34 @@ import { SubSystemRole } from './sub_system_role.entity';
 @Entity('sub_system_permission')
 export class SubSystemPermission {
 
-    @PrimaryGeneratedColumn({name: 'sub_system_permission_id'})
+    @PrimaryGeneratedColumn({ name: 'sub_system_permission_id' })
     subSystemPermissionId: number;
 
     @ManyToOne(
         type => User,
         user => user.subSystemPermissions,
         {
-            primary: true,
-            eager: true
+            nullable: false,
+            cascade: ['insert']
         }
     )
-    @JoinColumn({ name: 'fk_user_id' })
+    @JoinColumn({
+        name: 'fk_user_id'
+    })
     user: User;
 
     @ManyToOne(
         type => SubSystem,
         subSystem => subSystem.subSystemPermissions,
         {
-            primary: true,
             nullable: false,
-            eager: true
+            cascade: ['insert']
         }
     )
-    @JoinColumn({ name: 'fk_subsystem_id' })
-    subSystem: SubSystem;
+    @JoinColumn({
+        name: 'fk_subsystem_id'
+    })
+    subsystem: SubSystem;
 
     @Column({
         name: 'sub_system_hash',

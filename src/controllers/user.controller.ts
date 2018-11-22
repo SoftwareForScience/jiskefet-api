@@ -9,22 +9,19 @@
 import { Get, Controller, Param, Post, Body } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
-import { UserService } from '../services/user.service';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
-import { SubSystemService } from '../services/susbsystem.service';
-import { CreateSubSystemPermissionFeDto } from '../dtos/create.subsystemPermission.fe.dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
+import { User } from '../entities/user.entity';
 
 @ApiUseTags('users')
 @Controller('users')
 export class UserController {
     constructor(
         private readonly subSystemPermissionService: SubSystemPermissionService,
-        private readonly userService: UserService,
-        private readonly subSystemService: SubSystemService,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService) { }
 
@@ -45,12 +42,9 @@ export class UserController {
      * Generates a token and links it to the subsystem with permissions.
      */
     @Post(':id/tokens/new')
-    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionFeDto): Promise<string> {
+    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<string> {
         const uniqueId: string = uuid();
-        const hashedToken = await this.bcryptService.hashToken(uniqueId);
-        request.subSystemHash = hashedToken;
-
-        console.log(request);
+        request.subSystemHash =  await this.bcryptService.hashToken(uniqueId);
 
         // save it to db
         const newSubSystem: SubSystemPermission =
@@ -65,10 +59,6 @@ export class UserController {
 
         // create JWT
         const jwtToken: string = await this.authService.signSubSystem(jwtPayload);
-
-        console.log('creating jwt token with the following payload:');
-        console.log(jwtPayload);
-        console.log(`resulting token is \n${jwtToken}`);
 
         // send jwt back to user
         return jwtToken;
