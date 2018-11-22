@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Post, Controller, Body, Get, Param } from '@nestjs/common';
+import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
@@ -23,6 +23,7 @@ export class AttachmentController {
      * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post()
+    @UsePipes(ValidationPipe)
     async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
         return await this.attachmentservice.create(createAttachmentDto);
     }

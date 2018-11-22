@@ -19,40 +19,40 @@ const usePrefix = 'USE_API_PREFIX';
 let useApiPrefix = false;
 
 async function bootstrap(): Promise<void> {
-  let portNumber;
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
+    let portNumber;
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
 
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    next();
-  });
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Credentials', true);
+        next();
+    });
+    // Limits the packet size to 15MB
+    app.use(bodyParser.json({ limit: 15000000 }));
+    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
 
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    if (process.env.NODE_ENV) {
+        portNumber = app.get('ConfigService')[envConfig][port];
+        useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
+    } else {
+        portNumber = 3000;
+    }
 
-  if (process.env.NODE_ENV) {
-    portNumber = app.get('ConfigService')[envConfig][port];
-    useApiPrefix = app.get('ConfigService')[envConfig][usePrefix];
-  } else {
-    portNumber = 3000;
-  }
-
-  const options = new DocumentBuilder()
-    .setTitle('ALICE-Bookkeeping')
-    .setVersion('1.0')
-    .addTag('logs')
-    .addTag('runs');
-  if (!useApiPrefix) {
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
-  } else {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
-    const document = SwaggerModule.createDocument(app, options.build());
-    SwaggerModule.setup('doc', app, document);
-  }
-  await app.listen(portNumber);
+    const options = new DocumentBuilder()
+        .setTitle('ALICE-Bookkeeping')
+        .setVersion('1.0')
+        .addTag('logs')
+        .addTag('runs');
+    if (!useApiPrefix) {
+        const document = SwaggerModule.createDocument(app, options.build());
+        SwaggerModule.setup('doc', app, document);
+    } else {
+        // set /api as basePath for non local
+        options.setBasePath('/api');
+        const document = SwaggerModule.createDocument(app, options.build());
+        SwaggerModule.setup('doc', app, document);
+    }
+    await app.listen(portNumber);
 }
 bootstrap();
