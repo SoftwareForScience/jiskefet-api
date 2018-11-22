@@ -42,8 +42,14 @@ export class UserService {
         }
     }
 
-    async findUserById(id: number): Promise<User> {
-        return await this.repository.findOne(id);
+    /**
+     * find a user by Id
+     * @param userId number
+     */
+    async findUserById(userId: number): Promise<User> {
+        return await this.repository.createQueryBuilder()
+            .where('user_id = :userId', { userId })
+            .getOne();
     }
 
     /**

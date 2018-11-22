@@ -16,6 +16,7 @@ import { BCryptService } from '../services/bcrypt.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { User } from '../entities/user.entity';
+import { UserService } from 'services/user.service';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -23,7 +24,17 @@ export class UserController {
     constructor(
         private readonly subSystemPermissionService: SubSystemPermissionService,
         private readonly authService: AuthService,
-        private readonly bcryptService: BCryptService) { }
+        private readonly bcryptService: BCryptService,
+        private readonly userService: UserService) { }
+
+    /**
+     * Retrieve a the user by id
+     * @param userId number
+     */
+    @Get(':id')
+    async findUserById(@Param('id') userId: number): Promise<User> {
+        return await this.userService.findUserById(userId);
+    }
 
     /**
      * Retrieve all the generated tokens from user
