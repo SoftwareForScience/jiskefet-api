@@ -6,9 +6,25 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Query, Headers, UnprocessableEntityException, HttpException, HttpStatus, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import {
+    Get,
+    Controller,
+    Query,
+    Headers,
+    UnprocessableEntityException,
+    HttpException,
+    HttpStatus,
+    BadRequestException
+} from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { ApiImplicitQuery, ApiUseTags, ApiOperation, ApiResponse, ApiOkResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import {
+    ApiImplicitQuery,
+    ApiUseTags,
+    ApiOperation,
+    ApiResponse,
+    ApiOkResponse,
+    ApiUnprocessableEntityResponse
+} from '@nestjs/swagger';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
 
@@ -41,10 +57,11 @@ export class AuthContoller {
         description: 'User is unauthorized due to an invalid Authorization Grant.'
     })
     @ApiImplicitQuery({ name: 'grant', required: true })
-    async auth(@Query() query?: any): Promise<{token: string}> {
+    async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
             if (!query.grant) {
-                throw new UnprocessableEntityException('Authentication failed, please provide an Authorization Grant as a query param.');
+                throw new UnprocessableEntityException(`Authentication failed
+                , please provide an Authorization Grant as a query param.`);
             }
             const grant = query.grant;
             const jwt = await this.authService.auth(grant);

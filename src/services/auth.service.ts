@@ -115,7 +115,8 @@ export class AuthService {
      * @param code authorization grant code
      */
     private async getToken(code: string): Promise<string> {
-        const authorizationGrant = await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
+        const authorizationGrant =
+            await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
         const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
         if (!accessTokenObject.token.access_token) {
             throw new Error(accessTokenObject.token.error_description ||
