@@ -46,16 +46,18 @@ export class SubSystemPermissionService {
      * @param userId number
      */
     async findTokensByUserId(userId: number): Promise<SubSystemPermission[]> {
-        console.log('Doing findTokensByUserId');
-        const dingen = await this.repository.createQueryBuilder('sub_system_permission')
-            .where('fk_user_id = :userId', { userId })
-            .select([
-                'sub_system_permission.sub_system_permission_id',
-                'sub_system_permission.sub_system_token_description'
-            ])
-            .getMany();
-        console.log(dingen);
-        return dingen;
+        const result = await this.repository.query(
+            `SELECT sub_system_permission_id, sub_system_token_description
+            FROM bookkeeping.sub_system_permission WHERE fk_user_id = ${userId};`
+        );
+        const overview = new Array() as SubSystemPermission[];
+        for (const r of result) {
+            const subSystemPermission = {} as SubSystemPermission;
+            subSystemPermission.subSystemPermissionId = r.sub_system_permission_id;
+            subSystemPermission.subSystemTokenDescription = r.sub_system_token_description;
+            overview.push(subSystemPermission);
+        }
+        return overview;
     }
 
     /**
