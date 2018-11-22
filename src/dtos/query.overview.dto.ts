@@ -8,7 +8,7 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsNumberString } from 'class-validator';
 
 /**
  * Represents the query parameters given when executing a GET on /logs.
@@ -21,5 +21,6 @@ export class QueryOverviewDto {
         required: false,
     })
     @IsOptional()
+    @IsNumberString()
     timeRange?: string;
 }
