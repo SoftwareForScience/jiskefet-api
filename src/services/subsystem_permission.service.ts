@@ -32,6 +32,16 @@ export class SubSystemPermissionService {
     }
 
     /**
+     * Retrieve a single sub system permission by id.
+     * @param subSystemPermissionId number
+     */
+    async findSubSystemsPermissionsById(subSystemPermissionId: number): Promise<SubSystemPermission> {
+        return await this.repository.createQueryBuilder()
+            .where('sub_system_permission_id = :subSystemPermissionId', { subSystemPermissionId })
+            .getOne();
+    }
+
+    /**
      * Retrieves all the generated tokens by user
      * @param userId number
      */
@@ -39,6 +49,16 @@ export class SubSystemPermissionService {
         return await this.repository.createQueryBuilder()
             .where('fk_user_id = :userId', { userId })
             .getMany();
+    }
+
+    /**
+     * Find one subsystem by token
+     * @param token string
+     */
+    async findOneByToken(token: string): Promise<SubSystemPermission> {
+        return this.repository.createQueryBuilder()
+            .where('sub_system_token = :token', { token })
+            .getOne();
     }
 
     /**

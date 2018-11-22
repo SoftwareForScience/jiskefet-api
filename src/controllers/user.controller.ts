@@ -19,6 +19,7 @@ import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission
 import { SubSystemService } from '../services/susbsystem.service';
 import { SubSystem } from '../entities/sub_system.entity';
 import { CreateSubSystemPermissionFeDto } from 'dtos/create.subsystemPermission.fe.dto';
+import { JwtPayload } from 'interfaces/jwt-payload.interface';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -52,13 +53,11 @@ export class UserController {
         const user: User = await this.userService.findUserById(userId);
         const subSystemId = 1;
         const subSystem: SubSystem = await this.subSystemService.findSubSystemById(subSystemId);
-        const uuidToken: string = uuid();
-        // add extra field to the jwt token to identify that a machine is making the request
-        const jwtToken: string = await this.authService.signIn(uuidToken);
+        const uniqueId: string = uuid();
 
-        console.log(`created jwt token is based on ${uuidToken}`);
-        console.log(jwtToken);
-        const hashedToken = await this.bcryptService.hashToken(jwtToken);
+        console.log(`generated uuid is: ${uniqueId}`);
+        const hashedToken = await this.bcryptService.hashToken(uniqueId);
+        console.log(`hashed token is ${hashedToken}`);
         // map FeDto to the original Dto with user and subsystem objects.
         const newSubSystemPermission: CreateSubSystemPermissionDto = {
             user,
@@ -69,9 +68,24 @@ export class UserController {
             isMember: true
         };
         // save it to db
-        this.subSystemPermissionService.saveTokenForSubSystemPermission(newSubSystemPermission);
+        const newSubSystem: SubSystemPermission =
+            await this.subSystemPermissionService.saveTokenForSubSystemPermission(newSubSystemPermission);
 
-        // send token/jwt back to user
+        // add extra field to the jwt token to identify that a machine is making the request
+        const jwtPayload: JwtPayload = {
+            ['token']: uuid(),
+            ['is_subsystem']: 'true',
+            ['permission_id']: newSubSystem.subSystemPermissionId.toString()
+        };
+
+        // create JWT
+        const jwtToken: string = await this.authService.signIn(jwtPayload);
+
+        console.log('created jwt token is based on');
+        console.log(jwtPayload);
+        console.log(`token is \n${jwtToken}`);
+
+        // send jwt back to user
         return jwtToken;
     }
 }

@@ -21,14 +21,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: JwtPayload) {
+    async validate(payload: JwtPayload): Promise<any> {
         console.log('Validating jwt');
-        const user = await this.authService.validateUserJwt(payload);
-        console.log('user:');
-        console.log(await user);
-        if (!user) {
-            throw new UnauthorizedException();
+        if (!payload.is_subsystem) {
+            console.log('user validation');
+            const user = await this.authService.validateUserJwt(payload);
+            console.log('user:');
+            console.log(await user);
+            if (!user) {
+                throw new UnauthorizedException();
+            }
+            return user;
+        } else {
+            console.log('machine validation');
+            const subSystem = await this.authService.validateSubSystemJwt(payload);
+            console.log('subSystem:');
+            console.log(await subSystem);
+            if (!subSystem) {
+                throw new UnauthorizedException();
+            }
+            return subSystem;
         }
-        return user;
     }
 }

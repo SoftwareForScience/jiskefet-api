@@ -11,6 +11,8 @@ import { AuthService } from '../services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/jwt.strategy';
+import { SubSystemPermissionService } from 'services/subsystem_permission.service';
+import { BCryptService } from '../services/bcrypt.service';
 
 @Global()
 @Module({
@@ -24,7 +26,7 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
             },
         })
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy],
     exports: [AuthModule],
 })
 export class AuthModule {}

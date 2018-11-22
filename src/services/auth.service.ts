@@ -15,6 +15,8 @@ import { CreateUserDto } from '../dtos/create.user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { User } from '../entities/user.entity';
+import { SubSystemPermissionService } from './subsystem_permission.service';
+import { BCryptService } from './bcrypt.service';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +35,8 @@ export class AuthService {
 
     constructor(
         private readonly userService: UserService,
+        private readonly subSystemPermissionService: SubSystemPermissionService,
+        private readonly bcryptService: BCryptService,
         private readonly jwtService: JwtService,
     ) {
         // set client credentials
@@ -46,13 +50,20 @@ export class AuthService {
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
 
-    public async signIn(token: string): Promise<string> {
-        const user: JwtPayload = { token };
-        return this.jwtService.sign(user);
+    public async signIn(payload: JwtPayload): Promise<string> {
+        const token: JwtPayload = payload;
+        return this.jwtService.sign(token);
     }
 
     public async validateUserJwt(payload: JwtPayload): Promise<any> {
         return await this.userService.findOneByToken(payload.token);
+    }
+
+    public async validateSubSystemJwt(payload: JwtPayload): Promise<any> {
+        const subSystem =
+            // tslint:disable-next-line:radix
+            await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id));
+        return this.bcryptService.checkToken(payload.token, subSystem.subSystemHash);
     }
 
     /**
@@ -67,7 +78,7 @@ export class AuthService {
         }
         try {
             const accessToken = await this.getToken(grant);
-            const jwt = await this.signIn(accessToken);
+            const jwt = await this.signIn({ accessToken });
 
             console.log('\naccessToken: ' + accessToken);
             console.log('\njwt: ' + jwt);

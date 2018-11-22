@@ -7,5 +7,5 @@
  */
 
 export interface JwtPayload {
-    token: string;
+    [index: string]: string;
 }

@@ -13,7 +13,6 @@ import { Injectable } from '@nestjs/common';
 export class BCryptService {
     // private saltRounds: number = process.env.NUMBER_SALT_ROUNDS;
     private saltRounds: number = 10;
-    // constructor() { }
 
     /**
      * Hash token with bcrypt
@@ -29,8 +28,10 @@ export class BCryptService {
      * @param hash string
      */
     async checkToken(token: string, hash: string): Promise<void> {
-        bcrypt.compare(token, hash, (err, res) => {
-            // TODO
+        bcrypt.compare(token, hash).then((res: any) => {
+            console.log('result is: ');
+            console.log(res);
+            console.log(`type of res is ${typeof(res)}`);
         });
     }
 }

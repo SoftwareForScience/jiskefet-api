@@ -6,13 +6,25 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    ManyToMany,
+    JoinTable,
+    PrimaryColumn,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
 import { SubSystemRole } from './sub_system_role.entity';
 
 @Entity('sub_system_permission')
 export class SubSystemPermission {
+
+    @PrimaryGeneratedColumn({name: 'sub_system_permission_id'})
+    subSystemPermissionId: number;
 
     @ManyToOne(
         type => User,
@@ -37,11 +49,11 @@ export class SubSystemPermission {
     @JoinColumn({ name: 'fk_subsystem_id' })
     subSystem: SubSystem;
 
-    @PrimaryColumn({
-        name: 'sub_system_token',
+    @Column({
+        name: 'sub_system_hash',
         type: 'varchar'
     })
-    subSystemToken: string;
+    subSystemHash: string;
 
     @Column({
         name: 'sub_system_token_description',
@@ -65,8 +77,8 @@ export class SubSystemPermission {
     @JoinTable({
         name: 'sub_system_permission_in_sub_system_role',
         joinColumn: {
-            name: 'fk_sub_system_token',
-            referencedColumnName: 'subSystemToken'
+            name: 'fk_sub_system_permission_id',
+            referencedColumnName: 'subSystemPermissionId'
         },
         inverseJoinColumn: {
             name: 'fk_sub_system_role_id',
