@@ -16,7 +16,7 @@ import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { Log } from '../entities/log.entity';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class RunService {
