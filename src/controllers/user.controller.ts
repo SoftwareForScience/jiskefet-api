@@ -62,11 +62,12 @@ export class UserController {
         const newSubSystemPermission: CreateSubSystemPermissionDto = {
             user,
             subSystem,
-            subSystemToken: hashedToken,
+            subSystemHash: hashedToken,
             subSystemTokenDescription: 'random description',
             editEorReason: true,
             isMember: true
         };
+
         // save it to db
         const newSubSystem: SubSystemPermission =
             await this.subSystemPermissionService.saveTokenForSubSystemPermission(newSubSystemPermission);

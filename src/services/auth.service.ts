@@ -60,10 +60,16 @@ export class AuthService {
     }
 
     public async validateSubSystemJwt(payload: JwtPayload): Promise<any> {
+        console.log('payload is:');
+        console.log(payload);
         const subSystem =
-            // tslint:disable-next-line:radix
-            await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id));
-        return this.bcryptService.checkToken(payload.token, subSystem.subSystemHash);
+            await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id, 10));
+        console.log('sub system is');
+        console.log(await subSystem);
+        if (await this.bcryptService.checkToken(payload.token, subSystem.subSystemHash) === true) {
+            return subSystem;
+        }
+        return null;
     }
 
     /**

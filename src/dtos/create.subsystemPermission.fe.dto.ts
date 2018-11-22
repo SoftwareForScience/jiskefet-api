@@ -52,7 +52,7 @@ export class CreateSubSystemPermissionFeDto {
         description: 'A unique token for a subsystem linked to a user.',
     })
     @IsString()
-    subSystemToken: string;
+    subSystemHash: string;
 
     @ApiModelProperty({
         example: 'Read and Write token for subsystem',

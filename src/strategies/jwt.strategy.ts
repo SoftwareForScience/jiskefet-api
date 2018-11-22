@@ -35,8 +35,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         } else {
             console.log('machine validation');
             const subSystem = await this.authService.validateSubSystemJwt(payload);
-            console.log('subSystem:');
-            console.log(await subSystem);
             if (!subSystem) {
                 throw new UnauthorizedException();
             }
