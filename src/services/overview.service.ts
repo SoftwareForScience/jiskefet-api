@@ -31,7 +31,7 @@ export class OverviewService {
             `SELECT ss.subsystem_name, COUNT(*) as logs, u.user_id, ll.last_log, ll.log_id
         FROM sub_system ss
         INNER JOIN (
-          SELECT log_id, fk_user_id, subsystem_fk_subsystem_id, MAX(creation_time), creation_time, text as last_log
+          SELECT log_id, fk_user_id, subsystem_fk_subsystem_id, MAX(creation_time), creation_time, title as last_log
           FROM log GROUP BY log_id
         ) ll
         ON ll.subsystem_fk_subsystem_id = ss.subsystem_id
