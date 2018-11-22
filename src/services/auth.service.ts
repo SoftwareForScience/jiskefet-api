@@ -66,6 +66,7 @@ export class AuthService {
             await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id, 10));
         console.log('sub system is');
         console.log(await subSystem);
+        // now every request will be checked by bcrypt, which might result into a performance hit in the app.
         if (await this.bcryptService.checkToken(payload.token, subSystem.subSystemHash) === true) {
             return subSystem;
         }

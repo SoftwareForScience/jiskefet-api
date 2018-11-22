@@ -82,9 +82,9 @@ export class UserController {
         // create JWT
         const jwtToken: string = await this.authService.signIn(jwtPayload);
 
-        console.log('created jwt token is based on');
+        console.log('creating jwt token with the following payload:');
         console.log(jwtPayload);
-        console.log(`token is \n${jwtToken}`);
+        console.log(`resulting token is \n${jwtToken}`);
 
         // send jwt back to user
         return jwtToken;
