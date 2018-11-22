@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LogModule } from '../../src/modules/log.module';
 import { LogService } from '../../src/services/log.service';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Response } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Log } from '../../src/entities/log.entity';
@@ -72,7 +72,7 @@ describe('LogController', () => {
                 .post(`/logs`)
                 .send(logToPost)
                 .set('Accept', 'application/json')
-                .then(response => {
+                .then((response: request.Response) => {
                     expect(response.body).to.be.an('object');
                     expect(response.body.title).to.equal('test log');
                 });
@@ -97,7 +97,7 @@ describe('LogController', () => {
         it('should return an array', () => {
             return request(app.getHttpServer())
                 .get('/logs')
-                .then(response => {
+                .then((response: request.Response) => {
                     expect(response.body).to.be.an('array');
                 });
         });
@@ -119,7 +119,7 @@ describe('LogController', () => {
         it('should return an object', () => {
             return request(app.getHttpServer())
                 .get(`/logs/${1}`)
-                .then(response => {
+                .then((response: request.Response) => {
                     expect(response.body).to.be.an('object');
                 });
         });

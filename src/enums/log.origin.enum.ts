@@ -1,3 +1,4 @@
 export enum Origin {
-    'human', 'process'
+    human = 'human',
+    process = 'process'
 }

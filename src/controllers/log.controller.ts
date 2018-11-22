@@ -6,13 +6,14 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query, UsePipes, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { Get, Post, Controller, Body, Param, Query, UsePipes, UseGuards, ValidationPipe, Patch } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { Log } from '../entities/log.entity';
-import { ValidationPipe } from '../common/validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
+import { QueryLogDto } from '../dtos/query.log.dto';
+import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -20,35 +21,25 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('logs')
 export class LogController {
 
-    constructor(private readonly logservice: LogService) { }
+    constructor(private readonly logService: LogService) { }
 
     /**
      * Post a new Log item. /logs
-     * @param request CreateLogDto from frontend.
+     * @param createLogDto CreateLogDto from frontend.
      */
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() request: CreateLogDto): Promise<Log> {
-        return await this.logservice.create(request);
+        return await this.logService.create(request);
     }
 
     /**
      * Get all logs. /logs
      */
     @Get()
-    @ApiImplicitQuery({ name: 'pageSize', required: false })
-    @ApiImplicitQuery({ name: 'pageNumber', required: false })
-    @ApiImplicitQuery({ name: 'logId', required: false })
-    @ApiImplicitQuery({ name: 'searchterm', required: false })
-    @ApiImplicitQuery({ name: 'subType', required: false, enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'] })
-    @ApiImplicitQuery({ name: 'origin', required: false, enum: ['human', 'process'] })
-    @ApiImplicitQuery({ name: 'creationTime', required: false })
-    async findAll(@Query() query?: any) {
-        return await this.logservice.findAll(
-            query.pageSize || 25, query.pageNumber,
-            query.logId, query.searchterm,
-            query.subType, query.origin,
-            query.creationTime);
+    @UsePipes(ValidationPipe)
+    async findAll(@Query() query?: QueryLogDto): Promise<{ logs: Log[], count: number }> {
+        return await this.logService.findAll(query);
     }
 
     /**
@@ -57,6 +48,16 @@ export class LogController {
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Log> {
-        return await this.logservice.findLogById(id);
+        return await this.logService.findLogById(id);
+    }
+
+    /**
+     * Link a run to a log.
+     * @param request LinkLogToRunDto
+     */
+    @Patch(':id/runs')
+    @UsePipes(ValidationPipe)
+    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
+        return await this.logService.linkRunToLog(logId, request);
     }
 }

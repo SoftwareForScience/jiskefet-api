@@ -22,6 +22,9 @@ import { AuthContoller } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
 import { AuthUtility } from './utility/auth.utility';
+import { AttachmentController } from './controllers/attachment.controller';
+import { AttachmentService } from './services/attachment.service';
+import { AttachmentModule } from './modules/attachment.module';
 
 @Module({
   imports: [
@@ -30,8 +33,9 @@ import { AuthUtility } from './utility/auth.utility';
     LogModule,
     UserModule,
     AuthModule,
+    AttachmentModule
   ],
-  controllers: [AppController, RunController, LogController, AuthContoller],
-  providers: [AppService, RunService, LogService, UserService, AuthService, AuthUtility],
+    controllers: [AppController, RunController, LogController, AttachmentController, AuthContoller],
+    providers: [AppService, RunService, LogService, UserService, AttachmentService, AuthService, AuthUtility],
 })
 export class AppModule { }
