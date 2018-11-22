@@ -21,6 +21,7 @@ import { AuthService } from './services/auth.service';
 import { AuthContoller } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
+import { AuthUtility } from './utility/auth.utility';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { UserService } from './services/user.service';
     AuthModule,
   ],
   controllers: [AppController, RunController, LogController, AuthContoller],
-  providers: [AppService, RunService, LogService, UserService, AuthService],
+  providers: [AppService, RunService, LogService, UserService, AuthService, AuthUtility],
 })
 export class AppModule { }

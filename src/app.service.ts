@@ -10,6 +10,9 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
+    /**
+     * Returns the response when navigating to the root/base url without a route (i.e. '/').
+     */
     root(): string {
         return [
             `
