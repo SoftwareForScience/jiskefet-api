@@ -43,12 +43,12 @@ export class UserService {
     }
 
     /**
-     * find a user by Id
-     * @param userId number
+     * find a user by external id
+     * @param id number
      */
-    async findUserById(userId: number): Promise<User> {
+    async findUserById(id: number): Promise<User> {
         return await this.repository.createQueryBuilder()
-            .where('user_id = :userId', { userId })
+            .where('external_id = :id', { id })
             .getOne();
     }
 

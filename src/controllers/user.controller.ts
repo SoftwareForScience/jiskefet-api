@@ -43,6 +43,7 @@ export class UserController {
     // send userId in body for a nicer url? aka github style https://github.com/settings/tokens
     @Get(':id/tokens')
     async findById(@Param('id') userId: number): Promise<SubSystemPermission[]> {
+        console.log(userId);
         return await this.subSystemPermissionService.findTokensByUserId(userId);
     }
 

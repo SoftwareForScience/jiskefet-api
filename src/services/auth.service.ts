@@ -118,7 +118,6 @@ export class AuthService {
      * @param response response
      * @returns JWT string.
      */
-
     public async auth(grant: string): Promise<string> {
         const accessToken = await this.getToken(grant);
         const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
