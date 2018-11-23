@@ -6,35 +6,62 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    ManyToMany,
+    JoinTable,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
+import { SubSystemRole } from './sub_system_role.entity';
 
 @Entity('sub_system_permission')
 export class SubSystemPermission {
+
+    @PrimaryGeneratedColumn({ name: 'sub_system_permission_id' })
+    subSystemPermissionId: number;
 
     @ManyToOne(
         type => User,
         user => user.subSystemPermissions,
         {
-            primary: true,
-            eager: true
+            nullable: false,
+            cascade: ['insert']
         }
     )
-    @JoinColumn({ name: 'fk_user_id' })
+    @JoinColumn({
+        name: 'fk_user_id'
+    })
     user: User;
 
     @ManyToOne(
         type => SubSystem,
         subSystem => subSystem.subSystemPermissions,
         {
-            primary: true,
             nullable: false,
-            eager: true
+            cascade: ['insert']
         }
     )
-    @JoinColumn({ name: 'fk_subsystem_id' })
-    subSystem: SubSystem;
+    @JoinColumn({
+        name: 'fk_subsystem_id'
+    })
+    subsystem: SubSystem;
+
+    @Column({
+        name: 'sub_system_hash',
+        type: 'varchar'
+    })
+    subSystemHash: string;
+
+    @Column({
+        name: 'sub_system_token_description',
+        type: 'varchar'
+    })
+    subSystemTokenDescription: string;
 
     @Column({
         name: 'is_member',
@@ -47,4 +74,18 @@ export class SubSystemPermission {
         type: 'tinyint'
     })
     editEorReason: boolean;
+
+    @ManyToMany(type => SubSystemRole)
+    @JoinTable({
+        name: 'sub_system_permission_in_sub_system_role',
+        joinColumn: {
+            name: 'fk_sub_system_permission_id',
+            referencedColumnName: 'subSystemPermissionId'
+        },
+        inverseJoinColumn: {
+            name: 'fk_sub_system_role_id',
+            referencedColumnName: 'subSystemRoleId'
+        }
+    })
+    subSystemRoles: SubSystemRole[];
 }

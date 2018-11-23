@@ -11,6 +11,8 @@ import { AuthService } from '../services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/jwt.strategy';
+import { SubSystemPermissionService } from '../services/subsystem_permission.service';
+import { BCryptService } from '../services/bcrypt.service';
 import { AuthUtility } from '../utility/auth.utility';
 import { AuthContoller } from '../controllers/auth.controller';
 
@@ -25,7 +27,7 @@ import { AuthContoller } from '../controllers/auth.controller';
             },
         }),
     ],
-    providers: [AuthService, JwtStrategy, AuthUtility],
+    providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy, AuthUtility],
     controllers: [AuthContoller],
     exports: [AuthModule],
 })

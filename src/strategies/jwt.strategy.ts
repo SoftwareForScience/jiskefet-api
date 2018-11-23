@@ -11,7 +11,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { AuthService } from '../services/auth.service';
-import { User } from '../entities/user.entity';
 
 /**
  * A PassportStrategy that verifies JWT's.
@@ -25,16 +24,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    /**
-     * Validate a JWT by checking if a user exists with the JWT given.
-     * This is an additional check besides verifying the JWT itself.
-     * @param payload The JWT.
-     */
-    async validate(payload: JwtPayload): Promise<User> {
-        const user = await this.authService.validateUserJwt(payload);
-        if (!user) {
-            throw new UnauthorizedException();
+    async validate(payload: JwtPayload): Promise<any> {
+        if (!payload.is_subsystem) {
+            const user = await this.authService.validateUserJwt(payload);
+            if (!user) {
+                throw new UnauthorizedException();
+            }
+            return user;
+        } else {
+            const subSystem = await this.authService.validateSubSystemJwt(payload);
+            if (!subSystem) {
+                throw new UnauthorizedException();
+            }
+            return subSystem;
         }
-        return user;
     }
 }

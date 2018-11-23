@@ -28,7 +28,6 @@ export class LogController {
      * @param createLogDto CreateLogDto from frontend.
      */
     @Post()
-    @UsePipes(ValidationPipe)
     async create(@Body() request: CreateLogDto): Promise<Log> {
         return await this.logService.create(request);
     }
@@ -37,7 +36,6 @@ export class LogController {
      * Get all logs. /logs
      */
     @Get()
-    @UsePipes(ValidationPipe)
     async findAll(@Query() query?: QueryLogDto): Promise<{ logs: Log[], count: number }> {
         return await this.logService.findAll(query);
     }
@@ -56,7 +54,6 @@ export class LogController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/runs')
-    @UsePipes(ValidationPipe)
     async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
         return await this.logService.linkRunToLog(logId, request);
     }

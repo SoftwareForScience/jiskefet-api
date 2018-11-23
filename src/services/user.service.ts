@@ -11,7 +11,9 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create.user.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserService {
 
     private readonly repository: Repository<User>;
@@ -40,8 +42,14 @@ export class UserService {
         }
     }
 
+    /**
+     * find a user by external id
+     * @param id number
+     */
     async findUserById(id: number): Promise<User> {
-        return await this.repository.findOne(id);
+        return await this.repository.createQueryBuilder()
+            .where('external_id = :id', { id })
+            .getOne();
     }
 
     /**

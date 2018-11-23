@@ -13,6 +13,8 @@ import { CreateUserDto } from '../dtos/create.user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { User } from '../entities/user.entity';
+import { SubSystemPermissionService } from './subsystem_permission.service';
+import { BCryptService } from './bcrypt.service';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
 import * as RequestPromise from 'request-promise';
 import { OptionsWithUrl } from 'request-promise';
@@ -37,6 +39,8 @@ export class AuthService {
 
     constructor(
         private readonly userService: UserService,
+        private readonly subSystemPermissionService: SubSystemPermissionService,
+        private readonly bcryptService: BCryptService,
         private readonly jwtService: JwtService,
     ) {
         // set client credentials
@@ -50,6 +54,20 @@ export class AuthService {
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
 
+    public async sign(payload: JwtPayload): Promise<string> {
+        const token: JwtPayload = payload;
+        return this.jwtService.sign(token);
+    }
+
+    /**
+     * Creates a JWT for a subsystem that expires in specified time
+     * @param {String} payload JWT payload
+     */
+    public async signSubSystem(payload: JwtPayload): Promise<string> {
+        const token: JwtPayload = payload;
+        return this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
+    }
+
     /**
      * Returns the user that the JWT belongs to.
      * @param payload JWT
@@ -59,6 +77,42 @@ export class AuthService {
     }
 
     /**
+     * Validates the subsystem against the database
+     * @param {JwtPayload} payload JWT payload
+     */
+    public async validateSubSystemJwt(payload: JwtPayload): Promise<any> {
+        console.log('payload is:');
+        console.log(payload);
+        const subSystem =
+            await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id, 10));
+        console.log('sub system is');
+        console.log(await subSystem);
+        // now every request will be checked by bcrypt, which might result into a performance hit in the app.
+        if (await this.bcryptService.checkToken(payload.token, subSystem.subSystemHash) === true) {
+            return subSystem;
+        }
+        return null;
+    }
+
+    // TODO: incomming payload is only the body, not the whole JWT
+    /**
+     * Function to verify JWT without hitting the database
+     * @param {String} jwtToken Encoded JWT
+     */
+    public async validateJwt(jwtToken: string): Promise<any> {
+        console.log('incomming string:');
+        console.log(jwtToken);
+        const result: any = await this.jwtService.verify(jwtToken, { ignoreExpiration: true });
+        console.log('result is:');
+        console.log(await result);
+        console.log(`type is ${typeof (await result)}`);
+        return result;
+    }
+
+    /**
+     * Authorize the user via GitHub by redirecting to GitHub's login page.
+     * The user logs in via GitHub and GitHub does a GET on
+     * our /callback endpoint with the authorization grant (or code).
      * Authorize the user via the OAuth 2 provider by exchanging the grant for an access token.
      * This token is then encoded as a JWT, exchanged for a user resource which is saved and finally returned.
      * @param response response
@@ -67,7 +121,6 @@ export class AuthService {
     public async auth(grant: string): Promise<string> {
         const accessToken = await this.getToken(grant);
         const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
-
         const user: CreateUserDto = await this.getResource(accessToken);
         await this.userService.saveUser(user);
         return jwt;

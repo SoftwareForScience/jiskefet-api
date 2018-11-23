@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes, UseGuards, ValidationPipe, Patch } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
@@ -28,7 +28,6 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
-    @UsePipes(ValidationPipe)
     async create(@Body() request: CreateRunDto): Promise<Run> {
         request.timeO2Start = new Date();
         request.timeTrgStart = new Date();
@@ -61,7 +60,6 @@ export class RunController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/logs')
-    @UsePipes(ValidationPipe)
     async linkLogToRun(@Param('id') runNumber: number, @Body() request: LinkLogToRunDto): Promise<void> {
         return await this.runService.linkLogToRun(runNumber, request);
     }

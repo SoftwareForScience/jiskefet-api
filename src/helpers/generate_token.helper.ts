@@ -6,6 +6,6 @@
  * copied verbatim in the file "LICENSE"
  */
 
-export interface JwtPayload {
-    [index: string]: string;
+export class GenerateToken {
+
 }
