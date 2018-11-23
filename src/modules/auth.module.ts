@@ -13,20 +13,22 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 import { BCryptService } from '../services/bcrypt.service';
+import { AuthUtility } from '../utility/auth.utility';
+import { AuthContoller } from '../controllers/auth.controller';
 
 @Global()
 @Module({
     imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
-        // Todo: needs env vars for secretKey and expiration time
         JwtModule.register({
-            secretOrPrivateKey: 'secretKey',
+            secretOrPrivateKey: process.env.JWT_SECRET_KEY,
             signOptions: {
-                expiresIn: 3600,
+                expiresIn: process.env.JWT_EXPIRE_TIME,
             },
-        })
+        }),
     ],
-    providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy],
+    providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy, AuthUtility],
+    controllers: [AuthContoller],
     exports: [AuthModule],
 })
 export class AuthModule {}

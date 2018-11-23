@@ -6,9 +6,9 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UsePipes, UseGuards, Patch } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { Run } from '../entities/run.entity';

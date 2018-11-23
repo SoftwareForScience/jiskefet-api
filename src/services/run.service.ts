@@ -123,8 +123,8 @@ export class RunService {
         }
 
         const result = await query
-            .skip((+queryRunDto.pageNumber - 1 || 0) * +queryRunDto.pageSize)
-            .take(+queryRunDto.pageSize)
+            .skip((+queryRunDto.pageNumber - 1 || 0) * +queryRunDto.pageSize || 0)
+            .take(+queryRunDto.pageSize || 25)
             .getManyAndCount();
 
         return { runs: result[0], count: result[1] };

@@ -24,9 +24,6 @@ async function bootstrap(): Promise<void> {
     next();
   });
 
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
   const options = new DocumentBuilder()
     .setTitle('ALICE-Bookkeeping')
     .setVersion('1.0')
@@ -41,6 +38,9 @@ async function bootstrap(): Promise<void> {
   } else {
     options.setDescription('Running without /api prefix');
   }
+
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   const document = SwaggerModule.createDocument(app, options.build());
   SwaggerModule.setup('doc', app, document);

@@ -31,6 +31,10 @@ import { AuthContoller } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
 import { BCryptService } from './services/bcrypt.service';
+import { AuthUtility } from './utility/auth.utility';
+import { OverviewModule } from './modules/overview.module';
+import { OverviewController } from './controllers/overview.controller';
+import { OverviewService } from './services/overview.service';
 
 @Module({
   imports: [
@@ -42,6 +46,7 @@ import { BCryptService } from './services/bcrypt.service';
     UserModule,
     AuthModule,
     SubSystemPermissionModule,
+    OverviewModule,
   ],
   controllers: [
     AppController,
@@ -50,7 +55,8 @@ import { BCryptService } from './services/bcrypt.service';
     AttachmentController,
     SubSystemController,
     UserController,
-    AuthContoller
+    AuthContoller,
+    OverviewController,
   ],
   providers: [
     AppService,
@@ -60,8 +66,11 @@ import { BCryptService } from './services/bcrypt.service';
     SubSystemService,
     UserService,
     AuthService,
+    AuthUtility,
     BCryptService,
     SubSystemPermissionService,
+    OverviewService,
   ],
+
 })
 export class AppModule { }

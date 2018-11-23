@@ -7,8 +7,6 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
-import * as request from 'request';
 import * as oauth2 from 'simple-oauth2';
 import { UserService } from './user.service';
 import { CreateUserDto } from '../dtos/create.user.dto';
@@ -17,7 +15,13 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { User } from '../entities/user.entity';
 import { SubSystemPermissionService } from './subsystem_permission.service';
 import { BCryptService } from './bcrypt.service';
+import { GithubProfileDto } from '../dtos/github.profile.dto';
+import * as RequestPromise from 'request-promise';
+import { OptionsWithUrl } from 'request-promise';
 
+/**
+ * Handles authorization via OAuth 2.
+ */
 @Injectable()
 export class AuthService {
     private oAuth2Client: oauth2.OAuthClient;
@@ -64,7 +68,11 @@ export class AuthService {
         return this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
     }
 
-    public async validateUserJwt(payload: JwtPayload): Promise<any> {
+    /**
+     * Returns the user that the JWT belongs to.
+     * @param payload JWT
+     */
+    public async validateUserJwt(payload: JwtPayload): Promise<User> {
         return await this.userService.findOneByToken(payload.token);
     }
 
@@ -105,82 +113,83 @@ export class AuthService {
      * Authorize the user via GitHub by redirecting to GitHub's login page.
      * The user logs in via GitHub and GitHub does a GET on
      * our /callback endpoint with the authorization grant (or code).
+     * Authorize the user via the OAuth 2 provider by exchanging the grant for an access token.
+     * This token is then encoded as a JWT, exchanged for a user resource which is saved and finally returned.
      * @param response response
+     * @returns JWT string.
      */
-    public async auth(response: Response, grant: string) {
-        if (!grant) {
-            throw response.status(500).json('Authentication failed, please provide an Authorization Grant as a query param.');
-        }
-        try {
-            const accessToken = await this.getToken(grant);
-            const jwt = await this.sign({ accessToken });
 
-            console.log('\naccessToken: ' + accessToken);
-            console.log('\njwt: ' + jwt);
-
-            // ~Begin Validate user, extract to separate function eventually
-            const user = await this.userService.findOneByToken(accessToken);
-            if (!user) {
-                await this.getResource(await accessToken, async (returnedUser: CreateUserDto) => {
-                    this.userService.saveUser(returnedUser);
-                    const foundUser: User = await this.userService.findOneByToken(accessToken);
-                    if (!foundUser) {
-                        throw response.status(500).json('Authentication failed, user not saved correctly.');
-                    }
-                });
-            }
-            response.send({ token: await jwt });
-            // ~End validate user
-
-        } catch (error) {
-            throw response.status(500).json(`Authentication failed. ${error.message}`);
-        }
+    public async auth(grant: string): Promise<string> {
+        const accessToken = await this.getToken(grant);
+        const jwt = this.jwtService.sign({ token: accessToken } as JwtPayload);
+        const user: CreateUserDto = await this.getResource(accessToken);
+        await this.userService.saveUser(user);
+        return jwt;
     }
 
     /**
-     * Ask resource server for user info by giving access token.
-     * @param accessToken Access token
+     * Ask the resource server for user info by giving access token.
+     * @param accessToken Access token (non JWT)
      * @param res response object
      */
-    public async getResource(accessToken: string, callback: (user: CreateUserDto) => void): Promise<void> {
-        const getCall = {
-            url: 'https://api.github.com/user?access_token=' + accessToken,
-            headers: {
-                'User-Agent': 'request'
-            }
-        };
-
-        // const getCall = {
-        //     url: process.env.RESOURCE_API_URL,
-        //     headers: {
-        //         'User-Agent': 'request',
-        //         'Authorization': `token ${accessToken}`
-        //     }
-        // };
-
-        request(getCall, (error, response, body) => {
+    public async getResource(accessToken: string): Promise<CreateUserDto> {
+        const requestOptions = await this.getApiRequest(accessToken);
+        return RequestPromise(requestOptions).then((body) => {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
                 externalUserId: jsonBody.id,
                 token: accessToken,
                 avatarUrl: jsonBody.avatar_url
             };
-            callback(createUserDto);
+            return createUserDto;
+        }).catch((error) => {
+            throw new Error(error);
         });
     }
 
-    public async logout() { }
+    /**
+     * Request user's GitHub profile info from resource server.
+     * @param jwt
+     */
+    public async getGithubProfileInfo(jwt: string): Promise<GithubProfileDto> {
+        const decodedJwt = this.jwtService.decode(jwt, { json: true }) as { [key: string]: string };
+        const accessToken = decodedJwt.token;
+        const requestOptions = await this.getApiRequest(accessToken);
+
+        return RequestPromise(requestOptions).then((body) => {
+            return JSON.parse(body);
+        }).catch((error) => {
+            throw new Error(error);
+        });
+    }
 
     /**
-     * POST to authorization server for token by giving the authorization grant (code).
-     * @param code string
+     * POST to authorization server, requesting an access token
+     * by giving the authorization grant (code).
+     * @param code authorization grant code
      */
     private async getToken(code: string): Promise<string> {
-        const authorizationGrant = await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
+        const authorizationGrant =
+            await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
         const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
         if (!accessTokenObject.token.access_token) {
-            throw new Error('Cannot get access token: GitHub did not accept grant given.');
+            throw new Error(accessTokenObject.token.error_description ||
+                'Cannot get access token: Authentication Server did not accept grant given.');
         }
         return accessTokenObject.token.access_token;
+    }
+
+    /**
+     * Returns options needed to make a request to the OAuth provider's resource server.
+     * @param accessToken
+     */
+    private async getApiRequest(accessToken: string): Promise<OptionsWithUrl> {
+        return {
+            url: process.env.RESOURCE_API_URL,
+            headers: {
+                'User-Agent': 'request',
+                'Authorization': `token ${accessToken}`
+            }
+        };
     }
 }
