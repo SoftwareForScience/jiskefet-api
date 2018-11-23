@@ -48,7 +48,7 @@ export class SubSystemPermissionService {
     async findTokensByUserId(userId: number): Promise<SubSystemPermission[]> {
         const result = await this.repository.query(
             `SELECT sub_system_permission_id, sub_system_token_description
-            FROM bookkeeping.sub_system_permission WHERE fk_user_id = ${userId};`
+            FROM sub_system_permission WHERE fk_user_id = ${userId};`
         );
         const overview = new Array() as SubSystemPermission[];
         for (const r of result) {
