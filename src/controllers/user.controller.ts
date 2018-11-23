@@ -6,8 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Param, Post, Body } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { Get, Controller, Param, Post, Body, UseGuards } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
@@ -17,8 +17,11 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('users')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('users')
 export class UserController {
     constructor(
@@ -51,7 +54,7 @@ export class UserController {
      * Generates a token and links it to the subsystem with permissions.
      */
     @Post(':id/tokens/new')
-    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<string> {
+    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<any> {
         const uniqueId: string = uuid();
         request.subSystemHash =  await this.bcryptService.hashToken(uniqueId);
 
@@ -66,10 +69,9 @@ export class UserController {
             ['permission_id']: newSubSystem.subSystemPermissionId.toString()
         };
 
-        // create JWT
-        const jwtToken: string = await this.authService.signSubSystem(jwtPayload);
+        // creates a jwt and returns it
+        request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
-        // send jwt back to user
-        return jwtToken;
+        return request;
     }
 }

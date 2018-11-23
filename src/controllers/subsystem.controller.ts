@@ -6,13 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Param } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { Get, Controller, Param, UseGuards } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { SubSystemService } from '../services/susbsystem.service';
 import { SubSystem } from '../entities/sub_system.entity';
-import { SubSystemPermission } from '../entities/sub_system_permission.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('subsystems')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('subsystems')
 export class SubSystemController {
     constructor(

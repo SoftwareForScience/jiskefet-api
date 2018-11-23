@@ -65,7 +65,7 @@ export class AuthService {
      */
     public async signSubSystem(payload: JwtPayload): Promise<string> {
         const token: JwtPayload = payload;
-        return this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
+        return await this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
     }
 
     /**
