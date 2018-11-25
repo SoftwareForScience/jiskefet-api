@@ -7,8 +7,8 @@
  */
 
 /**
- * User to create based on an authentication via OAuth 2.
- * The app only saves the external (OAuth provider) ID an no additional information
+ * User to create based on the authentication via OAuth 2.
+ * The app only saves the external (OAuth provider) ID and no additional information
  * in order to prevent redundancy.
  */
 export class CreateUserDto {
