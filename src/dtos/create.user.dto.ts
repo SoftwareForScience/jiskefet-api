@@ -6,18 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
-
+/**
+ * User to create based on an authentication via OAuth 2.
+ * The app only saves the external (OAuth provider) ID an no additional information
+ * in order to prevent redundancy.
+ */
 export class CreateUserDto {
+    /**
+     * The user ID from the database of the OAuth provider (e.g. GitHub, Google etc.).
+     */
     externalUserId: number;
-    @ApiModelProperty({
-        example: '4l1c3L4R93H4Dr0NC0LL1D3R',
-        description: 'Generated token from oauth provider, encoded as JWT.',
-    })
-    @IsString()
-    token?: string;
-    avatarUrl?: string;
 
     constructor(data: CreateUserDto | {} = {}) {
         Object.assign(this, data);

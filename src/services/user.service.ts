@@ -31,25 +31,10 @@ export class UserService {
         // Todo: change this
         userEntity.samsId = 123;
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
-        // update user if exists
-        if (typeof foundUser === 'object') {
-            foundUser.token = userEntity.token;
-            await this.repository.save(foundUser);
-            return foundUser;
-        } else {
+        if (!foundUser) {
             await this.repository.save(userEntity);
-            return userEntity;
         }
-    }
-
-    /**
-     * find a user by external id
-     * @param id number
-     */
-    async findUserById(id: number): Promise<User> {
-        return await this.repository.createQueryBuilder()
-            .where('external_id = :id', { id })
-            .getOne();
+        return userEntity;
     }
 
     /**
@@ -59,12 +44,6 @@ export class UserService {
     async findUserByExternalId(externalId: number): Promise<User> {
         return await this.repository.createQueryBuilder()
             .where('external_id = :external_id', { external_id: externalId })
-            .getOne();
-    }
-
-    async findOneByToken(token: string): Promise<User> {
-        return await this.repository.createQueryBuilder()
-            .where('token = :token', { token })
             .getOne();
     }
 }
