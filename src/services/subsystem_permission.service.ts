@@ -45,7 +45,7 @@ export class SubSystemPermissionService {
      * Retrieves all the generated tokens by user
      * @param userId number
      */
-    async findTokensByUserId(userId: number): Promise<SubSystemPermission[]> {
+    async findTokensByExternalserId(userId: number): Promise<SubSystemPermission[]> {
         const result = await this.repository.query(
             `SELECT sub_system_permission_id, sub_system_token_description
             FROM sub_system_permission WHERE fk_user_id = ${userId};`

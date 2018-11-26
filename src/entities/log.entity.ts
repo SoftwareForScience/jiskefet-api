@@ -36,9 +36,9 @@ export class Log {
     @ManyToOne(
         type => User,
         user => user.logs,
-        // User should not be nullable, but for testing purposes it currently is
         {
-            nullable: true
+            nullable: false,
+            cascade: ['insert']
         }
     )
     @JoinColumn({ name: 'fk_user_id' })

@@ -45,8 +45,8 @@ export class UserController {
      */
     // send userId in body for a nicer url? aka github style https://github.com/settings/tokens
     @Get(':id/tokens')
-    async findById(@Param('id') userId: number): Promise<SubSystemPermission[]> {
-        return await this.subSystemPermissionService.findTokensByUserId(userId);
+    async findTokensByExternalUserId(@Param('id') userId: number): Promise<SubSystemPermission[]> {
+        return await this.subSystemPermissionService.findTokensByExternalserId(userId);
     }
 
     // same as above, see https://github.com/settings/tokens/new

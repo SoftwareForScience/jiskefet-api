@@ -81,12 +81,8 @@ export class AuthService {
      * @param {JwtPayload} payload JWT payload
      */
     public async validateSubSystemJwt(payload: JwtPayload): Promise<any> {
-        console.log('payload is:');
-        console.log(payload);
         const subSystem =
             await this.subSystemPermissionService.findSubSystemsPermissionsById(parseInt(payload.permission_id, 10));
-        console.log('sub system is');
-        console.log(await subSystem);
         // now every request will be checked by bcrypt, which might result into a performance hit in the app.
         if (await this.bcryptService.checkToken(payload.token, subSystem.subSystemHash) === true) {
             return subSystem;
@@ -100,12 +96,7 @@ export class AuthService {
      * @param {String} jwtToken Encoded JWT
      */
     public async validateJwt(jwtToken: string): Promise<any> {
-        console.log('incomming string:');
-        console.log(jwtToken);
         const result: any = await this.jwtService.verify(jwtToken, { ignoreExpiration: true });
-        console.log('result is:');
-        console.log(await result);
-        console.log(`type is ${typeof (await result)}`);
         return result;
     }
 
