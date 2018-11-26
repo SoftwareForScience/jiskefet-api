@@ -116,4 +116,14 @@ export class LogService {
         log.runs = [...log.runs, run];
         await this.repository.save(log);
     }
+
+    async findLogByUserId(userId: number): Promise<Log[]> {
+        return await this.repository
+            .createQueryBuilder('log')
+            .leftJoinAndSelect('log.user', 'fk_user_id')
+            .where('user_id = :userId', { userId })
+            .getMany()
+            .then((res: Log[]) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
+    }
 }

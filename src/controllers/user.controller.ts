@@ -18,6 +18,8 @@ import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Log } from '../entities/log.entity';
+import { LogService } from '../services/log.service';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -28,7 +30,8 @@ export class UserController {
         private readonly subSystemPermissionService: SubSystemPermissionService,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
-        private readonly userService: UserService) { }
+        private readonly userService: UserService,
+        private readonly logService: LogService) { }
 
     /**
      * Retrieve a the user by id
@@ -73,5 +76,14 @@ export class UserController {
         request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
         return request;
+    }
+
+    /**
+     * Find logs from a specific user.
+     * @param userId number
+     */
+    @Get(':id/logs')
+    async findByUserId(@Param('id') userId: number): Promise<Log[]> {
+        return await this.logService.findLogByUserId(userId);
     }
 }
