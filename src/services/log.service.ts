@@ -102,6 +102,7 @@ export class LogService {
         return await this.repository
             .createQueryBuilder('log')
             .leftJoinAndSelect('log.runs', 'runs')
+            .innerJoinAndSelect('log.user', 'user')
             .where('log_id = :id', { id })
             .getOne()
             .then((res: Log) => Promise.resolve(res))
