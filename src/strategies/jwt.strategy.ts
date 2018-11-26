@@ -26,12 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: JwtPayload): Promise<any> {
         if (!payload.is_subsystem) {
-            const user = await this.authService.validateUserJwt(payload);
-            if (!user) {
-                throw new UnauthorizedException();
-            }
-            return user;
+            // Does not require additional validation for non-subsystems, i.e. users.
+            return true;
         } else {
+            // Requires additional validation for subsystems.
             const subSystem = await this.authService.validateSubSystemJwt(payload);
             if (!subSystem) {
                 throw new UnauthorizedException();

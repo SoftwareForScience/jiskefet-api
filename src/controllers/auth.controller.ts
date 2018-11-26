@@ -73,8 +73,7 @@ export class AuthContoller {
 
     /**
      * Returns a JWT token if the grant given as a query parameter is valid.
-     * @param response response object to send back to client.
-     * @param query query parameters sent by client.
+     * @param headers http headers given by client in GET request.
      */
     @Get('/profile')
     @ApiOperation({ title: 'Returns the user\'s profile' })

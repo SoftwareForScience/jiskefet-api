@@ -12,7 +12,6 @@ import { UserService } from './user.service';
 import { CreateUserDto } from '../dtos/create.user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { User } from '../entities/user.entity';
 import { SubSystemPermissionService } from './subsystem_permission.service';
 import { BCryptService } from './bcrypt.service';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
@@ -69,14 +68,6 @@ export class AuthService {
     }
 
     /**
-     * Returns the user that the JWT belongs to.
-     * @param payload JWT
-     */
-    public async validateUserJwt(payload: JwtPayload): Promise<User> {
-        return await this.userService.findOneByToken(payload.token);
-    }
-
-    /**
      * Validates the subsystem against the database
      * @param {JwtPayload} payload JWT payload
      */
@@ -94,7 +85,7 @@ export class AuthService {
         return null;
     }
 
-    // TODO: incomming payload is only the body, not the whole JWT
+    // TODO: incoming payload is only the body, not the whole JWT
     /**
      * Function to verify JWT without hitting the database
      * @param {String} jwtToken Encoded JWT
@@ -136,9 +127,7 @@ export class AuthService {
         return RequestPromise(requestOptions).then((body) => {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
-                externalUserId: jsonBody.id,
-                token: accessToken,
-                avatarUrl: jsonBody.avatar_url
+                externalUserId: jsonBody.id
             };
             return createUserDto;
         }).catch((error) => {

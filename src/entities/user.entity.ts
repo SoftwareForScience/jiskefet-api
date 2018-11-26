@@ -24,7 +24,8 @@ export class User {
 
     @Column({
         name: 'external_id',
-        type: 'int'
+        type: 'int',
+        unique: true
     })
     externalUserId: number;
 
@@ -33,16 +34,6 @@ export class User {
         type: 'int'
     })
     samsId: number;
-
-    @Column({ nullable: true })
-    token: string;
-
-    @Column({
-        name: 'token_valid_until',
-        precision: 0,
-        nullable: true
-    })
-    tokenValidUntil: Date;
 
     @OneToMany(type => Log, log => log.user)
     logs: Log[];
