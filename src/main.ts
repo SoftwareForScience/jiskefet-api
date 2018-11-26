@@ -14,7 +14,7 @@ import * as bodyParser from 'body-parser';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
-  // app.enableCors();
+  app.enableCors();
 
   const options = new DocumentBuilder()
     .setTitle('ALICE-Bookkeeping')
