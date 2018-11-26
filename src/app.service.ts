@@ -20,7 +20,7 @@ export class AppService {
                 Welcome to the Jiskefet API
                 <br>
                 <br>
-                <a href="/doc/">
+                <a href="${process.env.USE_API_PREFIX === 'true' ? '/api' : ''}/doc/">
                     <button type="button" style="
                         font-size: 2rem;
                         padding: 10px 20px;
