@@ -117,13 +117,20 @@ export class LogService {
         await this.repository.save(log);
     }
 
-    async findLogByUserId(userId: number): Promise<Log[]> {
-        return await this.repository
-            .createQueryBuilder('log')
-            .leftJoinAndSelect('log.user', 'fk_user_id')
-            .where('user_id = :userId', { userId })
-            .getMany()
-            .then((res: Log[]) => Promise.resolve(res))
-            .catch((err: string) => Promise.reject(err));
+    /**
+     * Returns logs from a specific user
+     * @param userId number
+     */
+    async findLogsByUserId(
+        userId: number,
+        queryLogDto: QueryLogDto
+    ): Promise<{ logs: Log[], count: number }> {
+        const query = await this.repository
+            .createQueryBuilder()
+            .where('fk_user_id = :userId', { userId })
+            .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
+            .take(+queryLogDto.pageSize || 25)
+            .getManyAndCount();
+        return { logs: query[0], count: query[1] };
     }
 }

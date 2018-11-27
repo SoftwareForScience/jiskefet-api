@@ -6,8 +6,12 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Param, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+    Get,
+    Headers,
+    Controller, Param, Post, Body, UseGuards, Query, BadRequestException, HttpException, HttpStatus
+} from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
@@ -20,6 +24,9 @@ import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
+import { QueryLogDto } from '../dtos/query.log.dto';
+import { GithubProfileDto } from '../dtos/github.profile.dto';
+import { AuthUtility } from '../utility/auth.utility';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -31,8 +38,33 @@ export class UserController {
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
-        private readonly logService: LogService) { }
+        private readonly logService: LogService,
+        private readonly authUtility: AuthUtility) { }
 
+    /**
+     * Returns a JWT token if the grant given as a query parameter is valid.
+     * @param headers http headers given by client in GET request.
+     */
+    @Get('/profile')
+    @ApiOperation({ title: 'Returns the user\'s profile' })
+    @ApiOkResponse({
+        description: 'User successfully received profile information.'
+    })
+    @ApiResponse({
+        status: 401,
+        description: 'User is unauthorized'
+    })
+    async profile(@Headers() headers: any): Promise<GithubProfileDto> {
+        try {
+            const jwt = await this.authUtility.getJwtFromHeaders(headers);
+            if (!jwt) {
+                throw new BadRequestException('No JWT could be found in headers.');
+            }
+            return await this.authService.getGithubProfileInfo(jwt);
+        } catch (error) {
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     /**
      * Retrieve a the user by id
      * @param userId number
@@ -59,7 +91,7 @@ export class UserController {
     @Post(':id/tokens/new')
     async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<any> {
         const uniqueId: string = uuid();
-        request.subSystemHash =  await this.bcryptService.hashToken(uniqueId);
+        request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
         // save it to db
         const newSubSystem: SubSystemPermission =
@@ -83,7 +115,10 @@ export class UserController {
      * @param userId number
      */
     @Get(':id/logs')
-    async findByUserId(@Param('id') userId: number): Promise<Log[]> {
-        return await this.logService.findLogByUserId(userId);
+    async findByUserId(
+        @Param('id') userId: number,
+        @Query() query: QueryLogDto
+    ): Promise<{ logs: Log[], count: number }> {
+        return await this.logService.findLogsByUserId(userId, query);
     }
 }
