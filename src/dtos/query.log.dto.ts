@@ -13,6 +13,7 @@ import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { User } from '../entities/user.entity';
 
 /**
  * Represents the query parameters given when executing a GET on /logs.
@@ -108,4 +109,10 @@ export class QueryLogDto {
     // @IsDateString()
     @IsOptional()
     endCreationTime?: string;
+
+    @ApiModelProperty({
+        description: 'The author of the log..',
+        required: false,
+    })
+    user?: User;
 }

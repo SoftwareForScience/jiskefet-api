@@ -51,7 +51,8 @@ export class LogService {
      * Returns all Logs from the db.
      */
     async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], count: number }> {
-        let query = await this.repository.createQueryBuilder()
+        let query = await this.repository.createQueryBuilder('log')
+            .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
                 title: queryLogDto.searchterm ? `%${queryLogDto.searchterm}%` : '%'
             })
@@ -61,6 +62,7 @@ export class LogService {
             .andWhere('origin like :origin', {
                 origin: queryLogDto.origin ? queryLogDto.origin : '%'
             });
+
         if (queryLogDto.startCreationTime) {
             await query.andWhere('creation_time >= :startCreationTime', {
                 startCreationTime: queryLogDto.startCreationTime
@@ -81,7 +83,7 @@ export class LogService {
 
         if (queryLogDto.orderBy) {
             query = query.orderBy(
-                _.snakeCase(queryLogDto.orderBy),
+                `log.${queryLogDto.orderBy}`,
                 queryLogDto.orderDirection || OrderDirection.asc
             );
         }
@@ -100,6 +102,7 @@ export class LogService {
         return await this.repository
             .createQueryBuilder('log')
             .leftJoinAndSelect('log.runs', 'runs')
+            .innerJoinAndSelect('log.user', 'user')
             .where('log_id = :id', { id })
             .getOne()
             .then((res: Log) => Promise.resolve(res))
