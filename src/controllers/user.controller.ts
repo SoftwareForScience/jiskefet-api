@@ -38,33 +38,8 @@ export class UserController {
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
-        private readonly logService: LogService,
-        private readonly authUtility: AuthUtility) { }
+        private readonly logService: LogService) { }
 
-    /**
-     * Returns a JWT token if the grant given as a query parameter is valid.
-     * @param headers http headers given by client in GET request.
-     */
-    @Get('/profile')
-    @ApiOperation({ title: 'Returns the user\'s profile' })
-    @ApiOkResponse({
-        description: 'User successfully received profile information.'
-    })
-    @ApiResponse({
-        status: 401,
-        description: 'User is unauthorized'
-    })
-    async profile(@Headers() headers: any): Promise<GithubProfileDto> {
-        try {
-            const jwt = await this.authUtility.getJwtFromHeaders(headers);
-            if (!jwt) {
-                throw new BadRequestException('No JWT could be found in headers.');
-            }
-            return await this.authService.getGithubProfileInfo(jwt);
-        } catch (error) {
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     /**
      * Retrieve a the user by id
      * @param userId number
