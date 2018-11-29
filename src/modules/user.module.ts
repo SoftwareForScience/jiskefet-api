@@ -17,11 +17,12 @@ import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { SubSystemModule } from './subsystem.module';
 import { SubSystemService } from '../services/susbsystem.service';
+import { AuthUtility } from '../utility/auth.utility';
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([User]), SubSystemPermissionModule, SubSystemModule],
-  providers: [UserService, SubSystemPermissionService, AuthService, BCryptService, SubSystemService],
+  providers: [UserService, SubSystemPermissionService, AuthService, BCryptService, SubSystemService, AuthUtility],
   controllers: [UserController],
   exports: [UserService],
 })

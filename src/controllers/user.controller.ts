@@ -6,8 +6,12 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Param, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+    Get,
+    Headers,
+    Controller, Param, Post, Body, UseGuards, Query, BadRequestException, HttpException, HttpStatus
+} from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
@@ -18,6 +22,11 @@ import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Log } from '../entities/log.entity';
+import { LogService } from '../services/log.service';
+import { QueryLogDto } from '../dtos/query.log.dto';
+import { GithubProfileDto } from '../dtos/github.profile.dto';
+import { AuthUtility } from '../utility/auth.utility';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -28,7 +37,8 @@ export class UserController {
         private readonly subSystemPermissionService: SubSystemPermissionService,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
-        private readonly userService: UserService) { }
+        private readonly userService: UserService,
+        private readonly logService: LogService) { }
 
     /**
      * Retrieve a the user by id
@@ -56,7 +66,7 @@ export class UserController {
     @Post(':id/tokens/new')
     async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<any> {
         const uniqueId: string = uuid();
-        request.subSystemHash =  await this.bcryptService.hashToken(uniqueId);
+        request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
         // save it to db
         const newSubSystem: SubSystemPermission =
@@ -73,5 +83,16 @@ export class UserController {
         request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
         return request;
+    }
+
+    /**
+     * Find logs from a specific user.
+     * @param userId number
+     */
+    @Get(':id/logs')
+    async findLogsByUserId(
+        @Param('id') userId: number, @Query() query: QueryLogDto):
+        Promise<{ data: Log[], count: number }> {
+        return await this.logService.findLogsByUserId(userId, query);
     }
 }

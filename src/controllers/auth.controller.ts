@@ -8,9 +8,9 @@
 
 import {
     Get,
+    Headers,
     Controller,
     Query,
-    Headers,
     UnprocessableEntityException,
     HttpException,
     HttpStatus,
@@ -27,6 +27,8 @@ import {
 } from '@nestjs/swagger';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
+import { User } from '../entities/user.entity';
+import { UserService } from '../services/user.service';
 
 /**
  * Controller for authentication related endpoints.
@@ -36,7 +38,8 @@ import { AuthUtility } from '../utility/auth.utility';
 export class AuthContoller {
     constructor(
         private readonly authService: AuthService,
-        private readonly authUtility: AuthUtility
+        private readonly authUtility: AuthUtility,
+        private readonly userService: UserService
     ) { }
 
     /**
@@ -75,7 +78,7 @@ export class AuthContoller {
      * Returns a JWT token if the grant given as a query parameter is valid.
      * @param headers http headers given by client in GET request.
      */
-    @Get('/profile')
+    @Get('/user/profile')
     @ApiOperation({ title: 'Returns the user\'s profile' })
     @ApiOkResponse({
         description: 'User successfully received profile information.'
@@ -84,13 +87,15 @@ export class AuthContoller {
         status: 401,
         description: 'User is unauthorized'
     })
-    async profile(@Headers() headers: any): Promise<GithubProfileDto> {
+    async profile(@Headers() headers: any): Promise<{ userData: User, githubData: GithubProfileDto}> {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
                 throw new BadRequestException('No JWT could be found in headers.');
             }
-            return await this.authService.getGithubProfileInfo(jwt);
+            const githubProfile = await this.authService.getGithubProfileInfo(jwt);
+            const user: User = await this.userService.findUserByExternalId(githubProfile.id);
+            return { userData: user, githubData: githubProfile };
         } catch (error) {
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
