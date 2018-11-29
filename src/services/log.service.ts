@@ -129,7 +129,7 @@ export class LogService {
             .createQueryBuilder()
             .where('fk_user_id = :userId', { userId })
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
-            .take(+queryLogDto.pageSize || 25)
+            .take(+queryLogDto.pageSize || 16)
             .getManyAndCount();
         return { logs: query[0], count: query[1] };
     }

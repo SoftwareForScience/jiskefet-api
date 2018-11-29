@@ -91,9 +91,8 @@ export class UserController {
      */
     @Get(':id/logs')
     async findByUserId(
-        @Param('id') userId: number,
-        @Query() query: QueryLogDto
-    ): Promise<{ logs: Log[], count: number }> {
+        @Param('id') userId: number, @Query() query: QueryLogDto):
+        Promise<{ logs: Log[], count: number }> {
         return await this.logService.findLogsByUserId(userId, query);
     }
 }
