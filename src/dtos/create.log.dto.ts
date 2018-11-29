@@ -11,7 +11,8 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
-import { Attachment } from 'entities/attachment.entity';
+import { Attachment } from '../entities/attachment.entity';
+import { User } from '../entities/user.entity';
 
 @Entity('logs')
 export class CreateLogDto {
@@ -57,4 +58,11 @@ export class CreateLogDto {
         description: 'Attached run numbers of this log',
     })
     runs: number[];
+
+    @ApiModelProperty({
+        example: '{userId: 1, externalId: 1, ...}',
+        description: 'Author of log',
+    })
+    @IsString()
+    user: User;
 }
