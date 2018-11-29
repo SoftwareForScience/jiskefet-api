@@ -127,13 +127,13 @@ export class LogService {
     async findLogsByUserId(
         userId: number,
         queryLogDto: QueryLogDto
-    ): Promise<{ logs: Log[], count: number }> {
+    ): Promise<{ data: Log[], count: number }> {
         const query = await this.repository
             .createQueryBuilder()
             .where('fk_user_id = :userId', { userId })
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 16)
             .getManyAndCount();
-        return { logs: query[0], count: query[1] };
+        return { data: query[0], count: query[1] };
     }
 }
