@@ -8,11 +8,10 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsString, IsInt } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { Attachment } from '../entities/attachment.entity';
-import { User } from '../entities/user.entity';
 
 @Entity('logs')
 export class CreateLogDto {
@@ -60,9 +59,9 @@ export class CreateLogDto {
     runs: number[];
 
     @ApiModelProperty({
-        example: '{userId: 1, externalId: 1, ...}',
+        example: '1',
         description: 'Author of log',
     })
-    @IsString()
-    user: User;
+    @IsInt()
+    user: number;
 }
