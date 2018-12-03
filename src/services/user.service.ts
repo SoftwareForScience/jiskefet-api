@@ -46,4 +46,14 @@ export class UserService {
             .where('external_id = :external_id', { external_id: externalId })
             .getOne();
     }
+
+    /**
+     * Find the user by its (internal, i.e. primary key in db) user id.
+     * @param userId The users id
+     */
+    async findUserById(userId: number): Promise<User> {
+        return await this.repository.createQueryBuilder()
+            .where('user_id = :user_id', { user_id: userId })
+            .getOne();
+    }
 }

@@ -6,12 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import {
-    Get,
-    Headers,
-    Controller, Param, Post, Body, UseGuards, Query, BadRequestException, HttpException, HttpStatus
-} from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { Get, Controller, Param, Post, Body, UseGuards, Query } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
@@ -25,8 +21,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
-import { AuthUtility } from '../utility/auth.utility';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -38,28 +32,28 @@ export class UserController {
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
-        private readonly logService: LogService) { }
+        private readonly logService: LogService
+    ) { }
 
     /**
      * Retrieve a the user by id
      * @param userId number
      */
     @Get(':id')
-    async findUserByExternalId(@Param('id') userId: number): Promise<User> {
-        return await this.userService.findUserByExternalId(userId);
+    async findById(@Param('id') userId: number): Promise<User> {
+        return await this.userService.findUserById(userId);
     }
 
     /**
      * Retrieve all the generated tokens from user
      * @param userId number
      */
-    // send userId in body for a nicer url? aka github style https://github.com/settings/tokens
     @Get(':id/tokens')
     async findTokensByExternalUserId(@Param('id') userId: number): Promise<SubSystemPermission[]> {
         return await this.subSystemPermissionService.findTokensByExternalserId(userId);
     }
 
-    // same as above, see https://github.com/settings/tokens/new
+    // Todo: make this a RESTful endpoint, e.g. POST ':id/tokens'
     /**
      * Generates a token and links it to the subsystem with permissions.
      */
@@ -91,8 +85,8 @@ export class UserController {
      */
     @Get(':id/logs')
     async findLogsByUserId(
-        @Param('id') userId: number, @Query() query: QueryLogDto):
-        Promise<{ data: Log[], count: number }> {
+        @Param('id') userId: number, @Query() query: QueryLogDto
+    ): Promise<{ data: Log[], count: number }> {
         return await this.logService.findLogsByUserId(userId, query);
     }
 }
