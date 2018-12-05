@@ -35,6 +35,9 @@ import { AuthUtility } from './utility/auth.utility';
 import { OverviewModule } from './modules/overview.module';
 import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
+import { InfoLoggerService } from './services/infologger.service';
+import { InfoLoggerModule } from './modules/infologger.module';
+import { InfoLoggerController } from './controllers/infologger.controller';
 
 @Module({
   imports: [
@@ -47,6 +50,7 @@ import { OverviewService } from './services/overview.service';
     AuthModule,
     SubSystemPermissionModule,
     OverviewModule,
+    InfoLoggerModule,
   ],
   controllers: [
     AppController,
@@ -57,6 +61,7 @@ import { OverviewService } from './services/overview.service';
     UserController,
     AuthContoller,
     OverviewController,
+    InfoLoggerController,
   ],
   providers: [
     AppService,
@@ -70,6 +75,7 @@ import { OverviewService } from './services/overview.service';
     BCryptService,
     SubSystemPermissionService,
     OverviewService,
+    InfoLoggerService,
   ],
 
 })

@@ -29,6 +29,7 @@ import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
+import { InfoLoggerService } from '../services/infologger.service';
 
 /**
  * Controller for authentication related endpoints.
@@ -39,7 +40,8 @@ export class AuthContoller {
     constructor(
         private readonly authService: AuthService,
         private readonly authUtility: AuthUtility,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly loggerService: InfoLoggerService,
     ) { }
 
     /**
@@ -63,13 +65,16 @@ export class AuthContoller {
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
             if (!query.grant) {
+                this.loggerService.log('Testing the token.');
                 throw new UnprocessableEntityException(`Authentication failed
                 , please provide an Authorization Grant as a query param.`);
             }
             const grant = query.grant;
             const jwt = await this.authService.auth(grant);
+            this.loggerService.log('Token returned');
             return { token: jwt };
         } catch (error) {
+            this.loggerService.error('Invalid token');
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -91,12 +96,14 @@ export class AuthContoller {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
+                this.loggerService.warn('No JWT');
                 throw new BadRequestException('No JWT could be found in headers.');
             }
             const githubProfile = await this.authService.getGithubProfileInfo(jwt);
             const user: User = await this.userService.findUserByExternalId(githubProfile.id);
             return { userData: user, githubData: githubProfile };
         } catch (error) {
+            this.loggerService.warn('User is not authorized.');
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

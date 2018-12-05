@@ -11,6 +11,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
+import { InfoLoggerService } from './services/infologger.service';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -37,6 +38,7 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, options.build());
   SwaggerModule.setup('doc', app, document);
 
+  app.useLogger(app.get(InfoLoggerService));
   await app.listen(process.env.PORT);
 }
 bootstrap();
