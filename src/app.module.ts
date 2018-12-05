@@ -18,7 +18,7 @@ import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
 import { SubSystemController } from './controllers/subsystem.controller';
 import { SubSystemModule } from './modules/subsystem.module';
-import { SubSystemService } from './services/susbsystem.service';
+import { SubSystemService } from './services/subsystem.service';
 import { AttachmentModule } from './modules/attachment.module';
 import { AttachmentController } from './controllers/attachment.controller';
 import { AttachmentService } from './services/attachment.service';
@@ -27,7 +27,7 @@ import { SubSystemPermissionModule } from './modules/subsystem_permission.module
 import { SubSystemPermissionService } from './services/subsystem_permission.service';
 import { AuthModule } from './modules/auth.module';
 import { AuthService } from './services/auth.service';
-import { AuthContoller } from './controllers/auth.controller';
+import { AuthController } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
 import { BCryptService } from './services/bcrypt.service';
@@ -55,7 +55,7 @@ import { OverviewService } from './services/overview.service';
     AttachmentController,
     SubSystemController,
     UserController,
-    AuthContoller,
+    AuthController,
     OverviewController,
   ],
   providers: [
@@ -71,6 +71,5 @@ import { OverviewService } from './services/overview.service';
     SubSystemPermissionService,
     OverviewService,
   ],
-
 })
 export class AppModule { }

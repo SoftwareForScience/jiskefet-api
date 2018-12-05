@@ -14,7 +14,11 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { AuthUtility } from '../utility/auth.utility';
-import { AuthContoller } from '../controllers/auth.controller';
+import { AuthController } from '../controllers/auth.controller';
+
+// Import dotenv so end-to-end tests can find the env variables.
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Global()
 @Module({
@@ -28,7 +32,7 @@ import { AuthContoller } from '../controllers/auth.controller';
         }),
     ],
     providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy, AuthUtility],
-    controllers: [AuthContoller],
+    controllers: [AuthController],
     exports: [AuthModule],
 })
 export class AuthModule {}
