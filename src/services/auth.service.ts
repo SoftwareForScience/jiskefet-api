@@ -17,6 +17,7 @@ import { BCryptService } from './bcrypt.service';
 import { GithubProfileDto } from '../dtos/github.profile.dto';
 import * as RequestPromise from 'request-promise';
 import { OptionsWithUrl } from 'request-promise';
+import { UserProfile } from '../interfaces/userprofile.abstract';
 
 /**
  * Handles authorization via OAuth 2.
@@ -42,7 +43,7 @@ export class AuthService {
         private readonly bcryptService: BCryptService,
         private readonly jwtService: JwtService,
     ) {
-        // set client credentials
+        // set client credentials depending of github or cern SSO
         this.oAuth2Config.client.id = process.env.CLIENT_ID;
         this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
 
@@ -130,7 +131,7 @@ export class AuthService {
      * Request user's GitHub profile info from resource server.
      * @param jwt
      */
-    public async getGithubProfileInfo(jwt: string): Promise<GithubProfileDto> {
+    public async getProfileInfo(jwt: string): Promise<UserProfile> {
         const decodedJwt = this.jwtService.decode(jwt, { json: true }) as { [key: string]: string };
         const accessToken = decodedJwt.token;
         const requestOptions = await this.getApiRequest(accessToken);
