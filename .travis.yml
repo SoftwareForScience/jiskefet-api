@@ -8,4 +8,4 @@ script:
 # Disabled testing steps until we know how to test with authorization in the mix.
   # - npm test
 after_success: 
-  - codecov -f coverage/coverage-final.json
+  - codecov
