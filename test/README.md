@@ -10,8 +10,11 @@ $ npm run test
 # Manually
 $ npx jest
 
-# Just one file (it will search in the __tests__ folder)
+# Just one file (it will search files in the <project_root>/test directory)
 $ npx jest run.controller.e2e-spec.ts
+
+# Also works with wildcards
+$ npx jest run.c*
 ```
 
 ## View coverage report
