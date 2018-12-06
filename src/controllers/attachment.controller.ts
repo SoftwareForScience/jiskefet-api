@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Post, Controller, Body, Get, Param, UseGuards } from '@nestjs/common';
+import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
@@ -26,6 +26,7 @@ export class AttachmentController {
      * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post()
+    @UsePipes(ValidationPipe)
     async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
         return await this.attachmentservice.create(createAttachmentDto);
     }
@@ -37,10 +38,13 @@ export class AttachmentController {
     @Get(':id/logs')
     async findById(@Param('id') id: number): Promise<Attachment[]> {
         const attachments = await this.attachmentservice.findAttachmentsByLogId(id);
-        // testing purposes
+
+        // returns the fileData as base64 string, this should be done in mysql query for faster results
         for (const iterator of attachments) {
             iterator.fileData = 'base64;' + iterator.fileData;
+
         }
+
         return attachments;
     }
 }

@@ -128,12 +128,21 @@ export class LogService {
         userId: number,
         queryLogDto: QueryLogDto
     ): Promise<{ data: Log[], count: number }> {
-        const query = await this.repository
-            .createQueryBuilder()
-            .where('fk_user_id = :userId', { userId })
+        let query = await this.repository
+            .createQueryBuilder('log')
+            .innerJoinAndSelect('log.user', 'user')
+            .where('fk_user_id = :userId', { userId });
+
+        if (queryLogDto.orderBy) {
+            query = query.orderBy(
+                `log.${queryLogDto.orderBy}`,
+                queryLogDto.orderDirection || OrderDirection.asc
+            );
+        }
+        const result = await query
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 16)
             .getManyAndCount();
-        return { data: query[0], count: query[1] };
+        return { data: result[0], count: result[1] };
     }
 }
