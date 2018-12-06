@@ -8,7 +8,8 @@
     "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts",
     "dev": "nodemon --exec 'ts-node -r dotenv/config src/main.ts' src/main.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "jest",
+    "test": "jest --coverage",
+    "showcoverage": "open ./coverage/lcov-report/index.html",
     "typeorm": "npx ts-node node_modules/typeorm/cli.js"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
+    "@types/bcrypt": "^3.0.0",
     "@types/cookie": "^0.3.2",
     "@types/jest": "^23.3.10",
     "@types/node": "^10.7.1",

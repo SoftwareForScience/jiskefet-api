@@ -83,6 +83,13 @@ describe('LogController', () => {
                 .expect(200)
                 .expect('Content-Type', /json/);
         });
+
+        it('should return an object with a logs array', async () => {
+            const response = await request(app.getHttpServer())
+                .get('/logs')
+                .set('Authorization', `Bearer ${jwt}`);
+            expect(Array.isArray(response.body.logs)).toBeTruthy();
+        });
     });
 
     describe('GET /logs/{id}', () => {
@@ -98,6 +105,13 @@ describe('LogController', () => {
                 .get(`/logs/${1}`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .expect('Content-Type', /json/);
+        });
+
+        it('should return an object', async () => {
+            const response = await request(app.getHttpServer())
+                .get(`/logs/${1}`)
+                .set('Authorization', `Bearer ${jwt}`);
+            expect(typeof response.body).toBe('object');
         });
     });
 });

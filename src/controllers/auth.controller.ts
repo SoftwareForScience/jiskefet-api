@@ -108,8 +108,8 @@ export class AuthController {
         }
     }
 
-    @Get('/testtoken')
-    @ApiOperation({ title: 'Returns a jwt for authorization when running end-to-end tests.' })
+    @Get('/test-token')
+    @ApiOperation({ title: 'Returns a JWT for authorization when running end-to-end tests.' })
     @ApiOkResponse({
         description: 'The hashed secret given matches the secret in the environment and a JWT is returned.'
     })
