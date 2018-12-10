@@ -10,18 +10,22 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../abstracts/auth.service.abstract';
+import { AuthServiceFactory } from '../factories/auth.service.factory';
 
 /**
  * A PassportStrategy that verifies JWT's.
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private readonly authService: AuthService) {
+    constructor(
+        private readonly authService: AuthService,
+        private readonly authFactory: AuthServiceFactory) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.JWT_SECRET_KEY,
         });
+        this.authService = this.authFactory.createAuthService();
     }
 
     async validate(payload: JwtPayload): Promise<any> {

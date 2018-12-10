@@ -7,7 +7,6 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/jwt.strategy';
@@ -15,6 +14,8 @@ import { SubSystemPermissionService } from '../services/subsystem_permission.ser
 import { BCryptService } from '../services/bcrypt.service';
 import { AuthUtility } from '../utility/auth.utility';
 import { AuthContoller } from '../controllers/auth.controller';
+import { GithubAuthService } from '../services/github.auth.service';
+import { CernAuthService } from '../services/cern.auth.service';
 
 @Global()
 @Module({
@@ -27,8 +28,10 @@ import { AuthContoller } from '../controllers/auth.controller';
             },
         }),
     ],
-    providers: [AuthService, SubSystemPermissionService, BCryptService, JwtStrategy, AuthUtility],
+    providers: [GithubAuthService, CernAuthService,
+        SubSystemPermissionService, BCryptService,
+        JwtStrategy, AuthUtility],
     controllers: [AuthContoller],
     exports: [AuthModule],
 })
-export class AuthModule {}
+export class AuthModule { }

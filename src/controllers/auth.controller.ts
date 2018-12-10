@@ -16,7 +16,6 @@ import {
     HttpStatus,
     BadRequestException
 } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
 import {
     ApiImplicitQuery,
     ApiUseTags,
@@ -25,11 +24,12 @@ import {
     ApiOkResponse,
     ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
-import { UserProfile } from '../interfaces/userprofile.abstract';
+import { UserProfile } from '../abstracts/userprofile.abstract';
+import { AuthService } from '../abstracts/auth.service.abstract';
+import { AuthServiceFactory } from '../factories/auth.service.factory';
 
 /**
  * Controller for authentication related endpoints.
@@ -38,10 +38,13 @@ import { UserProfile } from '../interfaces/userprofile.abstract';
 @Controller()
 export class AuthContoller {
     constructor(
+        private readonly authFactory: AuthServiceFactory,
         private readonly authService: AuthService,
         private readonly authUtility: AuthUtility,
         private readonly userService: UserService
-    ) { }
+    ) {
+        this.authService = this.authFactory.createAuthService();
+    }
 
     /**
      * Returns a JWT token if the grant given as a query parameter is valid.

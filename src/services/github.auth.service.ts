@@ -14,28 +14,16 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { SubSystemPermissionService } from './subsystem_permission.service';
 import { BCryptService } from './bcrypt.service';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
 import * as RequestPromise from 'request-promise';
 import { OptionsWithUrl } from 'request-promise';
-import { UserProfile } from '../interfaces/userprofile.abstract';
+import { UserProfile } from '../abstracts/userprofile.abstract';
+import { AuthService } from '../abstracts/auth.service.abstract';
 
 /**
  * Handles authorization via OAuth 2.
  */
 @Injectable()
-export class AuthService {
-    private oAuth2Client: oauth2.OAuthClient;
-
-    private oAuth2Config: oauth2.ModuleOptions = {
-        client: {
-            id: '<id>',
-            secret: '<secret>'
-        },
-        auth: {
-            tokenHost: '<token_host>',
-            tokenPath: '<token_path>',
-        }
-    };
+export class GithubAuthService extends AuthService {
 
     constructor(
         private readonly userService: UserService,
@@ -43,15 +31,7 @@ export class AuthService {
         private readonly bcryptService: BCryptService,
         private readonly jwtService: JwtService,
     ) {
-        // set client credentials depending of github or cern SSO
-        this.oAuth2Config.client.id = process.env.CLIENT_ID;
-        this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
-
-        // set resource host
-        this.oAuth2Config.auth.tokenHost = process.env.AUTH_TOKEN_HOST;
-        this.oAuth2Config.auth.tokenPath = process.env.AUTH_TOKEN_PATH;
-
-        this.oAuth2Client = oauth2.create(this.oAuth2Config);
+        super();
     }
 
     public async sign(payload: JwtPayload): Promise<string> {
@@ -165,7 +145,7 @@ export class AuthService {
      */
     private async getApiRequest(accessToken: string): Promise<OptionsWithUrl> {
         return {
-            url: process.env.RESOURCE_API_URL,
+            url: process.env.GITHUB_RESOURCE_API_URL,
             headers: {
                 'User-Agent': 'request',
                 'Authorization': `token ${accessToken}`

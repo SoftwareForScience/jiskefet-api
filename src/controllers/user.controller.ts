@@ -11,7 +11,6 @@ import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
-import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
@@ -21,6 +20,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
+import { AuthServiceFactory } from '../factories/auth.service.factory';
+import { AuthService } from '../abstracts/auth.service.abstract';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -29,11 +30,14 @@ import { QueryLogDto } from '../dtos/query.log.dto';
 export class UserController {
     constructor(
         private readonly subSystemPermissionService: SubSystemPermissionService,
+        private readonly authFactory: AuthServiceFactory,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
         private readonly logService: LogService
-    ) { }
+    ) {
+        this.authService = this.authFactory.createAuthService();
+    }
 
     /**
      * Retrieve a the user by id

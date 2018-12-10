@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { UserProfile } from '../interfaces/userprofile.abstract';
+import { UserProfile } from '../abstracts/userprofile.abstract';
 
 /**
  * Object received from GitHub when calling resource server for user info.

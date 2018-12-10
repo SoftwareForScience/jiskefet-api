@@ -26,7 +26,6 @@ import { UserController } from './controllers/user.controller';
 import { SubSystemPermissionModule } from './modules/subsystem_permission.module';
 import { SubSystemPermissionService } from './services/subsystem_permission.service';
 import { AuthModule } from './modules/auth.module';
-import { AuthService } from './services/auth.service';
 import { AuthContoller } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
@@ -35,42 +34,45 @@ import { AuthUtility } from './utility/auth.utility';
 import { OverviewModule } from './modules/overview.module';
 import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
+import { GithubAuthService } from './services/github.auth.service';
+import { CernAuthService } from './services/cern.auth.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(),
-    RunModule,
-    LogModule,
-    AttachmentModule,
-    SubSystemModule,
-    UserModule,
-    AuthModule,
-    SubSystemPermissionModule,
-    OverviewModule,
-  ],
-  controllers: [
-    AppController,
-    RunController,
-    LogController,
-    AttachmentController,
-    SubSystemController,
-    UserController,
-    AuthContoller,
-    OverviewController,
-  ],
-  providers: [
-    AppService,
-    RunService,
-    LogService,
-    AttachmentService,
-    SubSystemService,
-    UserService,
-    AuthService,
-    AuthUtility,
-    BCryptService,
-    SubSystemPermissionService,
-    OverviewService,
-  ],
+    imports: [
+        TypeOrmModule.forRoot(),
+        RunModule,
+        LogModule,
+        AttachmentModule,
+        SubSystemModule,
+        UserModule,
+        AuthModule,
+        SubSystemPermissionModule,
+        OverviewModule,
+    ],
+    controllers: [
+        AppController,
+        RunController,
+        LogController,
+        AttachmentController,
+        SubSystemController,
+        UserController,
+        AuthContoller,
+        OverviewController,
+    ],
+    providers: [
+        AppService,
+        RunService,
+        LogService,
+        AttachmentService,
+        SubSystemService,
+        UserService,
+        GithubAuthService,
+        CernAuthService,
+        AuthUtility,
+        BCryptService,
+        SubSystemPermissionService,
+        OverviewService,
+    ],
 
 })
 export class AppModule { }
