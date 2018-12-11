@@ -35,10 +35,30 @@ import { AuthUtility } from './utility/auth.utility';
 import { OverviewModule } from './modules/overview.module';
 import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
+import * as defaultDatabaseOptions from '../ormconfig.json';
+
+let databaseOptions;
+// Use a different database for running tests.
+if (process.env.NODE_ENV === 'test') {
+    databaseOptions = {
+        type: process.env.TEST_DB_CONNECTION,
+        host: process.env.TEST_DB_HOST,
+        port: +process.env.TEST_DB_PORT,
+        username: process.env.TEST_DB_USERNAME,
+        password: process.env.TEST_DB_PASSWORD,
+        database: process.env.TEST_DB_DATABASE,
+        entities: [process.env.TEST_DB_ENTITIES],
+        synchronize: process.env.TEST_DB_SYNCHRONIZE ? true : false,
+        migrations: ['populate/*{.ts,.js}'],
+        migrationsRun: true
+    };
+} else {
+    databaseOptions = defaultDatabaseOptions;
+}
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(databaseOptions),
     RunModule,
     LogModule,
     AttachmentModule,
