@@ -13,5 +13,15 @@ import { UserProfile } from '../abstracts/userprofile.abstract';
  * Endpoint: https://api.github.com/user
  */
 export interface CernProfileDto extends UserProfile {
+    name: string;
+    username: string;
     id: number;
+    personid: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    identityclass: string;
+    federation: string;
+    phone: string;
+    mobile: string;
 }
