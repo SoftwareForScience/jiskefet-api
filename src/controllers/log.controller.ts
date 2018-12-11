@@ -14,6 +14,8 @@ import { Log } from '../entities/log.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
+import { InfoLoggerService } from '../services/infologger.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -21,7 +23,10 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 @Controller('logs')
 export class LogController {
 
-    constructor(private readonly logService: LogService) { }
+    constructor(
+        private readonly logService: LogService,
+        private readonly loggerService: InfoLoggerService
+    ) { }
 
     /**
      * Post a new Log item. /logs
@@ -29,7 +34,13 @@ export class LogController {
      */
     @Post()
     async create(@Body() request: CreateLogDto): Promise<Log> {
-        return await this.logService.create(request);
+        try {
+            return await this.logService.create(request);
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = error.message;
+            this.loggerService.warn(infoLog);
+        }
     }
 
     /**

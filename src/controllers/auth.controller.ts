@@ -30,6 +30,7 @@ import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { InfoLoggerService } from '../services/infologger.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 /**
  * Controller for authentication related endpoints.
@@ -65,16 +66,19 @@ export class AuthContoller {
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
             if (!query.grant) {
-                this.loggerService.log('Testing the token.');
+                const infoLog = new CreateInfologDto();
+                infoLog.message = 'Authentication failed, please provide an Authorization Grant as a query param.';
+                this.loggerService.warn(infoLog);
                 throw new UnprocessableEntityException(`Authentication failed
                 , please provide an Authorization Grant as a query param.`);
             }
             const grant = query.grant;
             const jwt = await this.authService.auth(grant);
-            this.loggerService.log('Token returned');
             return { token: jwt };
         } catch (error) {
-            this.loggerService.error('Invalid token');
+            const infoLog = new CreateInfologDto();
+            infoLog.message = error.message;
+            this.loggerService.warn(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -96,14 +100,19 @@ export class AuthContoller {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
-                this.loggerService.warn('No JWT');
+                const infoLog = new CreateInfologDto();
+                infoLog.message = 'No JWT could be found in headers.';
+                this.loggerService.warn(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
             const githubProfile = await this.authService.getGithubProfileInfo(jwt);
             const user: User = await this.userService.findUserByExternalId(githubProfile.id);
             return { userData: user, githubData: githubProfile };
         } catch (error) {
-            this.loggerService.warn('User is not authorized.');
+            console.log(error);
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'No JWT could be found in headers.';
+            this.loggerService.error(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

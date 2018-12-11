@@ -15,13 +15,18 @@ import { Run } from '../entities/run.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
+import { InfoLoggerService } from '../services/infologger.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
 @Controller('runs')
 export class RunController {
-    constructor(private readonly runService: RunService) { }
+    constructor(
+        private readonly runService: RunService,
+        private readonly loggerService: InfoLoggerService
+    ) { }
 
     /**
      * Post a new Run into the db.
@@ -29,11 +34,21 @@ export class RunController {
      */
     @Post()
     async create(@Body() request: CreateRunDto): Promise<Run> {
-        request.timeO2Start = new Date();
-        request.timeTrgStart = new Date();
-        request.timeO2End = new Date();
-        request.timeTrgEnd = new Date();
-        return await this.runService.create(request);
+        try {
+            request.timeO2Start = new Date();
+            request.timeTrgStart = new Date();
+            request.timeO2End = new Date();
+            request.timeTrgEnd = new Date();
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'A new run has been created.';
+            this.loggerService.infoLog(infoLog);
+            return await this.runService.create(request);
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'The run could not be created';
+            this.loggerService.error(infoLog);
+        }
+
     }
 
     /**

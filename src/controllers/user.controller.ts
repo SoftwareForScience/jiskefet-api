@@ -21,6 +21,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
+import { InfoLoggerService } from '../services/infologger.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -32,7 +34,8 @@ export class UserController {
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
-        private readonly logService: LogService
+        private readonly logService: LogService,
+        private readonly loggerService: InfoLoggerService
     ) { }
 
     /**
@@ -62,21 +65,28 @@ export class UserController {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
-        // save it to db
-        const newSubSystem: SubSystemPermission =
-            await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
+        try {
+            // save it to db
+            const newSubSystem: SubSystemPermission =
+                await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
 
-        // add extra field to the jwt token to identify that a machine is making the request
-        const jwtPayload: JwtPayload = {
-            ['token']: uniqueId,
-            ['is_subsystem']: 'true',
-            ['permission_id']: newSubSystem.subSystemPermissionId.toString()
-        };
+            // add extra field to the jwt token to identify that a machine is making the request
+            const jwtPayload: JwtPayload = {
+                ['token']: uniqueId,
+                ['is_subsystem']: 'true',
+                ['permission_id']: newSubSystem.subSystemPermissionId.toString()
+            };
 
-        // creates a jwt and returns it
-        request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
+            // creates a jwt and returns it
+            request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
-        return request;
+            return request;
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'Token could not be created.';
+            this.loggerService.warn(infoLog);
+        }
+
     }
 
     /**

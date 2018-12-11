@@ -6,13 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 
 @Entity('messages', { database: 'INFOLOGGER' })
 export class InfoLogger {
 
-    @PrimaryGeneratedColumn({ name: 'id' })
-    id: number;
+    // @PrimaryGeneratedColumn({ name: 'id' })
+    // id: number;
 
     @Column({
         name: 'severity',
@@ -27,10 +27,11 @@ export class InfoLogger {
     })
     level: number;
 
-    @Column({
+    @PrimaryColumn({
         name: 'timestamp',
-        nullable: true,
-        unsigned: true
+        type: 'double',
+        // precision: 21,
+        // scale: 6
     })
     timestamp: number;
 

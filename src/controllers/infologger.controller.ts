@@ -39,20 +39,19 @@ export class InfoLoggerController {
         return stringLog + '\n';
     }
 
-    @Post()
-    createInfoLog(message: string): Promise<void> {
-        console.log(message);
-        return this.infoLogger.log(this.format(message));
-    }
+    // @Post()
+    // createInfoLog(message: string): Promise<void> {
+    //     return this.infoLogger.log(this.format(message));
+    // }
 
-    @Post()
-    createWarningLog(message: string): Promise<void> {
-        return this.infoLogger.warn(this.format(message));
-    }
+    // @Post()
+    // createWarningLog(message: string): Promise<void> {
+    //     return this.infoLogger.warn(this.format(message));
+    // }
 
-    @Post()
-    createErrorLog(message: string): Promise<void> {
-        return this.infoLogger.error(this.format(message));
-    }
+    // @Post()
+    // createErrorLog(message: string): Promise<void> {
+    //     return this.infoLogger.error(this.format(message));
+    // }
 
 }
