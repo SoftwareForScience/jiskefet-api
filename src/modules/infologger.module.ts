@@ -10,6 +10,7 @@ import { Module, Global } from '@nestjs/common';
 import { InfoLoggerService } from '../services/infologger.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InfoLogger } from '../entities/infologger.entity';
+import { TimeUtility } from '../utility/time.utility';
 
 @Global()
 @Module({
@@ -23,7 +24,7 @@ import { InfoLogger } from '../entities/infologger.entity';
             database: 'INFOLOGGER',
             synchronize: true,
             logging: true})],
-    providers: [InfoLoggerService],
+    providers: [InfoLoggerService, TimeUtility],
     exports: [InfoLoggerService],
 })
 export class InfoLoggerModule { }

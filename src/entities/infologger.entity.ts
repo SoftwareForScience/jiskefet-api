@@ -30,8 +30,8 @@ export class InfoLogger {
     @PrimaryColumn({
         name: 'timestamp',
         type: 'double',
-        // precision: 21,
-        // scale: 6
+        precision: 16,
+        scale: 6
     })
     timestamp: number;
 

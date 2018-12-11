@@ -38,6 +38,7 @@ import { OverviewService } from './services/overview.service';
 import { InfoLoggerService } from './services/infologger.service';
 import { InfoLoggerModule } from './modules/infologger.module';
 import { InfoLoggerController } from './controllers/infologger.controller';
+import { TimeUtility } from './utility/time.utility';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { InfoLoggerController } from './controllers/infologger.controller';
     SubSystemPermissionService,
     OverviewService,
     InfoLoggerService,
+    TimeUtility,
   ],
 
 })

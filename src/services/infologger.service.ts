@@ -12,7 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { InfoLogger } from '../entities/infologger.entity';
 import { plainToClass } from 'class-transformer';
-import { Detector } from '../entities/detector.entity';
+import { TimeUtility } from '../utility/time.utility';
 
 @Injectable()
 export class InfoLoggerService extends Logger {
@@ -20,7 +20,8 @@ export class InfoLoggerService extends Logger {
     private readonly infoLogRepository: Repository<InfoLogger>;
 
     constructor(
-        @InjectRepository(InfoLogger) infoLogRepository: Repository<InfoLogger>
+        @InjectRepository(InfoLogger) infoLogRepository: Repository<InfoLogger>,
+        private readonly timeUtility: TimeUtility
     ) {
         super();
         this.infoLogRepository = infoLogRepository;
@@ -30,7 +31,7 @@ export class InfoLoggerService extends Logger {
         createInfologDto.severity = 'I';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
-        createInfologDto.timestamp = new Date().getTime();
+        createInfologDto.timestamp = this.timeUtility.getEpoch16();
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
         this.infoLogRepository.save(infoLogEntity);
         return infoLogEntity;
@@ -40,11 +41,8 @@ export class InfoLoggerService extends Logger {
         createInfologDto.severity = 'W';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
-        // const time = new Date().getTime();
-        // const factor = 1000;
-        // createInfologDto.timestamp = (time * factor);
-        // console.log(createInfologDto.timestamp);
-        createInfologDto.timestamp = new Date().getTime();
+        createInfologDto.timestamp = this.timeUtility.getEpoch16();
+        console.log(this.timeUtility.getEpoch16());
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
         this.infoLogRepository.save(infoLogEntity);
     }
@@ -53,7 +51,7 @@ export class InfoLoggerService extends Logger {
         createInfologDto.severity = 'E';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
-        createInfologDto.timestamp = new Date().getTime();
+        createInfologDto.timestamp = this.timeUtility.getEpoch16();
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
         this.infoLogRepository.save(infoLogEntity);
     }
