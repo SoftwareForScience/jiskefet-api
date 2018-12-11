@@ -1,9 +1,20 @@
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
+
 import { EntityRepository } from 'typeorm';
 import { Log } from '../../src/entities/log.entity';
 import { userArray } from './user.repository';
 import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { plainToClass } from 'class-transformer';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
+import { RunRepository } from './run.repository';
+import { OnModuleInit, Injectable } from '@nestjs/common';
+// import { ModuleRef } from '@nestjs/core';
 
 export const logArray: Log[] = [
     {
@@ -15,11 +26,11 @@ export const logArray: Log[] = [
         text: 'mock text 1',
         subsystemFkSubsystemId: 1,
         announcementValidUntil: new Date('2018-12-31T23:59:59Z'),
-        attachments: null,
+        attachments: [],
         commentFkParentLogId: null,
         commentFkRootLogId: null,
-        runs: null,
-        tags: null,
+        runs: [],
+        tags: [],
         user: userArray[0]
     },
     {
@@ -31,11 +42,11 @@ export const logArray: Log[] = [
         text: 'mock text 2',
         subsystemFkSubsystemId: 2,
         announcementValidUntil: new Date('2018-12-31T23:59:59Z'),
-        attachments: null,
+        attachments: [],
         commentFkParentLogId: null,
         commentFkRootLogId: null,
-        runs: null,
-        tags: null,
+        runs: [],
+        tags: [],
         user: userArray[0]
     }
 ];
@@ -43,8 +54,19 @@ export const logArray: Log[] = [
 /**
  * This class mocks the function calls from the LogService
  */
+@Injectable()
 @EntityRepository(Log)
 export class LogRepository {
+    private runRepository: RunRepository = new RunRepository();
+    // private runRepository: RunRepository;
+
+    // constructor(
+    //     private readonly moduleRef: ModuleRef
+    // ) {}
+
+    // onModuleInit(): void {
+    //     this.runRepository = this.moduleRef.get<RunRepository>(RunRepository);
+    // }
 
     /**
      * Saves a Log entity in db by converting the given CreateLogDto to a Log.
@@ -91,14 +113,17 @@ export class LogRepository {
         };
     }
 
-    // /**
-    //  * Link a run to a log.
-    //  * @param linkRunToLogDto
-    //  */
-    // async linkRunToLog(logId: number, linkRunToLogDto: LinkRunToLogDto): Promise<void> {
-    //     const log = await this.findLogById(logId);
-    //     const run = await this.runRepository.findOne(linkRunToLogDto.runNumber);
-    //     log.runs = [...log.runs, run];
-    //     await this.repository.save(log);
-    // }
+    /**
+     * Implementation differs from the LogService, it returns a log with the linked run
+     * Link a run to a log.
+     * @param linkRunToLogDto
+     */
+    async linkRunToLog(logId: number, linkRunToLogDto: LinkRunToLogDto): Promise<Log> {
+        const log = await this.findLogById(logId);
+
+        // mocked equivalent of findOne()
+        const run = await this.runRepository.findById(linkRunToLogDto.runNumber);
+        log.runs = [...log.runs, run];
+        return await log;
+    }
 }

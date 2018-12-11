@@ -113,4 +113,8 @@ export class CreateRunDto {
     })
     @IsInt()
     readonly bytesTimeframeBuilder: number;
+
+    constructor(data: CreateRunDto | {} = {}) {
+        Object.assign(this, data);
+    }
 }

@@ -12,6 +12,7 @@ import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
 import { LogRepository, logArray } from '../mocks/log.repository';
 import { Log } from '../../src/entities/log.entity';
+import { runArray } from '../mocks/run.repository';
 // import { LogRepository } from '../mocks/log.repository';
 
 describe('LogService', () => {
@@ -50,13 +51,16 @@ describe('LogService', () => {
             expect(result).toBeInstanceOf(Log);
         });
 
-        // it('should link a log to a run', async () => {
-        //     const logId = logArray[0].logId;
-        //     const runId: LinkRunToLogDto = {
-        //         runNumber: 1,
-        //     };
-        //     expect(await logService.linkRunToLog(logId, runId)).toHaveBeenCalled();
-        // });
+        it('should link a run to a log', async () => {
+            const logId = logArray[0].logId;
+            const runId: LinkRunToLogDto = {
+                runNumber: 1,
+            };
+
+            const log = logArray[0];
+            log.runs = [...log.runs, runArray[0]];
+            expect(await logService.linkRunToLog(logId, runId)).toEqual(log);
+        });
     });
 
     describe('get()', () => {
