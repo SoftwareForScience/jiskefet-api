@@ -19,14 +19,20 @@ import { SubSystemService } from '../services/susbsystem.service';
 import { AuthUtility } from '../utility/auth.utility';
 import { GithubAuthService } from '../services/github.auth.service';
 import { CernAuthService } from '../services/cern.auth.service';
+import { AuthService } from '../abstracts/auth.service.abstract';
 
+const authServiceProvider = {
+    provide: AuthService,
+    useClass: process.env.USE_CERN_SSO === 'true'
+        ? CernAuthService
+        : GithubAuthService,
+};
 @Global()
 @Module({
     imports: [TypeOrmModule.forFeature([User]), SubSystemPermissionModule, SubSystemModule],
     providers: [UserService,
         SubSystemPermissionService,
-        GithubAuthService,
-        CernAuthService,
+        authServiceProvider,
         BCryptService,
         SubSystemService,
         AuthUtility],

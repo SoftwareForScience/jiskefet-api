@@ -16,7 +16,14 @@ import { AuthUtility } from '../utility/auth.utility';
 import { AuthContoller } from '../controllers/auth.controller';
 import { GithubAuthService } from '../services/github.auth.service';
 import { CernAuthService } from '../services/cern.auth.service';
+import { AuthService } from '../abstracts/auth.service.abstract';
 
+const authServiceProvider = {
+    provide: AuthService,
+    useClass: process.env.USE_CERN_SSO === 'true'
+        ? CernAuthService
+        : GithubAuthService,
+};
 @Global()
 @Module({
     imports: [
@@ -28,7 +35,7 @@ import { CernAuthService } from '../services/cern.auth.service';
             },
         }),
     ],
-    providers: [GithubAuthService, CernAuthService,
+    providers: [authServiceProvider,
         SubSystemPermissionService, BCryptService,
         JwtStrategy, AuthUtility],
     controllers: [AuthContoller],

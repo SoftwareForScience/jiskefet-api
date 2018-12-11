@@ -25,6 +25,18 @@ import { AuthService } from '../abstracts/auth.service.abstract';
 @Injectable()
 export class GithubAuthService extends AuthService {
 
+    public oAuth2Client: oauth2.OAuthClient;
+    public oAuth2Config: oauth2.ModuleOptions = {
+        client: {
+            id: '<id>',
+            secret: '<secret>'
+        },
+        auth: {
+            tokenHost: '<token_host>',
+            tokenPath: '<token_path>',
+        }
+    };
+
     constructor(
         private readonly userService: UserService,
         private readonly subSystemPermissionService: SubSystemPermissionService,
@@ -32,6 +44,14 @@ export class GithubAuthService extends AuthService {
         private readonly jwtService: JwtService,
     ) {
         super();
+        this.oAuth2Config.client.id = process.env.GITHUB_CLIENT_ID;
+        this.oAuth2Config.client.secret = process.env.GITHUB_CLIENT_SECRET;
+
+        // set resource host
+        this.oAuth2Config.auth.tokenHost = process.env.GITHUB_AUTH_TOKEN_HOST;
+        this.oAuth2Config.auth.tokenPath = process.env.GITHUB_AUTH_TOKEN_PATH;
+
+        this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
 
     public async sign(payload: JwtPayload): Promise<string> {

@@ -29,7 +29,6 @@ import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { UserProfile } from '../abstracts/userprofile.abstract';
 import { AuthService } from '../abstracts/auth.service.abstract';
-import { AuthServiceFactory } from '../factories/auth.service.factory';
 
 /**
  * Controller for authentication related endpoints.
@@ -37,14 +36,12 @@ import { AuthServiceFactory } from '../factories/auth.service.factory';
 @ApiUseTags('authentication')
 @Controller()
 export class AuthContoller {
+
     constructor(
-        private readonly authFactory: AuthServiceFactory,
         private readonly authService: AuthService,
         private readonly authUtility: AuthUtility,
         private readonly userService: UserService
-    ) {
-        this.authService = this.authFactory.createAuthService();
-    }
+    ) { }
 
     /**
      * Returns a JWT token if the grant given as a query parameter is valid.

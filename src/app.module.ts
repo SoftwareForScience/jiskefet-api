@@ -36,7 +36,14 @@ import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
 import { GithubAuthService } from './services/github.auth.service';
 import { CernAuthService } from './services/cern.auth.service';
+import { AuthService } from './abstracts/auth.service.abstract';
 
+const authServiceProvider = {
+    provide: AuthService,
+    useClass: process.env.USE_CERN_SSO === 'true'
+        ? CernAuthService
+        : GithubAuthService,
+};
 @Module({
     imports: [
         TypeOrmModule.forRoot(),
@@ -66,8 +73,7 @@ import { CernAuthService } from './services/cern.auth.service';
         AttachmentService,
         SubSystemService,
         UserService,
-        GithubAuthService,
-        CernAuthService,
+        authServiceProvider,
         AuthUtility,
         BCryptService,
         SubSystemPermissionService,
