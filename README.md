@@ -81,6 +81,10 @@ $ npm run test
 
 # Open code coverage stats from latest test run
 $ npm run showcoverage
+
+# To run the benchmark first change the target url to the appropriate url and then 
+# add a valid token to the header. To run the benchmark use:
+$ artillery run api_benchmarks.yml
 ```
 
 ## Dependencies

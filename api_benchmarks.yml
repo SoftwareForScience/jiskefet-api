@@ -1,0 +1,18 @@
+config:
+  target: 'http://jiskefet.westeurope.cloudapp.azure.com/api'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+  defaults:
+    headers:
+      Authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImFiMTFjMmE3ZjkxNWVjNTE5ZjE5MDI1NGI0YmE5MTU1MzFmMGU1NjEiLCJpYXQiOjE1NDQ1MzM3NDMsImV4cCI6MTU0NDUzNzM0M30.qTIdKSLXSmDW0IZJ2Vs1sUANtqFNuntzJpJUt6lfUWE'
+scenarios:
+  - flow:
+    - get:
+        url: "/logs"
+    - get:
+        url: "/runs"
+    - get:
+        url: "/runs/1"
+    - get:
+        url: "/logs/1"
