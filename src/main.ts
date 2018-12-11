@@ -20,19 +20,11 @@ async function bootstrap(): Promise<void> {
   app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
 
   const options = new DocumentBuilder()
-    .setTitle('ALICE-Bookkeeping')
-    .setVersion('1.0')
+    .setTitle('Jiskefet')
+    .setVersion('0.3')
     .addTag('logs')
     .addTag('runs')
     .addBearerAuth();
-
-  if (process.env.USE_API_PREFIX === 'true') {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
-    options.setDescription('Running with /api prefix');
-  } else {
-    options.setDescription('Running without /api prefix');
-  }
 
   if (process.env.USE_API_PREFIX === 'true') {
     // set /api as basePath for non local
