@@ -12,11 +12,13 @@ import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
 import { LogRepository, logArray } from '../mocks/log.repository';
 import { Log } from '../../src/entities/log.entity';
-import { runArray } from '../mocks/run.repository';
-// import { LogRepository } from '../mocks/log.repository';
+import { runArray, RunRepository } from '../mocks/run.repository';
 
 describe('LogService', () => {
     let logService: LogService;
+
+    let runRepository: RunRepository;
+    let logRepository: LogRepository;
 
     const logDto: CreateLogDto = {
         title: 'title',
@@ -29,8 +31,8 @@ describe('LogService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            components: [
-                LogService,
+            providers: [
+                LogService, LogRepository, RunRepository
             ],
         })
         .overrideProvider(LogService)
@@ -38,6 +40,10 @@ describe('LogService', () => {
         .compile();
 
         logService = await module.get<LogService>(LogService);
+        logRepository = await module.get<LogRepository>(LogRepository);
+        logRepository.onModuleInit();
+        runRepository = await module.get<RunRepository>(RunRepository);
+        runRepository.onModuleInit();
     });
 
     describe('post()', () => {

@@ -13,7 +13,8 @@ import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { plainToClass } from 'class-transformer';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
 import { RunRepository } from './run.repository';
-import { OnModuleInit, Injectable } from '@nestjs/common';
+import { OnModuleInit, Injectable, forwardRef, Inject } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 // import { ModuleRef } from '@nestjs/core';
 
 export const logArray: Log[] = [
@@ -57,16 +58,22 @@ export const logArray: Log[] = [
 @Injectable()
 @EntityRepository(Log)
 export class LogRepository {
-    private runRepository: RunRepository = new RunRepository();
-    // private runRepository: RunRepository;
+    // private runRepository: RunRepository = new RunRepository();
+    private runRepository: RunRepository;
 
     // constructor(
-    //     private readonly moduleRef: ModuleRef
-    // ) {}
-
-    // onModuleInit(): void {
-    //     this.runRepository = this.moduleRef.get<RunRepository>(RunRepository);
+    //     @Inject(forwardRef(() => RunRepository)) runRepository: RunRepository,
+    // ) {
+    //     this.runRepository = runRepository;
     // }
+
+    constructor(
+        private readonly moduleRef: ModuleRef
+    ) {}
+
+    onModuleInit(): void {
+        this.runRepository = this.moduleRef.get<RunRepository>(RunRepository);
+    }
 
     /**
      * Saves a Log entity in db by converting the given CreateLogDto to a Log.

@@ -11,8 +11,9 @@ import { Run } from '../../src/entities/run.entity';
 import { CreateRunDto } from '../../src/dtos/create.run.dto';
 import { plainToClass } from 'class-transformer';
 import { logArray, LogRepository } from './log.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { LinkLogToRunDto } from '../../src/dtos/linkLogToRun.run.dto';
+import { ModuleRef } from '@nestjs/core';
 
 export const runArray: Run[] = [
     {
@@ -74,6 +75,21 @@ export const runArray: Run[] = [
 @EntityRepository(Run)
 export class RunRepository {
     // private logRepository: LogRepository = new LogRepository();
+    private logRepository: LogRepository;
+
+    // constructor(
+    //     @Inject(forwardRef(() => LogRepository)) logRepository: LogRepository,
+    // ) {
+    //     this.logRepository = logRepository;
+    // }
+
+    constructor(
+        private readonly moduleRef: ModuleRef
+    ) {}
+
+    onModuleInit(): void {
+        this.logRepository = this.moduleRef.get<LogRepository>(LogRepository);
+    }
 
     /**
      * Handler for saving the run entity in db.
