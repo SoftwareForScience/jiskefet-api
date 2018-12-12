@@ -6,14 +6,10 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity('messages', { database: 'INFOLOGGER' })
+@Entity('messages', { database: 'INFOLOGGER', synchronize: process.env.USE_INFO_LOGGER === 'true' ? true : false })
 export class InfoLog {
-
-    // @PrimaryGeneratedColumn({ name: 'id' })
-    // id: number;
-
     @Column({
         name: 'severity',
         nullable: true
