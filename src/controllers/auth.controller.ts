@@ -17,7 +17,6 @@ import {
     BadRequestException,
     UnauthorizedException
 } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
 import {
     ApiImplicitQuery,
     ApiUseTags,
@@ -26,12 +25,13 @@ import {
     ApiOkResponse,
     ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
+import { UserProfile } from '../abstracts/userprofile.abstract';
+import { AuthService } from '../abstracts/auth.service.abstract';
 import { BCryptService } from '../services/bcrypt.service';
 
 /**
@@ -103,7 +103,7 @@ export class AuthController {
         status: 401,
         description: 'User is unauthorized'
     })
-    async profile(@Headers() headers: any): Promise<{ userData: User, githubData: GithubProfileDto}> {
+    async profile(@Headers() headers: any): Promise<{ userData: User, profileData: UserProfile }> {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
@@ -112,11 +112,10 @@ export class AuthController {
                 this.loggerService.logWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
-            const githubProfile = await this.authService.getGithubProfileInfo(jwt);
-            const user: User = await this.userService.findUserByExternalId(githubProfile.id);
-            return { userData: user, githubData: githubProfile };
+            const userProfile = await this.authService.getProfileInfo(jwt);
+            const user: User = await this.userService.findUserByExternalId(userProfile.id);
+            return { userData: user, profileData: userProfile };
         } catch (error) {
-            console.log(error);
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
             this.loggerService.logErrorInfoLog(infoLog);
