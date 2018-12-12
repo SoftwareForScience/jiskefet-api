@@ -21,7 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('users')
@@ -35,7 +35,7 @@ export class UserController {
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
         private readonly logService: LogService,
-        private readonly loggerService: InfoLoggerService
+        private readonly loggerService: InfoLogService
     ) { }
 
     /**
@@ -84,7 +84,7 @@ export class UserController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Token could not be created.';
-            this.loggerService.warn(infoLog);
+            this.loggerService.saveWarnInfoLog(infoLog);
         }
 
     }

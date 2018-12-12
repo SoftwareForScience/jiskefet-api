@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-// export interface InfoLoggerProtocols {
+// export interface InfoLogProtocols {
 //     [
 //     version: '1.4',
 //     fields: [

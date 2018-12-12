@@ -9,7 +9,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 
 @Entity('messages', { database: 'INFOLOGGER' })
-export class InfoLogger {
+export class InfoLog {
 
     // @PrimaryGeneratedColumn({ name: 'id' })
     // id: number;

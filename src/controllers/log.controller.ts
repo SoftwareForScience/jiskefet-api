@@ -14,7 +14,7 @@ import { Log } from '../entities/log.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('logs')
@@ -25,7 +25,7 @@ export class LogController {
 
     constructor(
         private readonly logService: LogService,
-        private readonly loggerService: InfoLoggerService
+        private readonly loggerService: InfoLogService
     ) { }
 
     /**
@@ -39,7 +39,7 @@ export class LogController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
-            this.loggerService.warn(infoLog);
+            this.loggerService.saveWarnInfoLog(infoLog);
         }
     }
 

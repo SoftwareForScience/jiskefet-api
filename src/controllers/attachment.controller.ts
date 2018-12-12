@@ -12,7 +12,7 @@ import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('attachments')
@@ -23,7 +23,7 @@ export class AttachmentController {
 
     constructor(
         private readonly attachmentservice: AttachmentService,
-        private readonly loggerService: InfoLoggerService
+        private readonly loggerService: InfoLogService
     ) { }
 
     /**
@@ -37,7 +37,7 @@ export class AttachmentController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Attachment is not correctly added.';
-            this.loggerService.infoLog(infoLog);
+            this.loggerService.saveWarnInfoLog(infoLog);
         }
     }
 

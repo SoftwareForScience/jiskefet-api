@@ -7,14 +7,14 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InfoLogger } from '../entities/infologger.entity';
+import { InfoLog } from '../entities/infolog.entity';
 import { TimeUtility } from '../utility/time.utility';
 
 @Global()
 @Module({
-        imports: [TypeOrmModule.forFeature([InfoLogger]), TypeOrmModule.forRoot({
+        imports: [TypeOrmModule.forFeature([InfoLog]), TypeOrmModule.forRoot({
             name: 'infologger',
             type: 'mysql',
             host: 'localhost',
@@ -24,7 +24,7 @@ import { TimeUtility } from '../utility/time.utility';
             database: 'INFOLOGGER',
             synchronize: true,
             logging: true})],
-    providers: [InfoLoggerService, TimeUtility],
-    exports: [InfoLoggerService],
+    providers: [InfoLogService, TimeUtility],
+    exports: [InfoLogService],
 })
-export class InfoLoggerModule { }
+export class InfoLogModule { }

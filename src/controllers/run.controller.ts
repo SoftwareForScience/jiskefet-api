@@ -15,7 +15,7 @@ import { Run } from '../entities/run.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('runs')
@@ -25,7 +25,7 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 export class RunController {
     constructor(
         private readonly runService: RunService,
-        private readonly loggerService: InfoLoggerService
+        private readonly loggerService: InfoLogService
     ) { }
 
     /**
@@ -41,14 +41,13 @@ export class RunController {
             request.timeTrgEnd = new Date();
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
-            this.loggerService.infoLog(infoLog);
+            this.loggerService.saveInfoLog(infoLog);
             return await this.runService.create(request);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'The run could not be created';
-            this.loggerService.error(infoLog);
+            this.loggerService.saveErrorInfoLog(infoLog);
         }
-
     }
 
     /**

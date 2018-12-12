@@ -29,7 +29,7 @@ import { GithubProfileDto } from '../dtos/github.profile.dto';
 import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
-import { InfoLoggerService } from '../services/infologger.service';
+import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 /**
@@ -42,7 +42,7 @@ export class AuthContoller {
         private readonly authService: AuthService,
         private readonly authUtility: AuthUtility,
         private readonly userService: UserService,
-        private readonly loggerService: InfoLoggerService,
+        private readonly loggerService: InfoLogService,
     ) { }
 
     /**
@@ -65,10 +65,12 @@ export class AuthContoller {
     @ApiImplicitQuery({ name: 'grant', required: true })
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
+            console.log('im here');
+            this.loggerService.saveUnsavedInfologs();
             if (!query.grant) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'Authentication failed, please provide an Authorization Grant as a query param.';
-                this.loggerService.warn(infoLog);
+                this.loggerService.saveWarnInfoLog(infoLog);
                 throw new UnprocessableEntityException(`Authentication failed
                 , please provide an Authorization Grant as a query param.`);
             }
@@ -78,7 +80,7 @@ export class AuthContoller {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = error.message;
-            this.loggerService.warn(infoLog);
+            this.loggerService.saveWarnInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -102,7 +104,7 @@ export class AuthContoller {
             if (!jwt) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'No JWT could be found in headers.';
-                this.loggerService.warn(infoLog);
+                this.loggerService.saveWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
             const githubProfile = await this.authService.getGithubProfileInfo(jwt);
@@ -112,7 +114,7 @@ export class AuthContoller {
             console.log(error);
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
-            this.loggerService.error(infoLog);
+            this.loggerService.saveErrorInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
