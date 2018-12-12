@@ -10,7 +10,9 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import bodyParser = require('body-parser');
+import * as bodyParser from 'body-parser';
+import { InfoLogService } from './services/infolog.service';
+import * as cron from 'node-cron';
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
@@ -37,6 +39,12 @@ async function bootstrap(): Promise<void> {
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
 
+    app.useLogger(app.get(InfoLogService));
     await app.listen(process.env.PORT);
+
+    // Periodically save InfoLogs that failed to be persisted to the db.
+    cron.schedule('*/15 * * * *', () => {
+        app.get(InfoLogService).saveUnsavedInfologs();
+    });
 }
 bootstrap();

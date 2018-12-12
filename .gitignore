@@ -67,3 +67,4 @@ dist
 ormconfig.json
 environments/*.env
 src/migration/*.ts
+infolog-data

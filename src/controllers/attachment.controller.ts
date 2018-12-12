@@ -12,6 +12,8 @@ import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { InfoLogService } from '../services/infolog.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -19,7 +21,10 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('attachments')
 export class AttachmentController {
 
-    constructor(private readonly attachmentservice: AttachmentService) { }
+    constructor(
+        private readonly attachmentservice: AttachmentService,
+        private readonly loggerService: InfoLogService
+    ) { }
 
     /**
      * Post a new Attachment. /attachments
@@ -28,7 +33,13 @@ export class AttachmentController {
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
-        return await this.attachmentservice.create(createAttachmentDto);
+        try {
+            return await this.attachmentservice.create(createAttachmentDto);
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'Attachment is not correctly added.';
+            this.loggerService.logWarnInfoLog(infoLog);
+        }
     }
 
     /**
