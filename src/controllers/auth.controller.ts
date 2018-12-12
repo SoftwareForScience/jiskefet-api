@@ -96,7 +96,6 @@ export class AuthContoller {
             }
             const userProfile = await this.authService.getProfileInfo(jwt);
             const user: User = await this.userService.findUserByExternalId(userProfile.id);
-            console.log(userProfile);
             return { userData: user, profileData: userProfile };
         } catch (error) {
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);

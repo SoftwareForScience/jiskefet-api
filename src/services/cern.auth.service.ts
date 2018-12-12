@@ -14,7 +14,6 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { SubSystemPermissionService } from './subsystem_permission.service';
 import { BCryptService } from './bcrypt.service';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
 import * as RequestPromise from 'request-promise';
 import { OptionsWithUrl } from 'request-promise';
 import { UserProfile } from '../abstracts/userprofile.abstract';
@@ -94,8 +93,8 @@ export class CernAuthService extends AuthService {
     }
 
     /**
-     * Authorize the user via GitHub by redirecting to GitHub's login page.
-     * The user logs in via GitHub and GitHub does a GET on
+     * Authorize the user via CERN by redirecting to CERN's login page.
+     * The user logs in via CERN and CERN does a GET on
      * our /callback endpoint with the authorization grant (or code).
      * Authorize the user via the OAuth 2 provider by exchanging the grant for an access token.
      * This token is then encoded as a JWT, exchanged for a user resource which is saved and finally returned.
@@ -129,7 +128,7 @@ export class CernAuthService extends AuthService {
     }
 
     /**
-     * Request user's GitHub profile info from resource server.
+     * Request user's CERN profile info from resource server.
      * @param jwt
      */
     public async getProfileInfo(jwt: string): Promise<UserProfile> {
@@ -169,7 +168,7 @@ export class CernAuthService extends AuthService {
             url: process.env.CERN_RESOURCE_API_URL,
             headers: {
                 'User-Agent': 'request',
-                'Authorization': `token ${accessToken}`
+                'Authorization': `Bearer ${accessToken}`
             }
         };
     }
