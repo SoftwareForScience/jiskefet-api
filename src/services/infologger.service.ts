@@ -13,6 +13,7 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { InfoLogger } from '../entities/infologger.entity';
 import { plainToClass } from 'class-transformer';
 import { TimeUtility } from '../utility/time.utility';
+import * as fs from 'fs';
 
 @Injectable()
 export class InfoLoggerService extends Logger {
@@ -27,14 +28,13 @@ export class InfoLoggerService extends Logger {
         this.infoLogRepository = infoLogRepository;
     }
 
-    async infoLog(createInfologDto: CreateInfologDto): Promise<InfoLogger> {
+    async infoLog(createInfologDto: CreateInfologDto): Promise<void> {
         createInfologDto.severity = 'I';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
         createInfologDto.timestamp = this.timeUtility.getEpoch16();
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
-        this.infoLogRepository.save(infoLogEntity);
-        return infoLogEntity;
+        this.save(infoLogEntity);
     }
 
     async warn(createInfologDto: CreateInfologDto): Promise<void> {
@@ -42,9 +42,8 @@ export class InfoLoggerService extends Logger {
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
         createInfologDto.timestamp = this.timeUtility.getEpoch16();
-        console.log(this.timeUtility.getEpoch16());
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
-        this.infoLogRepository.save(infoLogEntity);
+        this.save(infoLogEntity);
     }
 
     async error(createInfologDto: CreateInfologDto): Promise<void> {
@@ -53,6 +52,35 @@ export class InfoLoggerService extends Logger {
         createInfologDto.hostname = 'jiskefet';
         createInfologDto.timestamp = this.timeUtility.getEpoch16();
         const infoLogEntity = plainToClass(InfoLogger, createInfologDto);
-        this.infoLogRepository.save(infoLogEntity);
+        this.save(infoLogEntity);
+    }
+
+    private async save(infoLogEntity: InfoLogger): Promise<void> {
+        // this.infoLogRepository.save(infoLogEntity).then().catch(() => {
+        fs.writeFile(`infolog-data/${infoLogEntity.timestamp}.json`, JSON.stringify(infoLogEntity), (err) => {
+            if (err) {
+                return console.log(err);
+            }
+            console.log('The file was saved!');
+        });
+        // });
+
+        this.read();
+
+    }
+
+    private async read(): Promise<void> {
+        fs.readdir(`infolog-data`, (err, files) => {
+            files.forEach(file => {
+                console.log('hoi');
+                console.log(file);
+                fs.readFile(`infolog-data/${file}`, 'utf-8', (error, content) => {
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+                    console.log(content);
+                });
+            });
+        });
     }
 }
