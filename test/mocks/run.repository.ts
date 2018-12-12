@@ -10,7 +10,7 @@ import { EntityRepository } from 'typeorm';
 import { Run } from '../../src/entities/run.entity';
 import { CreateRunDto } from '../../src/dtos/create.run.dto';
 import { plainToClass } from 'class-transformer';
-import { logArray, LogRepository } from './log.repository';
+import { LogRepository } from './log.repository';
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { LinkLogToRunDto } from '../../src/dtos/linkLogToRun.run.dto';
 import { ModuleRef } from '@nestjs/core';
