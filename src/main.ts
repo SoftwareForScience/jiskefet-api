@@ -15,36 +15,44 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    // Increases the packet limit to 15MB instead of the default 100kb
+    app.use(bodyParser.json({ limit: 15000000 }));
+    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
 
-  const options = new DocumentBuilder()
-    .setTitle('ALICE-Bookkeeping')
-    .setVersion('1.0')
-    .addTag('logs')
-    .addTag('runs')
-    .addBearerAuth();
+    const options = new DocumentBuilder()
+        .setTitle('ALICE-Bookkeeping')
+        .setVersion('1.0')
+        .addTag('logs')
+        .addTag('runs')
+        .addBearerAuth();
 
-  if (process.env.USE_API_PREFIX === 'true') {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
-    options.setDescription('Running with /api prefix');
-  } else {
-    options.setDescription('Running without /api prefix');
-  }
+    if (process.env.USE_API_PREFIX === 'true') {
+        // set /api as basePath for non local
+        options.setBasePath('/api');
+        options.setDescription('Running with /api prefix');
+    } else {
+        options.setDescription('Running without /api prefix');
+    }
 
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+    if (process.env.USE_API_PREFIX === 'true') {
+        // set /api as basePath for non local
+        options.setBasePath('/api');
+        options.setDescription('Running with /api prefix');
+    } else {
+        options.setDescription('Running without /api prefix');
+    }
 
-  const document = SwaggerModule.createDocument(app, options.build());
-  SwaggerModule.setup('doc', app, document);
+    const document = SwaggerModule.createDocument(app, options.build());
+    SwaggerModule.setup('doc', app, document);
 
-  app.useLogger(app.get(InfoLogService));
-  await app.listen(process.env.PORT);
+    app.useLogger(app.get(InfoLogService));
+    await app.listen(process.env.PORT);
 
-  // Periodically save InfoLogs that failed to be persisted to the db.
-  cron.schedule('*/15 * * * *', () => {
-    app.get(InfoLogService).saveUnsavedInfologs();
-  });
+    // Periodically save InfoLogs that failed to be persisted to the db.
+    cron.schedule('*/15 * * * *', () => {
+        app.get(InfoLogService).saveUnsavedInfologs();
+    });
 }
 bootstrap();

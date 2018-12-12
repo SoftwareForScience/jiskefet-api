@@ -1,46 +1,34 @@
-import * as request from 'supertest';
-import { Test, TestingModule } from '@nestjs/testing';
-import { RunModule } from '../../src/modules/run.module';
-import { RunService } from '../../src/services/run.service';
-import { INestApplication } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Run } from '../../src/entities/run.entity';
-import { expect } from 'chai';
-import { CreateRunDto } from '../../src/dtos/create.run.dto';
-import { plainToClass } from 'class-transformer';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 
-const mockRepository = { };
+import { Test, TestingModule } from '@nestjs/testing';
+import * as request from 'supertest';
+import { INestApplication } from '@nestjs/common';
+import { CreateRunDto } from '../../src/dtos/create.run.dto';
+import { AppModule } from '../../src/app.module';
+import { getJwt } from '../../src/helpers/auth.helper';
 
 describe('RunController', () => {
     let app: INestApplication;
-    const runService = {
-        findAll: () => ['test'],
-        findById: () => ({ test: 'test' }),
-        create: (runToCreate: CreateRunDto): Run => plainToClass(Run, runToCreate)
-    };
+    let jwt: string;
 
-    before(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            imports: [RunModule],
-            providers: [
-                {
-                    provide: 'RunRepository',
-                    useClass: Repository
-                }
-            ]
-        })
-            .overrideProvider(RunService)
-            .useValue(runService)
-            .overrideProvider(getRepositoryToken(Run))
-            .useValue(mockRepository)
-            .compile();
+    beforeAll(async () => {
+        const moduleFixture: TestingModule = await Test.createTestingModule({
+            imports: [AppModule]
+        }).compile();
 
-        app = module.createNestApplication();
+        app = moduleFixture.createNestApplication();
         await app.init();
+
+        jwt = await getJwt(app);
     });
 
-    after(async () => {
+    afterAll(async () => {
         await app.close();
     });
 
@@ -50,8 +38,8 @@ describe('RunController', () => {
             timeTrgStart: new Date('2000-01-01'),
             timeO2End: new Date('2000-01-01'),
             timeTrgEnd: new Date('2000-01-01'),
-            runType: 'fast',
-            runQuality: 'good',
+            runType: 'test',
+            runQuality: 'test',
             activityId: 'Sl4e12ofb83no92ns',
             nDetectors: 16,
             nFlps: 7,
@@ -65,6 +53,7 @@ describe('RunController', () => {
         it('should return status 201', () => {
             return request(app.getHttpServer())
                 .post(`/runs`)
+                .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
                 .expect(201);
         });
@@ -72,19 +61,18 @@ describe('RunController', () => {
         it('should return JSON', () => {
             return request(app.getHttpServer())
                 .post(`/runs`)
+                .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object', () => {
-            return request(app.getHttpServer())
+        it('should return an object containing "Sl4e12ofb83no92ns" as the activityId', async () => {
+            const response = await request(app.getHttpServer())
                 .post(`/runs`)
                 .send(runToPost)
-                .set('Accept', 'application/json')
-                .then(response => {
-                    expect(response.body).to.be.an('object');
-                    expect(response.body.activityId).to.equal('Sl4e12ofb83no92ns');
-                });
+                .set('Authorization', `Bearer ${jwt}`)
+                .set('Accept', 'application/json');
+            expect(response.body.activityId).toEqual('Sl4e12ofb83no92ns');
         });
     });
 
@@ -92,23 +80,23 @@ describe('RunController', () => {
         it('should return status 200', () => {
             return request(app.getHttpServer())
                 .get('/runs')
-                .expect(200)
-                .expect(['test']);
+                .set('Authorization', `Bearer ${jwt}`)
+                .expect(200);
         });
 
         it('should return JSON', () => {
             return request(app.getHttpServer())
                 .get('/runs')
+                .set('Authorization', `Bearer ${jwt}`)
                 .expect(200)
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an array', () => {
-            return request(app.getHttpServer())
+        it('should return an object with a runs array', async () => {
+            const response = await request(app.getHttpServer())
                 .get('/runs')
-                .then(response => {
-                    expect(response.body).to.be.an('array');
-                });
+                .set('Authorization', `Bearer ${jwt}`);
+            expect(Array.isArray(response.body.runs)).toBeTruthy();
         });
     });
 
@@ -116,21 +104,22 @@ describe('RunController', () => {
         it('should return status 200', () => {
             return request(app.getHttpServer())
                 .get(`/runs/${1}`)
+                .set('Authorization', `Bearer ${jwt}`)
                 .expect(200);
         });
 
         it('should return JSON', () => {
             return request(app.getHttpServer())
                 .get(`/runs/${1}`)
+                .set('Authorization', `Bearer ${jwt}`)
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object', () => {
-            return request(app.getHttpServer())
+        it('should return an object', async () => {
+            const response = await request(app.getHttpServer())
                 .get(`/runs/${1}`)
-                .then(response => {
-                    expect(response.body).to.be.an('object');
-                });
+                .set('Authorization', `Bearer ${jwt}`);
+            expect(typeof response.body).toBe('object');
         });
     });
 });

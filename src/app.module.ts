@@ -18,7 +18,7 @@ import { LogService } from './services/log.service';
 import { LogModule } from './modules/log.module';
 import { SubSystemController } from './controllers/subsystem.controller';
 import { SubSystemModule } from './modules/subsystem.module';
-import { SubSystemService } from './services/susbsystem.service';
+import { SubSystemService } from './services/subsystem.service';
 import { AttachmentModule } from './modules/attachment.module';
 import { AttachmentController } from './controllers/attachment.controller';
 import { AttachmentService } from './services/attachment.service';
@@ -27,7 +27,7 @@ import { SubSystemPermissionModule } from './modules/subsystem_permission.module
 import { SubSystemPermissionService } from './services/subsystem_permission.service';
 import { AuthModule } from './modules/auth.module';
 import { AuthService } from './services/auth.service';
-import { AuthContoller } from './controllers/auth.controller';
+import { AuthController } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
 import { BCryptService } from './services/bcrypt.service';
@@ -38,10 +38,30 @@ import { OverviewService } from './services/overview.service';
 import { InfoLogService } from './services/infolog.service';
 import { InfoLogModule } from './modules/infolog.module';
 import { TimeUtility } from './utility/time.utility';
+import * as defaultDatabaseOptions from '../ormconfig.json';
+
+let databaseOptions;
+// Use a different database for running tests.
+if (process.env.NODE_ENV === 'test') {
+    databaseOptions = {
+        type: process.env.TEST_DB_CONNECTION,
+        host: process.env.TEST_DB_HOST,
+        port: +process.env.TEST_DB_PORT,
+        username: process.env.TEST_DB_USERNAME,
+        password: process.env.TEST_DB_PASSWORD,
+        database: process.env.TEST_DB_DATABASE,
+        entities: [process.env.TEST_DB_ENTITIES],
+        synchronize: process.env.TEST_DB_SYNCHRONIZE ? true : false,
+        migrations: ['populate/*{.ts,.js}'],
+        migrationsRun: true
+    };
+} else {
+    databaseOptions = defaultDatabaseOptions;
+}
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(databaseOptions),
     RunModule,
     LogModule,
     AttachmentModule,
@@ -59,7 +79,7 @@ import { TimeUtility } from './utility/time.utility';
     AttachmentController,
     SubSystemController,
     UserController,
-    AuthContoller,
+    AuthController,
     OverviewController,
   ],
   providers: [
@@ -77,6 +97,5 @@ import { TimeUtility } from './utility/time.utility';
     InfoLogService,
     TimeUtility,
   ],
-
 })
 export class AppModule { }

@@ -75,13 +75,7 @@ $ npm run typeorm migration:revert
 
 ## Testing
 
-```bash
-# Run tests
-$ npm run test
-
-# Open code coverage stats from latest test run
-$ npm run showcoverage
-```
+[See the README.md in the `test` directory](test/README.md)
 
 ## Dependencies
 

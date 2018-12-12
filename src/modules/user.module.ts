@@ -16,7 +16,7 @@ import { SubSystemPermissionService } from '../services/subsystem_permission.ser
 import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { SubSystemModule } from './subsystem.module';
-import { SubSystemService } from '../services/susbsystem.service';
+import { SubSystemService } from '../services/subsystem.service';
 import { AuthUtility } from '../utility/auth.utility';
 
 @Global()
