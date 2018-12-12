@@ -15,7 +15,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*", "ormconfig.ts", "ormconfig.js"
+    "src/**/*", "ormconfig.ts", "ormconfig.js", "test/**/*.ts"
   ],
   "exclude": [
     "node_modules",
