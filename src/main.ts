@@ -21,7 +21,7 @@ async function bootstrap(): Promise<void> {
 
     const options = new DocumentBuilder()
         .setTitle('Jiskefet')
-        .setVersion('0.3')
+        .setVersion('0.1.0')
         .addTag('logs')
         .addTag('runs')
         .addBearerAuth();
