@@ -12,6 +12,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InfoLog } from '../entities/infolog.entity';
 import { TimeUtility } from '../utility/time.utility';
 
+// Import dotenv so end-to-end tests can find the env variables.
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 let imports = [];
 
 if (process.env.USE_INFO_LOGGER === 'true') {
