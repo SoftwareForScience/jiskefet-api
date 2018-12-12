@@ -100,16 +100,18 @@ export class InfoLogService extends Logger {
      * @param infoLogEntity
      */
     private async persist(infoLogEntity: InfoLog): Promise<void> {
-        this.infoLogRepository.save(infoLogEntity).then().catch(() => {
-            fs.writeFile(
-                `${this.INFO_LOG_DIR_PATH}/${infoLogEntity.timestamp}.json`,
-                JSON.stringify(infoLogEntity),
-                (err) => {
-                    if (err) {
-                        return console.log(err);
-                    }
+        if (process.env.USE_INFO_LOGGER === 'true') {
+            this.infoLogRepository.save(infoLogEntity).then().catch(() => {
+                fs.writeFile(
+                    `${this.INFO_LOG_DIR_PATH}/${infoLogEntity.timestamp}.json`,
+                    JSON.stringify(infoLogEntity),
+                    (err) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                    });
             });
-        });
+        }
     }
 
     /**

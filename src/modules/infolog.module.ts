@@ -12,9 +12,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InfoLog } from '../entities/infolog.entity';
 import { TimeUtility } from '../utility/time.utility';
 
-@Global()
-@Module({
-        imports: [TypeOrmModule.forFeature([InfoLog]), TypeOrmModule.forRoot({
+let imports = [];
+
+if (process.env.USE_INFO_LOGGER === 'true') {
+    imports = [
+        TypeOrmModule.forFeature([InfoLog]),
+        TypeOrmModule.forRoot({
             name: 'infologger',
             type: 'mysql',
             host: 'localhost',
@@ -23,7 +26,16 @@ import { TimeUtility } from '../utility/time.utility';
             password: 'root',
             database: 'INFOLOGGER',
             synchronize: true,
-            logging: true})],
+            logging: true
+        })
+    ];
+}
+
+@Global()
+@Module({
+        imports: [
+            ...imports
+        ],
     providers: [InfoLogService, TimeUtility],
     exports: [InfoLogService],
 })
