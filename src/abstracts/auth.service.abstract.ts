@@ -6,26 +6,25 @@
  * copied verbatim in the file 'LICENSE'
  */
 
-import { Injectable } from '@nestjs/common';
-import * as oauth2 from 'simple-oauth2';
-import { UserService } from './user.service';
 import { CreateUserDto } from '../dtos/create.user.dto';
-import { JwtService } from '@nestjs/jwt';
+import { UserProfile } from './userprofile.abstract';
+import { Authentication } from '../interfaces/authentication.interface';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { SubSystemPermissionService } from './subsystem_permission.service';
-import { BCryptService } from './bcrypt.service';
-import { GithubProfileDto } from '../dtos/github.profile.dto';
-import * as RequestPromise from 'request-promise';
+import * as oauth2 from 'simple-oauth2';
+import { UserService } from '../services/user.service';
+import { SubSystemPermissionService } from '../services/subsystem_permission.service';
+import { BCryptService } from '../services/bcrypt.service';
+import { JwtService } from '@nestjs/jwt';
 import { OptionsWithUrl } from 'request-promise';
+import * as RequestPromise from 'request-promise';
 
 /**
  * Handles authorization via OAuth 2.
  */
-@Injectable()
-export class AuthService {
-    private oAuth2Client: oauth2.OAuthClient;
+export abstract class AuthService implements Authentication {
 
-    private oAuth2Config: oauth2.ModuleOptions = {
+    protected oAuth2Client: oauth2.OAuthClient;
+    protected oAuth2Config: oauth2.ModuleOptions = {
         client: {
             id: '<id>',
             secret: '<secret>'
@@ -37,22 +36,16 @@ export class AuthService {
     };
 
     constructor(
-        private readonly userService: UserService,
-        private readonly subSystemPermissionService: SubSystemPermissionService,
-        private readonly bcryptService: BCryptService,
-        private readonly jwtService: JwtService,
-    ) {
-        // set client credentials
-        this.oAuth2Config.client.id = process.env.CLIENT_ID;
-        this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
+        protected readonly userService: UserService,
+        protected readonly subSystemPermissionService: SubSystemPermissionService,
+        protected readonly bcryptService: BCryptService,
+        protected readonly jwtService: JwtService,
+    ) { }
 
-        // set resource host
-        this.oAuth2Config.auth.tokenHost = process.env.AUTH_TOKEN_HOST;
-        this.oAuth2Config.auth.tokenPath = process.env.AUTH_TOKEN_PATH;
-
-        this.oAuth2Client = oauth2.create(this.oAuth2Config);
-    }
-
+    /**
+     * Creates a JWT for a user that expires in specified time
+     * @param {String} payload JWT payload
+     */
     public async sign(payload: JwtPayload): Promise<string> {
         const token: JwtPayload = payload;
         return this.jwtService.sign(token);
@@ -130,7 +123,7 @@ export class AuthService {
      * Request user's GitHub profile info from resource server.
      * @param jwt
      */
-    public async getGithubProfileInfo(jwt: string): Promise<GithubProfileDto> {
+    public async getProfileInfo(jwt: string): Promise<UserProfile> {
         const decodedJwt = this.jwtService.decode(jwt, { json: true }) as { [key: string]: string };
         const accessToken = decodedJwt.token;
         const requestOptions = await this.getApiRequest(accessToken);
@@ -147,28 +140,12 @@ export class AuthService {
      * by giving the authorization grant (code).
      * @param code authorization grant code
      */
-    private async getToken(code: string): Promise<string> {
-        const authorizationGrant =
-            await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
-        const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
-        if (!accessTokenObject.token.access_token) {
-            throw new Error(accessTokenObject.token.error_description ||
-                'Cannot get access token: Authentication Server did not accept grant given.');
-        }
-        return accessTokenObject.token.access_token;
-    }
+    protected abstract getToken(code: string): Promise<string>;
 
     /**
      * Returns options needed to make a request to the OAuth provider's resource server.
      * @param accessToken
      */
-    private async getApiRequest(accessToken: string): Promise<OptionsWithUrl> {
-        return {
-            url: process.env.RESOURCE_API_URL,
-            headers: {
-                'User-Agent': 'request',
-                'Authorization': `token ${accessToken}`
-            }
-        };
-    }
+    protected abstract getApiRequest(accessToken: string): Promise<OptionsWithUrl>;
+
 }

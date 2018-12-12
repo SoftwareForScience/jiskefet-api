@@ -26,7 +26,6 @@ import { UserController } from './controllers/user.controller';
 import { SubSystemPermissionModule } from './modules/subsystem_permission.module';
 import { SubSystemPermissionService } from './services/subsystem_permission.service';
 import { AuthModule } from './modules/auth.module';
-import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { UserModule } from './modules/user.module';
 import { UserService } from './services/user.service';
@@ -35,6 +34,9 @@ import { AuthUtility } from './utility/auth.utility';
 import { OverviewModule } from './modules/overview.module';
 import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
+import { GithubAuthService } from './services/github.auth.service';
+import { CernAuthService } from './services/cern.auth.service';
+import { AuthService } from './abstracts/auth.service.abstract';
 import * as defaultDatabaseOptions from '../ormconfig.json';
 
 let databaseOptions;
@@ -56,6 +58,12 @@ if (process.env.NODE_ENV === 'test') {
     databaseOptions = defaultDatabaseOptions;
 }
 
+const authServiceProvider = {
+    provide: AuthService,
+    useClass: process.env.USE_CERN_SSO === 'true'
+        ? CernAuthService
+        : GithubAuthService,
+};
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseOptions),
@@ -85,7 +93,7 @@ if (process.env.NODE_ENV === 'test') {
     AttachmentService,
     SubSystemService,
     UserService,
-    AuthService,
+    authServiceProvider,
     AuthUtility,
     BCryptService,
     SubSystemPermissionService,
