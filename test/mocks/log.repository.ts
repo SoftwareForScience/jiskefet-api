@@ -58,14 +58,7 @@ export const logArray: Log[] = [
 @Injectable()
 @EntityRepository(Log)
 export class LogRepository {
-    // private runRepository: RunRepository = new RunRepository();
     private runRepository: RunRepository;
-
-    // constructor(
-    //     @Inject(forwardRef(() => RunRepository)) runRepository: RunRepository,
-    // ) {
-    //     this.runRepository = runRepository;
-    // }
 
     constructor(
         private readonly moduleRef: ModuleRef,
