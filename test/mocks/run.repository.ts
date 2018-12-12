@@ -84,8 +84,11 @@ export class RunRepository {
     // }
 
     constructor(
-        private readonly moduleRef: ModuleRef
-    ) {}
+        private readonly moduleRef: ModuleRef,
+        @Inject(forwardRef(() => LogRepository)) logRepository: LogRepository,
+    ) {
+        this.logRepository = logRepository;
+    }
 
     onModuleInit(): void {
         this.logRepository = this.moduleRef.get<LogRepository>(LogRepository);
@@ -119,14 +122,16 @@ export class RunRepository {
         };
     }
 
-    // /**
-    //  * Link a log to a run.
-    //  * @param linkLogToRunDto
-    //  */
-    // async linkLogToRun(runNumber: number, linkLogToRunDto: LinkLogToRunDto): Promise<Run> {
-    //     const run = await this.findById(runNumber);
-    //     const log = await this.logRepository.findLogById(linkLogToRunDto.logId);
-    //     run.logs = [...run.logs, log];
-    //     return await run;
-    // }
+    /**
+     * Link a log to a run.
+     * @param linkLogToRunDto
+     */
+    async linkLogToRun(runNumber: number, linkLogToRunDto: LinkLogToRunDto): Promise<Run> {
+        const run = await this.findById(runNumber);
+
+        // mocked equivalent of findOne()
+        const log = await this.logRepository.findLogById(linkLogToRunDto.logId);
+        run.logs = [...run.logs, log];
+        return await run;
+    }
 }

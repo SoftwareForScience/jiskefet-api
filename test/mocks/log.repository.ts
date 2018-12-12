@@ -68,11 +68,14 @@ export class LogRepository {
     // }
 
     constructor(
-        private readonly moduleRef: ModuleRef
-    ) {}
+        private readonly moduleRef: ModuleRef,
+        @Inject(forwardRef(() => RunRepository)) runRepository: RunRepository,
+    ) {
+        this.runRepository = runRepository;
+    }
 
     onModuleInit(): void {
-        this.runRepository = this.moduleRef.get<RunRepository>(RunRepository);
+        this.runRepository = this.moduleRef.get<RunRepository>(RunRepository, { strict: false});
     }
 
     /**

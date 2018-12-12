@@ -63,6 +63,7 @@ describe('LogService', () => {
                 runNumber: 1,
             };
 
+            // mock linked run to log
             const log = logArray[0];
             log.runs = [...log.runs, runArray[0]];
             expect(await logService.linkRunToLog(logId, runId)).toEqual(log);

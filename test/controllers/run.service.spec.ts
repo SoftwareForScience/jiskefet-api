@@ -12,7 +12,7 @@ import { CreateRunDto } from '../../src/dtos/create.run.dto';
 import { RunRepository, runArray } from '../mocks/run.repository';
 import { Run } from '../../src/entities/run.entity';
 import { LinkLogToRunDto } from '../../src/dtos/linkLogToRun.run.dto';
-import { LogRepository } from '../mocks/log.repository';
+import { LogRepository, logArray } from '../mocks/log.repository';
 
 describe('RunService', () => {
     let runService: RunService;
@@ -70,7 +70,11 @@ describe('RunService', () => {
             const logId: LinkLogToRunDto = {
                 logId: 1,
             };
-            expect(await runService.linkLogToRun(runId, logId)).toHaveBeenCalled();
+
+            // mock linked log to run
+            const run = runArray[0];
+            run.logs = [...run.logs, logArray[0]];
+            expect(await runService.linkLogToRun(runId, logId)).toEqual(run);
         });
     });
 
