@@ -122,4 +122,8 @@ export class Log {
         cascade: ['insert']
     })
     attachments: Attachment[];
+
+    constructor(data: Log | {} = {}) {
+        Object.assign(this, data);
+    }
 }

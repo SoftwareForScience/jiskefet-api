@@ -122,4 +122,8 @@ export class Run {
 
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.run)
     runEorHistories: RunEorHistory[];
+
+    constructor(data: Run | {} = {}) {
+        Object.assign(this, data);
+    }
 }
