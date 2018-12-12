@@ -13,10 +13,14 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { AuthUtility } from '../utility/auth.utility';
-import { AuthContoller } from '../controllers/auth.controller';
 import { GithubAuthService } from '../services/github.auth.service';
 import { CernAuthService } from '../services/cern.auth.service';
 import { AuthService } from '../abstracts/auth.service.abstract';
+import { AuthController } from '../controllers/auth.controller';
+
+// Import dotenv so end-to-end tests can find the env variables.
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const authServiceProvider = {
     provide: AuthService,
@@ -35,10 +39,8 @@ const authServiceProvider = {
             },
         }),
     ],
-    providers: [authServiceProvider,
-        SubSystemPermissionService, BCryptService,
-        JwtStrategy, AuthUtility],
-    controllers: [AuthContoller],
+    providers: [authServiceProvider, SubSystemPermissionService, BCryptService, JwtStrategy, AuthUtility],
+    controllers: [AuthController],
     exports: [AuthModule],
 })
 export class AuthModule { }

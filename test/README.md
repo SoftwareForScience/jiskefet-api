@@ -1,42 +1,35 @@
-# Testing with Mocha
-This project uses [Mocha](https://mochajs.org/) as a testing framework. 
+# Testing with Jest
+This project uses [Jest](https://jestjs.io/en/) as a testing framework. 
 
-To run tests:
+## Run tests
+Steps:
 
-```
-$ npm run test
-```
+* Make sure to have a (empty) database made for testing only that has its credentials set in `.env`. See [database setup](#Database_setup) for more info.
+* Run tests:
 
-## Additional libraries
-Mocha itself is pretty barebones and it needs additional libraries that help with testing. Some information on the libraries that this project uses is given below.
+    ```bash
+    # Via test script in package.json
+    $ npm run test
 
-### Chai
-[Chai](https://www.chaijs.com/) is used by Mocha as an assertion library. There are three variants when using chai (assert/expect/should). We use the 'expect' variant.
+    # Manually
+    $ npx jest
 
-### Sinon
-[Sinon](https://sinonjs.org/) provides test-doubles (spies, stubs and mocks) for Mocha.
+    # Just one file (it will search files in the <project_root>/test directory)
+    $ npx jest run.controller.e2e-spec.ts
 
-# Test coverage
-[Istanbul](https://istanbul.js.org/) is used for test coverage reports. [nyc](https://github.com/istanbuljs/nyc) is istanbul's CLI. 
-
-Running `nyc` in front of your test command will execute your tests with mocha and then make a coverage report inside the *coverage* directory. 
-
-Just run `$ npm run test` to also run nyc in front of your mocha tests.
+    # Also works with wildcards
+    $ npx jest run.c*
+    ```
 
 ## View coverage report
 To view the coverage report in your browser:
 
-```
+```bash
 $ npm run showcoverage
 ```
 
-Which executes:
-```JS
-// package.json
-{
-    "scripts": {
-        // other scripts ..
-        "showcoverage": "open ./coverage/index.html"
-    }
-}
-```
+## Database setup
+Instead of running tests directly on the database defined in `ormconfig.json`, tests use a separate database that is defined in `.env` under the fields starting with '`TEST_DB_`'. This ensures that running `$ npm run test` will never modify the primary database by accident.
+
+### Automatic data population
+In order to be able to run certain tests, the database will be partially populated automatically. The `populate` directory contains the migration file that populates the database whenever `$ npm run test` is run.

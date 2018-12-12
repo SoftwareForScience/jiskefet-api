@@ -8,7 +8,7 @@
 
 import { Get, Controller, Param, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
-import { SubSystemService } from '../services/susbsystem.service';
+import { SubSystemService } from '../services/subsystem.service';
 import { SubSystem } from '../entities/sub_system.entity';
 import { AuthGuard } from '@nestjs/passport';
 

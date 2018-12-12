@@ -7,5 +7,5 @@ script:
   - tslint -c tslint.json 'src/**/*.ts'
 # Disabled testing steps until we know how to test with authorization in the mix.
   # - npm test
-# after_success: 
-#   - codecov -f .nyc_output/*.json
+after_success: 
+  - codecov
