@@ -11,7 +11,6 @@ import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
-import { AuthService } from '../services/auth.service';
 import { BCryptService } from '../services/bcrypt.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
@@ -21,18 +20,23 @@ import { AuthGuard } from '@nestjs/passport';
 import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
+import { InfoLogService } from '../services/infolog.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
+import { AuthService } from '../abstracts/auth.service.abstract';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
 @Controller('users')
 export class UserController {
+
     constructor(
         private readonly subSystemPermissionService: SubSystemPermissionService,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
-        private readonly logService: LogService
+        private readonly logService: LogService,
+        private readonly loggerService: InfoLogService
     ) { }
 
     /**
@@ -62,21 +66,28 @@ export class UserController {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
-        // save it to db
-        const newSubSystem: SubSystemPermission =
-            await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
+        try {
+            // save it to db
+            const newSubSystem: SubSystemPermission =
+                await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
 
-        // add extra field to the jwt token to identify that a machine is making the request
-        const jwtPayload: JwtPayload = {
-            ['token']: uniqueId,
-            ['is_subsystem']: 'true',
-            ['permission_id']: newSubSystem.subSystemPermissionId.toString()
-        };
+            // add extra field to the jwt token to identify that a machine is making the request
+            const jwtPayload: JwtPayload = {
+                ['token']: uniqueId,
+                ['is_subsystem']: 'true',
+                ['permission_id']: newSubSystem.subSystemPermissionId.toString()
+            };
 
-        // creates a jwt and returns it
-        request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
+            // creates a jwt and returns it
+            request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
-        return request;
+            return request;
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'Token could not be created.';
+            this.loggerService.logWarnInfoLog(infoLog);
+        }
+
     }
 
     /**

@@ -75,6 +75,16 @@ $ npm run typeorm migration:revert
 
 ## Testing
 
+```bash
+# Run tests
+$ npm run test
+
+# Open code coverage stats from latest test run
+$ npm run showcoverage
+
+# To run the benchmark first change the target url to the appropriate url. To run the benchmark use:
+$ artillery run api_benchmarks.yml
+```
 [See the README.md in the `test` directory](test/README.md)
 
 ## Dependencies
