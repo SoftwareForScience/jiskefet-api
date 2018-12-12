@@ -39,12 +39,15 @@ async function bootstrap(): Promise<void> {
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
 
-    app.useLogger(app.get(InfoLogService));
-    await app.listen(process.env.PORT);
+    if (process.env.USE_INFO_LOGGER === 'true') {
+        app.useLogger(app.get(InfoLogService));
 
-    // Periodically save InfoLogs that failed to be persisted to the db.
-    cron.schedule('*/15 * * * *', () => {
-        app.get(InfoLogService).saveUnsavedInfologs();
-    });
+        // Periodically save InfoLogs that failed to be persisted to the db.
+        cron.schedule('*/15 * * * *', () => {
+            app.get(InfoLogService).saveUnsavedInfologs();
+        });
+    }
+
+    await app.listen(process.env.PORT);
 }
 bootstrap();

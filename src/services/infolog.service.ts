@@ -83,16 +83,18 @@ export class InfoLogService extends Logger {
             const fileContent = fs.readFileSync(`${this.INFO_LOG_DIR_PATH}/${file}`, 'utf-8');
             infoLogs.push(JSON.parse(fileContent));
         });
-        this.infoLogRepository.save(infoLogs).then(() => {
-            const infoLog = new CreateInfologDto();
-            // tslint:disable-next-line:no-trailing-whitespace
-            infoLog.message = `Successfully saved InfoLogs that could not be persisted 
+        if (process.env.USE_INFO_LOGGER === 'true') {
+            this.infoLogRepository.save(infoLogs).then(() => {
+                const infoLog = new CreateInfologDto();
+                // tslint:disable-next-line:no-trailing-whitespace
+                infoLog.message = `Successfully saved InfoLogs that could not be persisted 
             to the database in the past due to a possible database outage.`;
-            this.logInfoLog(infoLog);
-            this.deleteInfoLogDataFiles();
-        }).catch((er) => {
-            throw new CouldNotSaveInfoLogFilesException(er);
-        });
+                this.logInfoLog(infoLog);
+                this.deleteInfoLogDataFiles();
+            }).catch((er) => {
+                throw new CouldNotSaveInfoLogFilesException(er);
+            });
+        }
     }
 
     /**
