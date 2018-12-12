@@ -85,6 +85,7 @@ $ npm run showcoverage
 # To run the benchmark first change the target url to the appropriate url. To run the benchmark use:
 $ artillery run api_benchmarks.yml
 ```
+[See the README.md in the `test` directory](test/README.md)
 
 ## Dependencies
 

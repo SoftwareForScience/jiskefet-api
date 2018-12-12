@@ -13,30 +13,30 @@ import { AppModule } from './app.module';
 import bodyParser = require('body-parser');
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  // Increases the packet limit to 15MB instead of the default 100kb
-  app.use(bodyParser.json({ limit: 15000000 }));
-  app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    // Increases the packet limit to 15MB instead of the default 100kb
+    app.use(bodyParser.json({ limit: 15000000 }));
+    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
 
-  const options = new DocumentBuilder()
-    .setTitle('Jiskefet')
-    .setVersion('0.3')
-    .addTag('logs')
-    .addTag('runs')
-    .addBearerAuth();
+    const options = new DocumentBuilder()
+        .setTitle('Jiskefet')
+        .setVersion('0.3')
+        .addTag('logs')
+        .addTag('runs')
+        .addBearerAuth();
 
-  if (process.env.USE_API_PREFIX === 'true') {
-    // set /api as basePath for non local
-    options.setBasePath('/api');
-    options.setDescription('Running with /api prefix');
-  } else {
-    options.setDescription('Running without /api prefix');
-  }
+    if (process.env.USE_API_PREFIX === 'true') {
+        // set /api as basePath for non local
+        options.setBasePath('/api');
+        options.setDescription('Running with /api prefix');
+    } else {
+        options.setDescription('Running without /api prefix');
+    }
 
-  const document = SwaggerModule.createDocument(app, options.build());
-  SwaggerModule.setup('doc', app, document);
+    const document = SwaggerModule.createDocument(app, options.build());
+    SwaggerModule.setup('doc', app, document);
 
-  await app.listen(process.env.PORT);
+    await app.listen(process.env.PORT);
 }
 bootstrap();

@@ -6,6 +6,6 @@
  * copied verbatim in the file "LICENSE"
  */
 
-export class GenerateToken {
-
+export abstract class UserProfile {
+    id: number;
 }

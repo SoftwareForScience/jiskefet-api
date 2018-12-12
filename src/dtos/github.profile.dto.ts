@@ -6,13 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
+import { UserProfile } from '../abstracts/userprofile.abstract';
+
 /**
  * Object received from GitHub when calling resource server for user info.
  * Endpoint: https://api.github.com/user
  */
-export interface GithubProfileDto {
-    login: string;
+export interface GithubProfileDto extends UserProfile {
     id: number;
+    login: string;
     node_id: string;
     avatar_url: string;
     gravatar_id: string;
