@@ -34,6 +34,9 @@ import { AuthUtility } from './utility/auth.utility';
 import { OverviewModule } from './modules/overview.module';
 import { OverviewController } from './controllers/overview.controller';
 import { OverviewService } from './services/overview.service';
+import { InfoLogService } from './services/infolog.service';
+import { InfoLogModule } from './modules/infolog.module';
+import { TimeUtility } from './utility/time.utility';
 import { GithubAuthService } from './services/github.auth.service';
 import { CernAuthService } from './services/cern.auth.service';
 import { AuthService } from './abstracts/auth.service.abstract';
@@ -75,6 +78,7 @@ const authServiceProvider = {
     AuthModule,
     SubSystemPermissionModule,
     OverviewModule,
+    InfoLogModule,
   ],
   controllers: [
     AppController,
@@ -98,6 +102,8 @@ const authServiceProvider = {
     BCryptService,
     SubSystemPermissionService,
     OverviewService,
+    InfoLogService,
+    TimeUtility,
   ],
 })
 export class AppModule { }

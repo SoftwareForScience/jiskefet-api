@@ -28,6 +28,8 @@ import {
 import { AuthUtility } from '../utility/auth.utility';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
+import { InfoLogService } from '../services/infolog.service';
+import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { UserProfile } from '../abstracts/userprofile.abstract';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import { BCryptService } from '../services/bcrypt.service';
@@ -42,6 +44,7 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly authUtility: AuthUtility,
         private readonly userService: UserService,
+        private readonly loggerService: InfoLogService,
         private readonly bcryptService: BCryptService,
     ) { }
 
@@ -66,6 +69,9 @@ export class AuthController {
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
             if (!query.grant) {
+                const infoLog = new CreateInfologDto();
+                infoLog.message = 'Authentication failed, please provide an Authorization Grant as a query param.';
+                this.loggerService.logWarnInfoLog(infoLog);
                 throw new UnprocessableEntityException(`Authentication failed
                 , please provide an Authorization Grant as a query param.`);
             }
@@ -73,6 +79,9 @@ export class AuthController {
             const jwt = await this.authService.auth(grant);
             return { token: jwt };
         } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = error.message;
+            this.loggerService.logWarnInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,12 +107,18 @@ export class AuthController {
         try {
             const jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (!jwt) {
+                const infoLog = new CreateInfologDto();
+                infoLog.message = 'No JWT could be found in headers.';
+                this.loggerService.logWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
             const userProfile = await this.authService.getProfileInfo(jwt);
             const user: User = await this.userService.findUserByExternalId(userProfile.id);
             return { userData: user, profileData: userProfile };
         } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'No JWT could be found in headers.';
+            this.loggerService.logErrorInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
