@@ -20,7 +20,7 @@ import { UserProfile } from '../abstracts/userprofile.abstract';
 import { AuthService } from '../abstracts/auth.service.abstract';
 
 /**
- * Handles authorization via OAuth 2.
+ * Handles authorization via Github OAuth2.
  */
 @Injectable()
 export class GithubAuthService extends AuthService {

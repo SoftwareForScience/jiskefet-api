@@ -20,7 +20,7 @@ import { UserProfile } from '../abstracts/userprofile.abstract';
 import { AuthService } from '../abstracts/auth.service.abstract';
 
 /**
- * Handles authorization via OAuth 2.
+ * Handles authorization via CERN OAuth2.
  */
 @Injectable()
 export class CernAuthService extends AuthService {
