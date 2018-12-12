@@ -84,7 +84,7 @@ export class UserController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Token could not be created.';
-            this.loggerService.saveWarnInfoLog(infoLog);
+            this.loggerService.logWarnInfoLog(infoLog);
         }
 
     }

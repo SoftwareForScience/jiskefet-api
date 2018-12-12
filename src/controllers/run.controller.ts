@@ -41,12 +41,12 @@ export class RunController {
             request.timeTrgEnd = new Date();
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
-            this.loggerService.saveInfoLog(infoLog);
+            this.loggerService.logInfoLog(infoLog);
             return await this.runService.create(request);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'The run could not be created';
-            this.loggerService.saveErrorInfoLog(infoLog);
+            this.loggerService.logErrorInfoLog(infoLog);
         }
     }
 

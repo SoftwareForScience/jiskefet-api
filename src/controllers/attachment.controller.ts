@@ -37,7 +37,7 @@ export class AttachmentController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Attachment is not correctly added.';
-            this.loggerService.saveWarnInfoLog(infoLog);
+            this.loggerService.logWarnInfoLog(infoLog);
         }
     }
 

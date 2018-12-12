@@ -39,7 +39,7 @@ export class LogController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
-            this.loggerService.saveWarnInfoLog(infoLog);
+            this.loggerService.logWarnInfoLog(infoLog);
         }
     }
 

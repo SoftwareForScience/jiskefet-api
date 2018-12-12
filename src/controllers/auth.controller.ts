@@ -65,12 +65,10 @@ export class AuthContoller {
     @ApiImplicitQuery({ name: 'grant', required: true })
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
-            console.log('im here');
-            this.loggerService.saveUnsavedInfologs();
             if (!query.grant) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'Authentication failed, please provide an Authorization Grant as a query param.';
-                this.loggerService.saveWarnInfoLog(infoLog);
+                this.loggerService.logWarnInfoLog(infoLog);
                 throw new UnprocessableEntityException(`Authentication failed
                 , please provide an Authorization Grant as a query param.`);
             }
@@ -80,7 +78,7 @@ export class AuthContoller {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = error.message;
-            this.loggerService.saveWarnInfoLog(infoLog);
+            this.loggerService.logWarnInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -104,7 +102,7 @@ export class AuthContoller {
             if (!jwt) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'No JWT could be found in headers.';
-                this.loggerService.saveWarnInfoLog(infoLog);
+                this.loggerService.logWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
             const githubProfile = await this.authService.getGithubProfileInfo(jwt);
@@ -114,7 +112,7 @@ export class AuthContoller {
             console.log(error);
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
-            this.loggerService.saveErrorInfoLog(infoLog);
+            this.loggerService.logErrorInfoLog(infoLog);
             throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -21,12 +21,14 @@ import CouldNotSaveInfoLogFilesException from '../exceptions/CouldNotSaveInfoLog
 export class InfoLogService extends Logger {
 
     private readonly infoLogRepository: Repository<InfoLog>;
+    private readonly INFO_LOG_DIR_PATH: string = 'infolog-data';
 
     constructor(
         @InjectRepository(InfoLog) infoLogRepository: Repository<InfoLog>,
         private readonly timeUtility: TimeUtility
     ) {
         super();
+        this.ensureInfoLogDirExists();
         this.infoLogRepository = infoLogRepository;
     }
 
@@ -34,7 +36,7 @@ export class InfoLogService extends Logger {
      * Saves a informative InfoLog to the database.
      * @param createInfologDto
      */
-    async saveInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
+    public async logInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
         createInfologDto.severity = 'I';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
@@ -47,7 +49,7 @@ export class InfoLogService extends Logger {
      * Saves a warning InfoLog to the database.
      * @param createInfologDto
      */
-    async saveWarnInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
+    public async logWarnInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
         createInfologDto.severity = 'W';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
@@ -60,7 +62,7 @@ export class InfoLogService extends Logger {
      * Saves an error InfoLog to the database.
      * @param createInfologDto
      */
-    async saveErrorInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
+    public async logErrorInfoLog(createInfologDto: CreateInfologDto): Promise<void> {
         createInfologDto.severity = 'E';
         createInfologDto.level = 1;
         createInfologDto.hostname = 'jiskefet';
@@ -70,57 +72,63 @@ export class InfoLogService extends Logger {
     }
 
     /**
-     * Writes an InfoLog to a JSON file.
+     * Saves all the InfoLogs from the infolog-data directory to the database and deletes them from
+     * the directory if successful.
+     */
+    public saveUnsavedInfologs(): void {
+        const infoLogs = [] as InfoLog[];
+        let files = [] as string[];
+        files = fs.readdirSync(this.INFO_LOG_DIR_PATH);
+        files.forEach(file => {
+            const fileContent = fs.readFileSync(`${this.INFO_LOG_DIR_PATH}/${file}`, 'utf-8');
+            infoLogs.push(JSON.parse(fileContent));
+        });
+        this.infoLogRepository.save(infoLogs).then(() => {
+            const infoLog = new CreateInfologDto();
+            // tslint:disable-next-line:no-trailing-whitespace
+            infoLog.message = `Successfully saved InfoLogs that could not be persisted 
+            to the database in the past due to a possible database outage.`;
+            this.logInfoLog(infoLog);
+            this.deleteInfoLogDataFiles();
+        }).catch((er) => {
+            throw new CouldNotSaveInfoLogFilesException(er);
+        });
+    }
+
+    /**
+     * Persist an InfoLog to the database, or if the database is down, to a JSON file in the dir `infolog-data`.
      * @param infoLogEntity
      */
-    async persist(infoLogEntity: InfoLog): Promise<void> {
+    private async persist(infoLogEntity: InfoLog): Promise<void> {
         this.infoLogRepository.save(infoLogEntity).then().catch(() => {
-            fs.writeFile(`infolog-data/${infoLogEntity.timestamp}.json`, JSON.stringify(infoLogEntity), (err) => {
-                if (err) {
-                    return console.log(err);
-                }
+            fs.writeFile(
+                `${this.INFO_LOG_DIR_PATH}/${infoLogEntity.timestamp}.json`,
+                JSON.stringify(infoLogEntity),
+                (err) => {
+                    if (err) {
+                        return console.log(err);
+                    }
             });
         });
     }
 
     /**
-     * Saves all the InfoLogs from the infolog-data directory to the database and deletes them from
-     * the directory if successful.
+     * Ensures that a directory to save 'failed-to-save' InfoLogs to exists.
      */
-    public async saveUnsavedInfologs(): Promise<void> {
-        const infoLogs = [] as InfoLog[];
-        fs.readdir(`infolog-data`, (err, files) => {
-            files.forEach(file => {
-                fs.readFile(`infolog-data/${file}`, 'utf-8', async (error, data: string) => {
-                    if (error) {
-                        throw new Error(error.message);
-                    }
-                    infoLogs.push(JSON.parse(data));
-                });
-            });
-        });
-        console.log(infoLogs);
-        await this.infoLogRepository.save(infoLogs).then(() => {
-            const infoLog = new CreateInfologDto();
-            // tslint:disable-next-line:no-trailing-whitespace
-            infoLog.message = `Successfully saved InfoLogs that could not be persisted 
-            to the database in the past due to a possible database outage.`;
-            this.saveInfoLog(infoLog);
-            this.deleteInfoLogDataFiles();
-        }).catch((err) => {
-            throw new CouldNotSaveInfoLogFilesException(err);
-        });
-
+    private async ensureInfoLogDirExists(): Promise<void> {
+        if (!fs.existsSync(this.INFO_LOG_DIR_PATH)) {
+            fs.mkdirSync(this.INFO_LOG_DIR_PATH);
+        }
     }
 
     /**
      * Deletes the contents of the infolog-data directory.
      */
     private async deleteInfoLogDataFiles(): Promise<void> {
-        rimraf('infolog-data/*', () => {
+        rimraf(`${this.INFO_LOG_DIR_PATH}/*`, () => {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Infolog files are deleted from the infolog-data directory.';
-            this.saveInfoLog(infoLog);
+            this.logInfoLog(infoLog);
         });
     }
 }
