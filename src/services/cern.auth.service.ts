@@ -18,12 +18,16 @@ import * as RequestPromise from 'request-promise';
 import { OptionsWithUrl } from 'request-promise';
 import { UserProfile } from '../abstracts/userprofile.abstract';
 import { AuthService } from '../abstracts/auth.service.abstract';
+import InvalidSettingException from 'exceptions/InvalidSettingException';
+
 
 /**
  * Handles authorization via CERN OAuth2.
  */
 @Injectable()
 export class CernAuthService extends AuthService {
+
+    private cernRegisteredURI : string;
 
     constructor(
         @Inject(UserService) userService: UserService,
@@ -36,12 +40,25 @@ export class CernAuthService extends AuthService {
         this.oAuth2Config.client.id = process.env.CERN_CLIENT_ID;
         this.oAuth2Config.client.secret = process.env.CERN_CLIENT_SECRET;
 
+        if(process.env.CERN_REGISTERED_URI === undefined || process.env.CERN_REGISTERED_URI === "") {
+            throw new InvalidSettingException("CERN_REGISTERED_URI must be filled in");
+        }        
+
+        this.cernRegisteredURI = process.env.CERN_REGISTERED_URI;
+    
+    
+
+
         // set resource host
         this.oAuth2Config.auth.tokenHost = process.env.CERN_AUTH_TOKEN_HOST;
+    
         this.oAuth2Config.auth.tokenPath = process.env.CERN_AUTH_TOKEN_PATH;
-
+       
+        
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
+
+    
 
     /**
      * POST to authorization server, requesting an access token
@@ -49,14 +66,26 @@ export class CernAuthService extends AuthService {
      * @param code authorization grant code
      */
     protected async getToken(code: string): Promise<string> {
-        const authorizationGrant =
-            await this.oAuth2Client.authorizationCode.getToken({ code } as oauth2.AuthorizationTokenConfig);
-        const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
-        if (!accessTokenObject.token.access_token) {
-            throw new Error(accessTokenObject.token.error_description ||
-                'Cannot get access token: Authentication Server did not accept grant given.');
+        try{
+    
+            // This line will return a 400 Bad Request error (Invalid grant)
+            const authorizationGrant =
+                await this.oAuth2Client.authorizationCode.getToken({ 
+                    code: code,
+                    redirect_uri: this.cernRegisteredURI
+                    } as any);
+            const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
+        
+            if (!accessTokenObject.token.access_token) {
+                throw new Error(accessTokenObject.token.error_description ||
+                    'Cannot get access token: Authentication Server did not accept grant given.');
+            }
+            
+            return accessTokenObject.token.access_token;
+        } catch(exception) {
+            console.log(exception);
+            throw new Error("The OAuth server did something unexpected, is OAuth properly setup?");
         }
-        return accessTokenObject.token.access_token;
     }
 
     /**
@@ -67,8 +96,8 @@ export class CernAuthService extends AuthService {
         return {
             url: process.env.CERN_RESOURCE_API_URL,
             headers: {
-                'User-Agent': 'request',
-                'Authorization': `Token ${accessToken}`
+                'User-Agent': 'Jiskefet',
+                'Authorization': `bearer ${accessToken}`
             }
         };
     }
