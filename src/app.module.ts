@@ -41,6 +41,9 @@ import { GithubAuthService } from './services/github.auth.service';
 import { CernAuthService } from './services/cern.auth.service';
 import { AuthService } from './abstracts/auth.service.abstract';
 import * as defaultDatabaseOptions from '../ormconfig.json';
+import { SettingService } from './services/setting.service';
+import { SettingController } from './controllers/setting.controller';
+import { SettingModule } from './modules/setting.module';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -79,6 +82,7 @@ const authServiceProvider = {
     SubSystemPermissionModule,
     OverviewModule,
     InfoLogModule,
+    SettingModule
   ],
   controllers: [
     AppController,
@@ -89,6 +93,7 @@ const authServiceProvider = {
     UserController,
     AuthController,
     OverviewController,
+    SettingController
   ],
   providers: [
     AppService,
@@ -104,6 +109,7 @@ const authServiceProvider = {
     OverviewService,
     InfoLogService,
     TimeUtility,
+    SettingService
   ],
 })
 export class AppModule { }
