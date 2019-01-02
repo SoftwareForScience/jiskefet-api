@@ -6,15 +6,13 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { Get, Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
 import { SettingService } from '../services/setting.service';
 import { Setting } from '../interfaces/setting.interface';
 
 @ApiUseTags('setting')
-@ApiBearerAuth()
-@UseGuards(AuthGuard())
+@Controller()
 export class SettingController {
 
     constructor(
