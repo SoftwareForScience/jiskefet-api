@@ -20,7 +20,6 @@ import * as checkEnv from 'check-env';
  * if one of the variables is missing, the program will exit.
  */
 function preCheck(): void {
-    console.log('calling precheck');
     checkEnv([
         'PORT',
         'USE_API_PREFIX',
@@ -54,7 +53,6 @@ function preCheck(): void {
 preCheck();
 
 async function bootstrap(): Promise<void> {
-    console.log('bootstrapping app');
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     // Increases the packet limit to 15MB instead of the default 100kb
