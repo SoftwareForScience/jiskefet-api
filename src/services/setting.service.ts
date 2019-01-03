@@ -13,11 +13,15 @@ import { Setting } from '../interfaces/setting.interface';
 export class SettingService {
 
     async getSettings(): Promise<Setting> {
+        if (process.env.USE_CERN_SSO === 'true') {
+            return {
+                ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
+                ['CERN_AUTH_URL']: process.env.CERN_AUTH_URL
+            };
+        }
         return {
-            ['API_URL']: process.env.API_URL,
             ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
             ['GITHUB_AUTH_URL']: process.env.GITHUB_AUTH_URL,
-            ['CERN_AUTH_URL']: process.env.CERN_AUTH_URL
         };
     }
 }
