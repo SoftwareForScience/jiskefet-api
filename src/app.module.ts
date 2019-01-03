@@ -40,7 +40,6 @@ import { TimeUtility } from './utility/time.utility';
 import { GithubAuthService } from './services/github.auth.service';
 import { CernAuthService } from './services/cern.auth.service';
 import { AuthService } from './abstracts/auth.service.abstract';
-import * as defaultDatabaseOptions from '../ormconfig.json';
 import { SettingService } from './services/setting.service';
 import { SettingController } from './controllers/setting.controller';
 import { SettingModule } from './modules/setting.module';
