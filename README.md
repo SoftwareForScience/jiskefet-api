@@ -19,15 +19,6 @@ And the **Ansible playbook** to deploy the application can be found here: https:
 $ npm install
 ```
 
-### Set db config
-
-Copy **ormconfig.json.dist** as **ormconfig.json**.
-```bash
-# Create ormconfig.json file
-$ cp ormconfig.json.dist ormconfig.json
-```
-Change **ormconfig.json** to your own variables.
-
 ### Set env variables
 
 Copy the environment template that corresponds to your current environment:
