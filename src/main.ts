@@ -13,8 +13,48 @@ import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
+import * as checkEnv from 'check-env';
+
+/**
+ * Check the .env against the array of variables.
+ * if one of the variables is missing, the program will exit.
+ */
+function preCheck(): void {
+    console.log('calling precheck');
+    checkEnv([
+        'PORT',
+        'USE_API_PREFIX',
+        'USE_CERN_SSO',
+        'JWT_SECRET_KEY',
+        'JWT_EXPIRE_TIME',
+        'SUB_SYSTEM_TOKEN_EXPIRES_IN',
+        'USE_INFO_LOGGER'
+    ]);
+
+    if (process.env.USE_CERN_SSO === 'true') {
+        checkEnv([
+            'CERN_CLIENT_ID',
+            'CERN_CLIENT_SECRET',
+            'CERN_AUTH_TOKEN_HOST',
+            'CERN_AUTH_TOKEN_PATH',
+            'CERN_RESOURCE_API_URL',
+            'CERN_AUTH_URL'
+        ]);
+    }
+    checkEnv([
+        'GITHUB_CLIENT_ID',
+        'GITHUB_CLIENT_SECRET',
+        'GITHUB_AUTH_TOKEN_HOST',
+        'GITHUB_AUTH_TOKEN_PATH',
+        'GITHUB_RESOURCE_API_URL',
+        'GITHUB_AUTH_URL'
+    ]);
+}
+
+preCheck();
 
 async function bootstrap(): Promise<void> {
+    console.log('bootstrapping app');
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     // Increases the packet limit to 15MB instead of the default 100kb
