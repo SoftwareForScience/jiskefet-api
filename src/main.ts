@@ -13,14 +13,16 @@ import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
-import * as checkEnv from 'check-env';
+import { EnvironmentUtility } from './utility/env.utility';
 
 /**
  * Check the .env against the array of variables.
  * if one of the variables is missing, the program will exit.
  */
 function preCheck(): void {
-    checkEnv([
+    const envUtil = new EnvironmentUtility();
+
+    envUtil.checkEnv([
         'PORT',
         'USE_API_PREFIX',
         'USE_CERN_SSO',
@@ -42,7 +44,7 @@ function preCheck(): void {
     ]);
 
     if (process.env.USE_CERN_SSO === 'true') {
-        checkEnv([
+        envUtil.checkEnv([
             'CERN_CLIENT_ID',
             'CERN_CLIENT_SECRET',
             'CERN_AUTH_TOKEN_HOST',
@@ -50,15 +52,20 @@ function preCheck(): void {
             'CERN_RESOURCE_API_URL',
             'CERN_AUTH_URL'
         ]);
+
+        envUtil.checkEnvPlaceholders('CERN_AUTH_URL', 'CLIENT_ID_HERE');
+    } else {
+        envUtil.checkEnv([
+            'GITHUB_CLIENT_ID',
+            'GITHUB_CLIENT_SECRET',
+            'GITHUB_AUTH_TOKEN_HOST',
+            'GITHUB_AUTH_TOKEN_PATH',
+            'GITHUB_RESOURCE_API_URL',
+            'GITHUB_AUTH_URL'
+        ]);
+
+        envUtil.checkEnvPlaceholders('GITHUB_AUTH_URL', 'CLIENT_ID_HERE');
     }
-    checkEnv([
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN_HOST',
-        'GITHUB_AUTH_TOKEN_PATH',
-        'GITHUB_RESOURCE_API_URL',
-        'GITHUB_AUTH_URL'
-    ]);
 }
 
 preCheck();
