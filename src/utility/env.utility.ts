@@ -5,7 +5,7 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file 'LICENSE'
  */
-
+import MissingEnvException from '../exceptions/MissingEnvException';
 export class EnvironmentUtility {
     /**
      * Check if process.env['key'] has been set.
@@ -23,9 +23,9 @@ export class EnvironmentUtility {
 
         if (missing.length) {
             if (missing.length === 1) {
-                throw new Error('Missing environment variable ' + missing[0]);
+                throw new MissingEnvException('Missing environment variable ' + missing[0]);
             }
-            throw new Error('Missing environment variables ' + missing.join(', '));
+            throw new MissingEnvException('Missing environment variables ' + missing.join(', '));
         }
     }
 
@@ -36,7 +36,7 @@ export class EnvironmentUtility {
      */
     public checkEnvPlaceholders(key: string, stringToCheck: string): void {
         if (process.env[key].includes(stringToCheck)) {
-            throw new Error('Placeholder detected at ' + process.env[key]);
+            throw new MissingEnvException('Placeholder detected at ' + process.env[key]);
         }
     }
 }
