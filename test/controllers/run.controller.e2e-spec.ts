@@ -22,7 +22,7 @@ describe('RunController', () => {
             imports: [AppModule]
         }).compile();
 
-        app = moduleFixture.createNestApplication();
+        app = await moduleFixture.createNestApplication();
         await app.init();
 
         jwt = await getJwt(app);
