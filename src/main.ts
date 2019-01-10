@@ -14,6 +14,7 @@ import * as bodyParser from 'body-parser';
 import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
+import { Regex } from './enums/env.enum';
 
 /**
  * Check the .env against the array of variables.
@@ -21,7 +22,7 @@ import { EnvironmentUtility } from './utility/env.utility';
  */
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
-    const keys: string[] = [
+    let keys: string[] = [
         'PORT',
         'USE_API_PREFIX',
         'USE_CERN_SSO',
@@ -33,63 +34,62 @@ function preCheck(): void {
         'TYPEORM_PORT',
         'TYPEORM_SYNCHRONIZE',
         'TYPEORM_LOGGING',
-        'TYPEORM_ENTITIES',
-        'TYPEORM_MIGRATIONS',
-        'TYPEORM_MIGRATIONS_DIR',
         'JWT_SECRET_KEY',
         'JWT_EXPIRE_TIME',
         'SUB_SYSTEM_TOKEN_EXPIRES_IN',
-        'USE_INFO_LOGGER'
+        'CLIENT_ID',
+        'CLIENT_SECRET',
+        'AUTH_REDIRECT_URI'
     ];
 
-    // for url regex, see https://regexr.com/3ajfi
     let values: string[] = [
-        // need to limit range of allowed ports from 1 - 65535
-        'regex:^([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9])$',
-        // expected values
-        'string:true, false',
-        'string:true, false',
+        `regex:${Regex.PORT_NUMBER}`,
+        `regex:${Regex.BOOLEAN}`,
+        `regex:${Regex.BOOLEAN}`,
+        'string:mysql, postgres, mariadb, mssql, mongodb',
+        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
+        '',
+        '',
+        '',
+        `regex:${Regex.PORT_NUMBER}`,
+        `regex:${Regex.BOOLEAN}`,
+        `regex:${Regex.BOOLEAN}`,
         '',
         '',
         '',
         '',
         '',
-        'regex:^([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9])$',
-        'string:true, false',
-        'string:true, false',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        'string:true, false'
+        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
     ];
 
-    envUtil.checkEnv(keys);
+    envUtil.checkEnv(keys, values);
+    // extra check if the AUTH_REDIRECT_URI contains callback
+    envUtil.checkEnv(['AUTH_REDIRECT_URI'], ['endsWith: callback']);
 
-    if (process.env.USE_CERN_SSO === 'true') {
-        envUtil.checkEnv([
-            'CERN_CLIENT_ID',
-            'CERN_CLIENT_SECRET',
-            'CERN_AUTH_TOKEN_HOST',
-            'CERN_AUTH_TOKEN_PATH',
-            'CERN_RESOURCE_API_URL',
-            'CERN_AUTH_URL'
-        ]);
+    if (process.env.NODE_ENV === 'test') {
+        keys = [
+            'TEST_DB_CONNECTION',
+            'TEST_DB_HOST',
+            'TEST_DB_USERNAME',
+            'TEST_DB_PASSWORD',
+            'TEST_DB_DATABASE',
+            'TEST_DB_PORT',
+            'TEST_DB_SYNCHRONIZE',
+            'TEST_DB_LOGGING'
+        ];
 
-        envUtil.checkEnvPlaceholders('CERN_AUTH_URL', 'CLIENT_ID_HERE');
-    } else {
-        envUtil.checkEnv([
-            'GITHUB_CLIENT_ID',
-            'GITHUB_CLIENT_SECRET',
-            'GITHUB_AUTH_TOKEN_HOST',
-            'GITHUB_AUTH_TOKEN_PATH',
-            'GITHUB_RESOURCE_API_URL',
-            'GITHUB_AUTH_URL'
-        ]);
+        values = [
+            'string:mysql, postgres, mariadb, mssql, mongodb',
+            `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
+            '',
+            '',
+            '',
+            `regex:${Regex.PORT_NUMBER}`,
+            `regex:${Regex.BOOLEAN}`,
+            `regex:${Regex.BOOLEAN}`,
+        ];
 
-        envUtil.checkEnvPlaceholders('GITHUB_AUTH_URL', 'CLIENT_ID_HERE');
+        envUtil.checkEnv(keys, values);
     }
 }
 
@@ -129,6 +129,6 @@ async function bootstrap(): Promise<void> {
         });
     }
 
-    await app.listen(process.env.PORT);
+    await app.listen(process.env.PORT ? process.env.PORT : 3000);
 }
 bootstrap();

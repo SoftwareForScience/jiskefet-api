@@ -16,12 +16,16 @@ export class SettingService {
         if (process.env.USE_CERN_SSO === 'true') {
             return {
                 ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
-                ['CERN_AUTH_URL']: process.env.CERN_AUTH_URL
+                ['AUTH_URL']:
+                    `https://oauth.web.cern.ch/OAuth/Authorize?response_type=code&client_id=${ process.env.CLIENT_ID }&
+                    redirect_uri=${ process.env.AUTH_REDIRECT_URI }`
             };
         }
         return {
             ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
-            ['GITHUB_AUTH_URL']: process.env.GITHUB_AUTH_URL,
+            ['AUTH_URL']:
+                    `https://github.com/login/oauth/authorize?response_type=code&client_id=${ process.env.CLIENT_ID }&
+                    redirect_uri=${ process.env.AUTH_REDIRECT_URI }`,
         };
     }
 }

@@ -54,7 +54,7 @@ if (process.env.NODE_ENV === 'test') {
         username: process.env.TEST_DB_USERNAME,
         password: process.env.TEST_DB_PASSWORD,
         database: process.env.TEST_DB_DATABASE,
-        entities: [process.env.TEST_DB_ENTITIES],
+        entities: ['src/**/**.entity{.ts,.js}'],
         synchronize: process.env.TEST_DB_SYNCHRONIZE ? true : false,
         migrations: ['populate/*{.ts,.js}'],
         migrationsRun: true
@@ -67,11 +67,11 @@ if (process.env.NODE_ENV === 'test') {
       username: process.env.TYPEORM_USERNAME,
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      entities: [process.env.TYPEORM_ENTITIES],
+      entities: ['src/**/**.entity{.ts,.js}'],
       logging: process.env.TYPEORM_LOGGING,
       synchronize: process.env.TYPEORM_SYNCHRONIZE ? true : false,
-      migrations: [process.env.TYPEORM_MIGRATIONS]
-      // what to do with the cli variable from ormcofnig.json
+      migrations: ['src/migration/*{.ts,.js}']
+      // what to do with the cli variable from ormconfig.json
     };
 }
 

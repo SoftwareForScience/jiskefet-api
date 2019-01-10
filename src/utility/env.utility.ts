@@ -6,17 +6,21 @@
  * copied verbatim in the file 'LICENSE'
  */
 import MissingEnvException from '../exceptions/MissingEnvException';
+import EnvValueDoesNotMatchException from '../exceptions/EnvValueDoesNotMatchException';
 export class EnvironmentUtility {
     /**
      * Check if process.env['key'] has been set.
-     * https://github.com/ekmartin/check-env/blob/master/index.js
+     * If values is provided, the function will also check if process.env['key'] matches the provided values.
+     * The provided values array must have the same size as the keys array
+     *
      * @param keys array of environment variables
+     * @param values array of values to match the env['key'] against,
+     * please start the string with either 'regex:', 'string:' or 'endsWith:'.
+     * If an index is left empty, the process.env['key']'s value won't be checked
      */
     public checkEnv(keys: string[], values?: string[]): void {
         const missing: string[] = [];
         const errorMsg: string[] = [];
-        let regex: RegExp;
-        let possibleValues: string[];
 
         keys.forEach((key) => {
             if (!process.env[key]) {
@@ -33,30 +37,45 @@ export class EnvironmentUtility {
 
         if (values) {
             for (let i: number = 0; i < keys.length; i++) {
-                if (values[i].startsWith('regex:')) {
-                    regex = new RegExp(values[i].replace('regex:', ''));
-                    if (!regex.test(process.env[keys[i]])) {
-                        errorMsg.push(`${process.env[keys[i]]} does not pass regex ${regex}`);
-                    }
-                } else if (values[i].startsWith('string:')) {
-                    possibleValues = values[i].replace('string:', '').replace(' ', '').split(',');
-                    if (possibleValues.indexOf(process.env[keys[i]]) === -1) {
-                        errorMsg.push(`${process.env[keys[i]]} does not pass match ${possibleValues}`);
-                    }
+                // Retrieve the starting keyword in order to determine case to use
+                const startingKey: string = values[i].substr(0, values[i].indexOf(':'));
+
+                switch (startingKey) {
+                    case 'regex':
+                        let regex: RegExp;
+                        regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''), '\gi');
+                        console.log(`checking ${process.env[keys[i]]} against ${regex}`);
+                        if (!regex.test(process.env[keys[i]])) {
+                            errorMsg.push(`${[keys[i]]} does not pass regex ${regex}.`);
+                        }
+                        break;
+                    case 'string':
+                        let possibleValues: string[];
+                        possibleValues = values[i].replace('string:', '').replace(/\s/g, '').split(',');
+                        console.log(`checking ${process.env[keys[i]]} against ${possibleValues}`);
+                        if (possibleValues.indexOf(process.env[keys[i]]) === -1) {
+                            errorMsg.push(`${[keys[i]]} does not match the possible string(s): ${possibleValues}.`);
+                        }
+                        break;
+                    case 'endsWith':
+                        const endingString: string = values[i].replace('endsWith:', '').replace(/\s/g, '');
+                        console.log(`checking ${process.env[keys[i]]} against ${endingString}`);
+                        if (!process.env[keys[i]].endsWith(endingString)) {
+                            errorMsg.push(`${[keys[i]]} does not end with ${endingString}.`);
+                        }
+                        break;
+                    default:
                 }
             }
         }
 
-    }
-
-    /**
-     * Check if process.env['key'] has placeholder values.
-     * @param key Check if .env still contains placeholder strings
-     * @param stringToCheck placeholder string to check for
-     */
-    public checkEnvPlaceholders(key: string, stringToCheck: string): void {
-        if (process.env[key].includes(stringToCheck)) {
-            throw new MissingEnvException('Placeholder detected at ' + process.env[key]);
+        if (errorMsg.length) {
+            if (errorMsg.length === 1) {
+                throw new EnvValueDoesNotMatchException(
+                    'Environment value does not match expected value: \n' + errorMsg[0]);
+            }
+            throw new EnvValueDoesNotMatchException(
+                'Environment value does not match expected value: \n' + errorMsg.join('\n'));
         }
     }
 }
