@@ -12,8 +12,11 @@ export class EnvironmentUtility {
      * https://github.com/ekmartin/check-env/blob/master/index.js
      * @param keys array of environment variables
      */
-    public checkEnv(keys: string[]): void {
+    public checkEnv(keys: string[], values?: string[]): void {
         const missing: string[] = [];
+        const errorMsg: string[] = [];
+        let regex: RegExp;
+        let possibleValues: string[];
 
         keys.forEach((key) => {
             if (!process.env[key]) {
@@ -27,6 +30,23 @@ export class EnvironmentUtility {
             }
             throw new MissingEnvException('Missing environment variables ' + missing.join(', '));
         }
+
+        if (values) {
+            for (let i: number = 0; i < keys.length; i++) {
+                if (values[i].startsWith('regex:')) {
+                    regex = new RegExp(values[i].replace('regex:', ''));
+                    if (!regex.test(process.env[keys[i]])) {
+                        errorMsg.push(`${process.env[keys[i]]} does not pass regex ${regex}`);
+                    }
+                } else if (values[i].startsWith('string:')) {
+                    possibleValues = values[i].replace('string:', '').replace(' ', '').split(',');
+                    if (possibleValues.indexOf(process.env[keys[i]]) === -1) {
+                        errorMsg.push(`${process.env[keys[i]]} does not pass match ${possibleValues}`);
+                    }
+                }
+            }
+        }
+
     }
 
     /**

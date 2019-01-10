@@ -21,8 +21,7 @@ import { EnvironmentUtility } from './utility/env.utility';
  */
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
-
-    envUtil.checkEnv([
+    const keys: string[] = [
         'PORT',
         'USE_API_PREFIX',
         'USE_CERN_SSO',
@@ -41,7 +40,33 @@ function preCheck(): void {
         'JWT_EXPIRE_TIME',
         'SUB_SYSTEM_TOKEN_EXPIRES_IN',
         'USE_INFO_LOGGER'
-    ]);
+    ];
+
+    // for url regex, see https://regexr.com/3ajfi
+    let values: string[] = [
+        // need to limit range of allowed ports from 1 - 65535
+        'regex:^([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9])$',
+        // expected values
+        'string:true, false',
+        'string:true, false',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'regex:^([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9])$',
+        'string:true, false',
+        'string:true, false',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'string:true, false'
+    ];
+
+    envUtil.checkEnv(keys);
 
     if (process.env.USE_CERN_SSO === 'true') {
         envUtil.checkEnv([
