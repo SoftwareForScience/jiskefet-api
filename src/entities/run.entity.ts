@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
@@ -19,7 +19,7 @@ import { Tag } from './tag.entity';
 @Entity('run')
 export class Run {
 
-    @Column({
+    @PrimaryColumn({
         name: 'run_number'
     })
     runNumber: number;
