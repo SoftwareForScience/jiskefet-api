@@ -37,7 +37,7 @@ export class EnvironmentUtility {
 
         if (values) {
             for (let i: number = 0; i < keys.length; i++) {
-                // Retrieve the starting keyword in order to determine case to use
+                // Retrieve the starting keyword in order to determine which case to use
                 const startingKey: string = values[i].substr(0, values[i].indexOf(':'));
 
                 switch (startingKey) {

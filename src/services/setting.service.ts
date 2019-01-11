@@ -24,8 +24,8 @@ export class SettingService {
         return {
             ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
             ['AUTH_URL']:
-                    `https://github.com/login/oauth/authorize?response_type=code&client_id=${ process.env.CLIENT_ID }&
-                    redirect_uri=${ process.env.AUTH_REDIRECT_URI }`,
+                    `https://github.com/login/oauth/authorize?response_type=code&client_id=${ process.env.CLIENT_ID }&`
+                    + `redirect_uri=${ process.env.AUTH_REDIRECT_URI }`,
         };
     }
 }

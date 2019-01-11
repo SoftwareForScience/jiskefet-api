@@ -47,7 +47,7 @@ function preCheck(): void {
         `regex:${Regex.BOOLEAN}`,
         `regex:${Regex.BOOLEAN}`,
         'string:mysql, postgres, mariadb, mssql, mongodb',
-        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
+        ``,
         '',
         '',
         '',
@@ -59,12 +59,16 @@ function preCheck(): void {
         '',
         '',
         '',
-        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
+        ``,
     ];
 
     envUtil.checkEnv(keys, values);
     // extra check if the AUTH_REDIRECT_URI contains callback
     envUtil.checkEnv(['AUTH_REDIRECT_URI'], ['endsWith: callback']);
+
+    if (process.env.USE_CERN_SSO === 'true') {
+        envUtil.checkEnv(['CERN_REGISTERED_URI'], [`regex:${Regex.IP_OR_URL_OR_LOCALHOST}`]);
+    }
 
     if (process.env.NODE_ENV === 'test') {
         keys = [
