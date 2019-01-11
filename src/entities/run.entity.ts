@@ -19,7 +19,9 @@ import { Tag } from './tag.entity';
 @Entity('run')
 export class Run {
 
-    @PrimaryGeneratedColumn({ name: 'run_number' })
+    @Column({
+        name: 'run_number'
+    })
     runNumber: number;
 
     @Column({
