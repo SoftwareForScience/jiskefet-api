@@ -47,7 +47,7 @@ function preCheck(): void {
         `regex:${Regex.BOOLEAN}`,
         `regex:${Regex.BOOLEAN}`,
         'string:mysql, postgres, mariadb, mssql, mongodb',
-        ``,
+        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
         '',
         '',
         '',
@@ -59,7 +59,7 @@ function preCheck(): void {
         '',
         '',
         '',
-        ``,
+        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
     ];
 
     envUtil.checkEnv(keys, values);
