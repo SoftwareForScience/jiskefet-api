@@ -20,7 +20,7 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
-    async getSettings(): Promise<Setting> {
+    async getSettings(): Promise<{ data: Setting}> {
         return await this.settingService.getSettings();
     }
 }
