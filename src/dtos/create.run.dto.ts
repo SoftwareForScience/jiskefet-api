@@ -11,10 +11,17 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsEnum, IsDateString } from 'class-validator';
+import { IsInt, IsString, IsEnum, IsDateString, IsNumber } from 'class-validator';
 import { RunType } from '../enums/run.runtype.enum';
 import { RunQuality } from '../enums/run.runquality.enum';
 export class CreateRunDto {
+
+    @ApiModelProperty({
+        example: 1234,
+        description: 'The id of the run'
+    })
+    @IsNumber()
+    runNumber: number;
 
     @ApiModelProperty({
         example: new Date(),
