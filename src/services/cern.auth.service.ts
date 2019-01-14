@@ -32,8 +32,8 @@ export class CernAuthService extends AuthService {
     ) {
         super(userService, subSystemPermissionService, bcryptService, jwtService);
         // set oAuth credentials
-        this.oAuth2Config.client.id = process.env.CERN_CLIENT_ID;
-        this.oAuth2Config.client.secret = process.env.CERN_CLIENT_SECRET;
+        this.oAuth2Config.client.id = process.env.CLIENT_ID;
+        this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
 
         if (process.env.CERN_REGISTERED_URI === undefined
             || process.env.CERN_REGISTERED_URI === '') {
@@ -43,9 +43,8 @@ export class CernAuthService extends AuthService {
         this.cernRegisteredURI = process.env.CERN_REGISTERED_URI;
 
         // set resource host
-        this.oAuth2Config.auth.tokenHost = process.env.CERN_AUTH_TOKEN_HOST;
-
-        this.oAuth2Config.auth.tokenPath = process.env.CERN_AUTH_TOKEN_PATH;
+        this.oAuth2Config.auth.tokenHost = 'https://oauth.web.cern.ch/';
+        this.oAuth2Config.auth.tokenPath = 'Oauth/Token';
 
         this.oAuth2Client = oauth2.create(this.oAuth2Config);
     }
@@ -84,7 +83,7 @@ export class CernAuthService extends AuthService {
      */
     protected async getApiRequest(accessToken: string): Promise<OptionsWithUrl> {
         return {
-            url: process.env.CERN_RESOURCE_API_URL,
+            url: 'https://oauthresource.web.cern.ch/api/User',
             headers: {
                 'User-Agent': 'Jiskefet',
                 'Authorization': `bearer ${accessToken}`

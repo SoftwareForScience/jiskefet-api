@@ -40,7 +40,9 @@ import { TimeUtility } from './utility/time.utility';
 import { GithubAuthService } from './services/github.auth.service';
 import { CernAuthService } from './services/cern.auth.service';
 import { AuthService } from './abstracts/auth.service.abstract';
-import * as defaultDatabaseOptions from '../ormconfig.json';
+import { SettingService } from './services/setting.service';
+import { SettingController } from './controllers/setting.controller';
+import { SettingModule } from './modules/setting.module';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -52,13 +54,25 @@ if (process.env.NODE_ENV === 'test') {
         username: process.env.TEST_DB_USERNAME,
         password: process.env.TEST_DB_PASSWORD,
         database: process.env.TEST_DB_DATABASE,
-        entities: [process.env.TEST_DB_ENTITIES],
+        entities: ['src/**/**.entity{.ts,.js}'],
         synchronize: process.env.TEST_DB_SYNCHRONIZE ? true : false,
         migrations: ['populate/*{.ts,.js}'],
         migrationsRun: true
     };
 } else {
-    databaseOptions = defaultDatabaseOptions;
+    databaseOptions = {
+      type: process.env.TYPEORM_CONNECTION,
+      host: process.env.TYPEORM_HOST,
+      port: process.env.TYPEORM_PORT,
+      username: process.env.TYPEORM_USERNAME,
+      password: process.env.TYPEORM_PASSWORD,
+      database: process.env.TYPEORM_DATABASE,
+      entities: ['src/**/**.entity{.ts,.js}'],
+      logging: process.env.TYPEORM_LOGGING,
+      synchronize: process.env.TYPEORM_SYNCHRONIZE ? true : false,
+      migrations: ['src/migration/*{.ts,.js}']
+      // what to do with the cli variable from ormconfig.json
+    };
 }
 
 const authServiceProvider = {
@@ -79,6 +93,7 @@ const authServiceProvider = {
     SubSystemPermissionModule,
     OverviewModule,
     InfoLogModule,
+    SettingModule
   ],
   controllers: [
     AppController,
@@ -89,6 +104,7 @@ const authServiceProvider = {
     UserController,
     AuthController,
     OverviewController,
+    SettingController
   ],
   providers: [
     AppService,
@@ -104,6 +120,7 @@ const authServiceProvider = {
     OverviewService,
     InfoLogService,
     TimeUtility,
+    SettingService
   ],
 })
 export class AppModule { }
