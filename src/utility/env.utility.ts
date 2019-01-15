@@ -43,7 +43,7 @@ export class EnvironmentUtility {
                 switch (startingKey) {
                     case 'regex':
                         let regex: RegExp;
-                        regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''), '\gi');
+                        regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''));
                         console.log(`checking ${process.env[keys[i]]} against ${regex}`);
                         if (!regex.test(process.env[keys[i]])) {
                             errorMsg.push(`${[keys[i]]} does not pass regex ${regex}.`);
