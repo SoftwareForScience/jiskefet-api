@@ -10,12 +10,13 @@ import { Get, Post, Controller, Body, Param, Query, UsePipes, UseGuards, Validat
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
-import { Log } from '../entities/log.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem, createResponseItems } from '../helpers/response.helper';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -33,9 +34,10 @@ export class LogController {
      * @param createLogDto CreateLogDto from frontend.
      */
     @Post()
-    async create(@Body() request: CreateLogDto): Promise<Log> {
+    async create(@Body() request: CreateLogDto): Promise<ResponseObject> {
         try {
-            return await this.logService.create(request);
+            const log = await this.logService.create(request);
+            return createResponseItem(log);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
@@ -47,8 +49,9 @@ export class LogController {
      * Get all logs. /logs
      */
     @Get()
-    async findAll(@Query() query?: QueryLogDto): Promise<{ logs: Log[], count: number }> {
-        return await this.logService.findAll(query);
+    async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject> {
+        const getLogs = await this.logService.findAll(query);
+        return createResponseItems(getLogs.logs, undefined, getLogs.additionalInformation);
     }
 
     /**
@@ -56,8 +59,9 @@ export class LogController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id')
-    async findById(@Param('id') id: number): Promise<Log> {
-        return await this.logService.findLogById(id);
+    async findById(@Param('id') id: number): Promise<ResponseObject> {
+        const logById = await this.logService.findLogById(id);
+        return createResponseItem(logById);
     }
 
     /**

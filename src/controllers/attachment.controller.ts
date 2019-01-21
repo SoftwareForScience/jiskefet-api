@@ -10,10 +10,11 @@ import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
-import { Attachment } from '../entities/attachment.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
+import { createResponseItem, createResponseItems } from '../helpers/response.helper';
+import { ResponseObject } from '../interfaces/response_object.interface';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -32,9 +33,10 @@ export class AttachmentController {
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
+    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject> {
         try {
-            return await this.attachmentservice.create(createAttachmentDto);
+            const attachment = await this.attachmentservice.create(createAttachmentDto);
+            return createResponseItem(attachment);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Attachment is not correctly added.';
@@ -47,15 +49,14 @@ export class AttachmentController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id/logs')
-    async findById(@Param('id') id: number): Promise<Attachment[]> {
-        const attachments = await this.attachmentservice.findAttachmentsByLogId(id);
+    async findById(@Param('id') id: number): Promise<ResponseObject> {
+        const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(id);
 
         // returns the fileData as base64 string, this should be done in mysql query for faster results
-        for (const iterator of attachments) {
+        for (const iterator of attachmentsById) {
             iterator.fileData = 'base64;' + iterator.fileData;
 
         }
-
-        return attachments;
+        return createResponseItems(attachmentsById);
     }
 }

@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Attachment } from '../entities/attachment.entity';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
+import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class AttachmentService {
@@ -30,8 +31,7 @@ export class AttachmentService {
     async create(createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
         createAttachmentDto.creationTime = new Date();
         const AttachmentEntity = plainToClass(Attachment, createAttachmentDto);
-        await this.repository.save(AttachmentEntity);
-        return AttachmentEntity;
+        return await this.repository.save(AttachmentEntity);
     }
 
     /**

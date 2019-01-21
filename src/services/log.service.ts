@@ -17,6 +17,8 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem } from '../helpers/response.helper';
 
 @Injectable()
 export class LogService {
@@ -43,14 +45,13 @@ export class LogService {
                 attachment.creationTime = LogEntity.creationTime;
             }
         }
-        await this.repository.save(LogEntity);
-        return LogEntity;
+        return await this.repository.save(LogEntity);
     }
 
     /**
      * Returns all Logs from the db.
      */
-    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], count: number }> {
+    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], additionalInformation: any }> {
         let query = await this.repository.createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
@@ -91,7 +92,14 @@ export class LogService {
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 25)
             .getManyAndCount();
-        return { logs: result[0], count: result[1] };
+        return {
+            logs: result[0],
+            additionalInformation: {
+                count: result[1],
+                pageNumber: queryLogDto.pageNumber,
+                pageSize: queryLogDto.pageSize
+            }
+        };
     }
 
     /**
@@ -127,7 +135,7 @@ export class LogService {
     async findLogsByUserId(
         userId: number,
         queryLogDto: QueryLogDto
-    ): Promise<{ data: Log[], count: number }> {
+    ): Promise<{ logs: Log[], additionalInformation: any }> {
         let query = await this.repository
             .createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
@@ -143,6 +151,13 @@ export class LogService {
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 16)
             .getManyAndCount();
-        return { data: result[0], count: result[1] };
+        return {
+            logs: result[0],
+            additionalInformation: {
+                count: result[1],
+                pageNumber: queryLogDto.pageNumber,
+                pageSize: queryLogDto.pageSize
+            }
+        };
     }
 }

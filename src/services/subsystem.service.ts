@@ -10,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubSystem } from '../entities/sub_system.entity';
+import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class SubSystemService {

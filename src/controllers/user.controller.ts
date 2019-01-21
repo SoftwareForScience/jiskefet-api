@@ -14,15 +14,15 @@ import { SubSystemPermissionService } from '../services/subsystem_permission.ser
 import { BCryptService } from '../services/bcrypt.service';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
-import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Log } from '../entities/log.entity';
 import { LogService } from '../services/log.service';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItems, createResponseItem } from '../helpers/response.helper';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -44,8 +44,9 @@ export class UserController {
      * @param userId number
      */
     @Get(':id')
-    async findById(@Param('id') userId: number): Promise<User> {
-        return await this.userService.findUserById(userId);
+    async findById(@Param('id') userId: number): Promise<ResponseObject> {
+        const findUserById = await this.userService.findUserById(userId);
+        return createResponseItem(findUserById);
     }
 
     /**
@@ -53,8 +54,9 @@ export class UserController {
      * @param userId number
      */
     @Get(':id/tokens')
-    async findTokensByExternalUserId(@Param('id') userId: number): Promise<SubSystemPermission[]> {
-        return await this.subSystemPermissionService.findTokensByExternalserId(userId);
+    async findTokensByExternalUserId(@Param('id') userId: number): Promise<ResponseObject> {
+        const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
+        return createResponseItems(tokenByExternalId);
     }
 
     // Todo: make this a RESTful endpoint, e.g. POST ':id/tokens'
@@ -62,7 +64,7 @@ export class UserController {
      * Generates a token and links it to the subsystem with permissions.
      */
     @Post(':id/tokens/new')
-    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<any> {
+    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<ResponseObject> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
@@ -81,7 +83,7 @@ export class UserController {
             // creates a jwt and returns it
             request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
-            return request;
+            return createResponseItem(newSubSystem);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Token could not be created.';
@@ -97,7 +99,8 @@ export class UserController {
     @Get(':id/logs')
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
-    ): Promise<{ data: Log[], count: number }> {
-        return await this.logService.findLogsByUserId(userId, query);
+    ): Promise<ResponseObject> {
+        const logsByUserId = await this.logService.findLogsByUserId(userId, query);
+        return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);
     }
 }

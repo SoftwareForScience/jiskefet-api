@@ -11,12 +11,13 @@ import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
-import { Run } from '../entities/run.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem, createResponseItems } from '../helpers/response.helper';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
@@ -33,7 +34,7 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
-    async create(@Body() request: CreateRunDto): Promise<Run> {
+    async create(@Body() request: CreateRunDto): Promise<ResponseObject> {
         try {
             request.timeO2Start = new Date();
             request.timeTrgStart = new Date();
@@ -42,7 +43,8 @@ export class RunController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
             this.loggerService.logInfoLog(infoLog);
-            return await this.runService.create(request);
+            const run = await this.runService.create(request);
+            return createResponseItem(run);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'The run could not be created';
@@ -56,8 +58,9 @@ export class RunController {
      * @param query optional filters
      */
     @Get()
-    async findAll(@Query() query?: QueryRunDto): Promise<{runs: Run[], count: number}> {
-        return await this.runService.findAll(query);
+    async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject> {
+        const getRuns = await this.runService.findAll(query);
+        return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
     }
 
     /**
@@ -65,8 +68,9 @@ export class RunController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id')
-    async findById(@Param('id') id: number): Promise<Run> {
-        return await this.runService.findById(id);
+    async findById(@Param('id') id: number): Promise<ResponseObject> {
+        const runById = await this.runService.findById(id);
+        return createResponseItem(runById);
     }
 
     /**
