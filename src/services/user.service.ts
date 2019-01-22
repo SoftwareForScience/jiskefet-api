@@ -12,7 +12,6 @@ import { plainToClass } from 'class-transformer';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create.user.dto';
 import { Injectable } from '@nestjs/common';
-import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class UserService {

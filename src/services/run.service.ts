@@ -17,7 +17,6 @@ import { Log } from '../entities/log.entity';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
-import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class RunService {

@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Attachment } from '../entities/attachment.entity';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
-import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class AttachmentService {

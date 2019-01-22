@@ -12,7 +12,6 @@ import { Repository } from 'typeorm';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { plainToClass } from 'class-transformer';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
-import { ResponseObject } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class SubSystemPermissionService {

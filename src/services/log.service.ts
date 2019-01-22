@@ -17,8 +17,6 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
-import { ResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem } from '../helpers/response.helper';
 
 @Injectable()
 export class LogService {
