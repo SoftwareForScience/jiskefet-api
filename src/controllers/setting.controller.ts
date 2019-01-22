@@ -9,7 +9,8 @@
 import { Get, Controller } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { SettingService } from '../services/setting.service';
-import { Setting } from '../interfaces/setting.interface';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem } from '../helpers/response.helper';
 
 @ApiUseTags('setting')
 @Controller()
@@ -20,7 +21,8 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
-    async getSettings(): Promise<{ data: Setting}> {
-        return await this.settingService.getSettings();
+    async getSettings(): Promise<ResponseObject> {
+        const setting = await this.settingService.getSettings();
+        return createResponseItem(setting);
     }
 }

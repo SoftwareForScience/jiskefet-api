@@ -63,27 +63,27 @@ export class UserController {
     /**
      * Generates a token and links it to the subsystem with permissions.
      */
-    @Post(':id/tokens/new')
+    @Post(':id/tokens')
     async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<ResponseObject> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
         try {
             // save it to db
-            const newSubSystem: SubSystemPermission =
+            const newSubSystemPermission: SubSystemPermission =
                 await this.subSystemPermissionService.saveTokenForSubSystemPermission(request);
 
             // add extra field to the jwt token to identify that a machine is making the request
             const jwtPayload: JwtPayload = {
                 ['token']: uniqueId,
                 ['is_subsystem']: 'true',
-                ['permission_id']: newSubSystem.subSystemPermissionId.toString()
+                ['permission_id']: newSubSystemPermission.subSystemPermissionId.toString()
             };
 
             // creates a jwt and returns it
             request.subSystemHash = await this.authService.signSubSystem(jwtPayload);
 
-            return createResponseItem(newSubSystem);
+            return createResponseItem(request);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Token could not be created.';

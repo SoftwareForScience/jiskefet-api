@@ -114,7 +114,7 @@ export class AuthController {
             }
             const userProfile = await this.authService.getProfileInfo(jwt);
             const user = await this.userService.findUserByExternalId(userProfile.id);
-            return createResponseItem(userProfile, undefined, user);
+            return createResponseItem({ userData: user, profileData: userProfile });
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
