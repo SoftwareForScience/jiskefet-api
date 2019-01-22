@@ -7,6 +7,7 @@
  */
 
 import { ResponseObject, Meta } from '../interfaces/response_object.interface';
+import { HttpException } from '@nestjs/common';
 
 export const createResponseItem = (item: any, meta?: Meta, additionalData?: any): ResponseObject => {
     return {
@@ -26,6 +27,18 @@ export const createResponseItems = (items: any[], meta?: Meta, additionalData?: 
         data: {
             items,
             ...additionalData
+        },
+    };
+};
+
+export const createErrorResponse = (httpError: HttpException, meta?: Meta): ResponseObject => {
+    return {
+        apiVersion: '0.1.0',
+        meta,
+        error: {
+            errorCode: httpError.getStatus(),
+            codeMessage: httpError.name,
+            customMessage: httpError.message
         },
     };
 };
