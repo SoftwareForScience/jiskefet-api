@@ -16,8 +16,9 @@ import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
-import { ResponseObject } from '../interfaces/response_object.interface';
+import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems } from '../helpers/response.helper';
+import { Run } from '../entities/run.entity';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
@@ -34,7 +35,7 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
-    async create(@Body() request: CreateRunDto): Promise<ResponseObject> {
+    async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
             request.timeO2Start = new Date();
             request.timeTrgStart = new Date();
@@ -58,7 +59,7 @@ export class RunController {
      * @param query optional filters
      */
     @Get()
-    async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject> {
+    async findAll(@Query() query?: QueryRunDto): Promise<CollectionResponseObject<Run>> {
         const getRuns = await this.runService.findAll(query);
         return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
     }
@@ -68,7 +69,7 @@ export class RunController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id')
-    async findById(@Param('id') id: number): Promise<ResponseObject> {
+    async findById(@Param('id') id: number): Promise<ResponseObject<Run>> {
         const runById = await this.runService.findById(id);
         return createResponseItem(runById);
     }

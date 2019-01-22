@@ -14,7 +14,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { createResponseItem, createResponseItems } from '../helpers/response.helper';
-import { ResponseObject } from '../interfaces/response_object.interface';
+import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
+import { Attachment } from '../entities/attachment.entity';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -33,7 +34,7 @@ export class AttachmentController {
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject> {
+    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
         try {
             const attachment = await this.attachmentservice.create(createAttachmentDto);
             return createResponseItem(attachment);
@@ -49,7 +50,7 @@ export class AttachmentController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id/logs')
-    async findById(@Param('id') logId: number): Promise<ResponseObject> {
+    async findById(@Param('id') logId: number): Promise<CollectionResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);
 
         // returns the fileData as base64 string, this should be done in mysql query for faster results

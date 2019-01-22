@@ -17,6 +17,7 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { AdditionalOptions } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class LogService {
@@ -56,7 +57,7 @@ export class LogService {
     /**
      * Returns all Logs from the db.
      */
-    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], additionalInformation: any }> {
+    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository.createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
@@ -140,7 +141,7 @@ export class LogService {
     async findLogsByUserId(
         userId: number,
         queryLogDto: QueryLogDto
-    ): Promise<{ logs: Log[], additionalInformation: any }> {
+    ): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository
             .createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')

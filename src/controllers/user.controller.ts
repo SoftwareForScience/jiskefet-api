@@ -21,8 +21,11 @@ import { QueryLogDto } from '../dtos/query.log.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
-import { ResponseObject } from '../interfaces/response_object.interface';
+import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createResponseItem } from '../helpers/response.helper';
+import { User } from '../entities/user.entity';
+import { Collection } from 'typeorm';
+import { Log } from '../entities/log.entity';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -44,7 +47,7 @@ export class UserController {
      * @param userId number
      */
     @Get(':id')
-    async findById(@Param('id') userId: number): Promise<ResponseObject> {
+    async findById(@Param('id') userId: number): Promise<ResponseObject<User>> {
         const findUserById = await this.userService.findUserById(userId);
         return createResponseItem(findUserById);
     }
@@ -54,17 +57,18 @@ export class UserController {
      * @param userId number
      */
     @Get(':id/tokens')
-    async findTokensByExternalUserId(@Param('id') userId: number): Promise<ResponseObject> {
+    async findTokensByExternalUserId(@Param('id') userId: number):
+        Promise<CollectionResponseObject<SubSystemPermission>> {
         const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
         return createResponseItems(tokenByExternalId);
     }
 
-    // Todo: make this a RESTful endpoint, e.g. POST ':id/tokens'
     /**
      * Generates a token and links it to the subsystem with permissions.
      */
     @Post(':id/tokens')
-    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto): Promise<ResponseObject> {
+    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto):
+        Promise<ResponseObject<CreateSubSystemPermissionDto>> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
@@ -89,7 +93,6 @@ export class UserController {
             infoLog.message = 'Token could not be created.';
             this.loggerService.logWarnInfoLog(infoLog);
         }
-
     }
 
     /**
@@ -99,7 +102,7 @@ export class UserController {
     @Get(':id/logs')
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
-    ): Promise<ResponseObject> {
+    ): Promise<CollectionResponseObject<Log>> {
         const logsByUserId = await this.logService.findLogsByUserId(userId, query);
         return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);
     }

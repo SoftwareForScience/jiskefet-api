@@ -17,6 +17,7 @@ import { Log } from '../entities/log.entity';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { AdditionalOptions } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class RunService {
@@ -45,7 +46,7 @@ export class RunService {
      * Returns runs from the db, filtered by the optional query.
      * @param query QueryRunDto
      */
-    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: any }> {
+    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository.createQueryBuilder()
             .where('run_type like :runType', {
                 runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'

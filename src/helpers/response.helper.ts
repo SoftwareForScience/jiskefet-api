@@ -6,26 +6,31 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ResponseObject, Meta } from '../interfaces/response_object.interface';
+import {
+    ResponseObject,
+    Meta,
+    CollectionResponseObject,
+} from '../interfaces/response_object.interface';
 
-export const createResponseItem = (item: any, meta?: Meta, additionalData?: any): ResponseObject => {
+export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): ResponseObject<T> => {
     return {
         apiVersion: '0.1.0',
         meta,
         data: {
-            item,
-            ...additionalData
+            ...additionalData,
+            item
         },
     };
 };
 
-export const createResponseItems = (items: any[], meta?: Meta, additionalData?: any): ResponseObject => {
+export const createResponseItems = <T>(
+    items: any[], meta?: Meta, additionalData?: any): CollectionResponseObject<T> => {
     return {
         apiVersion: '0.1.0',
         meta,
         data: {
-            items,
-            ...additionalData
+            ...additionalData,
+            items
         },
     };
 };

@@ -7,15 +7,33 @@
  */
 
  /**
-  * Interface to standardize the response of a API object
+  * Interface to standardize the response of a API object containing a single item
   */
-export interface ResponseObject {
+export interface ResponseObject<T> {
     apiVersion: string;
     meta?: Meta;
     data?: {
         [key: string]: any;
-        items?: any[];
-        item?: any;
+        item: T;
+    };
+
+    error?: {
+        errorCode: number; // 404
+        codeMessage: string; // Not found
+        customMessage?: string; // custom message 'Hello , world not found!'
+        [key: string]: any;
+    };
+}
+
+ /**
+  * Interface to standardize the response of a API object containing a collection of items
+  */
+export interface CollectionResponseObject<T> {
+    apiVersion: string;
+    meta?: Meta;
+    data?: {
+        [key: string]: any;
+        items: T[];
     };
 
     error?: {
@@ -28,4 +46,12 @@ export interface ResponseObject {
 
 export interface Meta {
     [key: string]: string;
+}
+
+export interface AdditionalOptions {
+    itemsPerPage?: number;
+    totalItems?: number;
+    pageIndex?: number | string;
+    totalPages?: number | string;
+    [key: string]: number | string;
 }
