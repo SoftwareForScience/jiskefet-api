@@ -53,7 +53,7 @@ export class CreateLogDto {
     attachments?: Attachment[];
 
     @ApiModelProperty({
-        example: '8',
+        example: [1],
         description: 'Attached run numbers of this log',
     })
     runs: number[];

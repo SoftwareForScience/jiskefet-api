@@ -36,14 +36,21 @@ export class LogService {
      * @param createLogDto class that carries the request body for a Log.
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
-        const LogEntity = plainToClass(Log, createLogDto);
-        LogEntity.creationTime = new Date();
-        if (LogEntity.attachments) {
-            for (const attachment of LogEntity.attachments) {
-                attachment.creationTime = LogEntity.creationTime;
+        const logEntity = plainToClass(Log, createLogDto);
+        logEntity.creationTime = new Date();
+        logEntity.runs = [];
+        if (logEntity.attachments) {
+            for (const attachment of logEntity.attachments) {
+                attachment.creationTime = logEntity.creationTime;
             }
         }
-        return await this.repository.save(LogEntity);
+        if (createLogDto.runs) {
+            for (const runNumber of createLogDto.runs) {
+                const run = await this.runRepository.findOne(runNumber);
+                await logEntity.runs.push(run);
+            }
+        }
+        return await this.repository.save(logEntity);
     }
 
     /**
