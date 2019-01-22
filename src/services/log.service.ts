@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
@@ -48,6 +48,9 @@ export class LogService {
         if (createLogDto.runs) {
             for (const runNumber of createLogDto.runs) {
                 const run = await this.runRepository.findOne(runNumber);
+                if (!run) {
+                    throw new HttpException(`Run with run number ${runNumber} does not exist.`, 404);
+                }
                 await logEntity.runs.push(run);
             }
         }

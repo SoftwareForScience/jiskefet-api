@@ -38,7 +38,7 @@ export interface CollectionResponseObject<T> {
 
     error?: {
         errorCode: number; // 404
-        codeMessage: string; // Not found
+        codeMessage: string ; // Not found
         customMessage?: string; // custom message 'Hello , world not found!'
         [key: string]: any;
     };

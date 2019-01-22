@@ -16,7 +16,7 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem, createResponseItems } from '../helpers/response.helper';
+import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Log } from '../entities/log.entity';
 
 @ApiUseTags('logs')
@@ -44,6 +44,7 @@ export class LogController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
             this.loggerService.logWarnInfoLog(infoLog);
+            return createErrorResponse(error);
         }
     }
 
