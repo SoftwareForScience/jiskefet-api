@@ -17,6 +17,7 @@ import { Log } from '../entities/log.entity';
 import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { AdditionalOptions } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class RunService {
@@ -38,15 +39,14 @@ export class RunService {
      */
     async create(createRunDto: CreateRunDto): Promise<Run> {
         const RunEntity = plainToClass(Run, createRunDto);
-        await this.repository.save(RunEntity);
-        return RunEntity;
+        return await this.repository.save(RunEntity);
     }
 
     /**
      * Returns runs from the db, filtered by the optional query.
      * @param query QueryRunDto
      */
-    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], count: number }> {
+    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository.createQueryBuilder()
             .where('run_type like :runType', {
                 runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'
@@ -126,8 +126,14 @@ export class RunService {
             .skip((+queryRunDto.pageNumber - 1 || 0) * +queryRunDto.pageSize || 0)
             .take(+queryRunDto.pageSize || 25)
             .getManyAndCount();
-
-        return { runs: result[0], count: result[1] };
+        return {
+            runs: result[0],
+            additionalInformation: {
+                count: result[1],
+                pageNumber: queryRunDto.pageNumber,
+                pageSize: queryRunDto.pageSize
+            }
+        };
     }
 
     /**

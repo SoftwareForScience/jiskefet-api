@@ -1,0 +1,15 @@
+config:
+  target: 'http://jiskefet.westeurope.cloudapp.azure.com/api'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - flow:
+    - get:
+        url: "/logs"
+    - get:
+        url: "/runs"
+    - get:
+        url: "/runs/1"
+    - get:
+        url: "/logs/1"

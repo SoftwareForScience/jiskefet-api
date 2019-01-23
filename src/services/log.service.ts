@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
@@ -17,6 +17,7 @@ import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
+import { AdditionalOptions } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class LogService {
@@ -36,21 +37,30 @@ export class LogService {
      * @param createLogDto class that carries the request body for a Log.
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
-        const LogEntity = plainToClass(Log, createLogDto);
-        LogEntity.creationTime = new Date();
-        if (LogEntity.attachments) {
-            for (const attachment of LogEntity.attachments) {
-                attachment.creationTime = LogEntity.creationTime;
+        const logEntity = plainToClass(Log, createLogDto);
+        logEntity.creationTime = new Date();
+        logEntity.runs = [];
+        if (logEntity.attachments) {
+            for (const attachment of logEntity.attachments) {
+                attachment.creationTime = logEntity.creationTime;
             }
         }
-        await this.repository.save(LogEntity);
-        return LogEntity;
+        if (createLogDto.runs) {
+            for (const runNumber of createLogDto.runs) {
+                const run = await this.runRepository.findOne(runNumber);
+                if (!run) {
+                    throw new HttpException(`Run with run number ${runNumber} does not exist.`, 404);
+                }
+                await logEntity.runs.push(run);
+            }
+        }
+        return await this.repository.save(logEntity);
     }
 
     /**
      * Returns all Logs from the db.
      */
-    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], count: number }> {
+    async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository.createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
@@ -91,7 +101,14 @@ export class LogService {
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 25)
             .getManyAndCount();
-        return { logs: result[0], count: result[1] };
+        return {
+            logs: result[0],
+            additionalInformation: {
+                count: result[1],
+                pageNumber: queryLogDto.pageNumber,
+                pageSize: queryLogDto.pageSize
+            }
+        };
     }
 
     /**
@@ -127,7 +144,7 @@ export class LogService {
     async findLogsByUserId(
         userId: number,
         queryLogDto: QueryLogDto
-    ): Promise<{ data: Log[], count: number }> {
+    ): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
         let query = await this.repository
             .createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
@@ -143,6 +160,13 @@ export class LogService {
             .skip((+queryLogDto.pageNumber - 1 || 0) * +queryLogDto.pageSize || 0)
             .take(+queryLogDto.pageSize || 16)
             .getManyAndCount();
-        return { data: result[0], count: result[1] };
+        return {
+            logs: result[0],
+            additionalInformation: {
+                count: result[1],
+                pageNumber: queryLogDto.pageNumber,
+                pageSize: queryLogDto.pageSize
+            }
+        };
     }
 }

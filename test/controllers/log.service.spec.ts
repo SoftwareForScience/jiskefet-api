@@ -1,73 +1,90 @@
-// import { LogService } from '../../src/services/log.service';
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { CreateLogDto } from '../../src/dtos/create.log.dto';
-// import * as chai from 'chai';
-// import { Repository } from 'typeorm';
-// import { getRepositoryToken } from '@nestjs/typeorm';
-// import { Log } from '../../src/entities/log.entity';
-// import sinon from 'sinon';
-// import { create } from 'domain';
+/*
+ * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
+ *
+ * This software is distributed under the terms of the
+ * GNU General Public Licence version 3 (GPL) version 3,
+ * copied verbatim in the file "LICENSE"
+ */
 
-// // This repo is not reached for some reason, and it uses create in the real repo.
-// const mockRepository = {
-//     create(log: Log) {
-//         return log;
-//     },
-//     save() {
-//         return 'hi';
-//     }
-// };
+import { LogService } from '../../src/services/log.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { CreateLogDto } from '../../src/dtos/create.log.dto';
+import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
+import { LogRepository, logArray } from '../mocks/log.repository';
+import { Log } from '../../src/entities/log.entity';
+import { runArray, RunRepository } from '../mocks/run.repository';
 
-// describe('LogService', () => {
-//     let logService: LogService;
+describe('LogService', () => {
+    let logService: LogService;
 
-//     beforeEach(async () => {
-//         const module: TestingModule = await Test.createTestingModule({
-//             providers: [
-//                 LogService,
-//                 {
-//                     provide: 'LogRepository',
-//                     useClass: Repository,
-//                 }
-//             ],
-//         })
-//             .overrideProvider(getRepositoryToken(Log))
-//             .useValue(mockRepository)
-//             .compile();
+    let runRepository: RunRepository;
+    let logRepository: LogRepository;
 
-//         logService = module.get<LogService>(LogService);
-//     });
+    const logDto: CreateLogDto = {
+        title: 'title',
+        text: 'text',
+        subtype: 'run',
+        origin: 'human',
+        user: 1,
+        runs: null
+    };
 
-//     describe('create()', () => {
-//         let log: CreateLogDto;
-//         let createLog: any;
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                LogService, LogRepository, RunRepository
+            ],
+        })
+        .overrideProvider(LogService)
+        .useClass(LogRepository)
+        .compile();
 
-//         beforeEach(() => {
-//             log = new CreateLogDto();
-//             log.title = 'title';
-//             log.text = 'text';
-//             log.subtype = 'run';
-//             log.origin = 'human';
-//             log.creationTime = new Date('2018-10-29T18:13:24.789Z');
+        logService = await module.get<LogService>(LogService);
+        logRepository = await module.get<LogRepository>(LogRepository);
+        logRepository.onModuleInit();
+        runRepository = await module.get<RunRepository>(RunRepository);
+        runRepository.onModuleInit();
+    });
 
-//             createLog = sinon.stub(new LogService(new Repository()), 'create' as any);
-//         });
+    describe('post()', () => {
 
-//         afterEach(() => {
-//             createLog.restore();
-//         });
+        it('should be defined', async () => {
+            expect(logService).toBeDefined();
+        });
 
-//         it('should return a Log', () => {
-//             createLog(log).yields(log);
-//         });
+        it('should create one log and return it', async () => {
+            const result = await logService.create(logDto);
+            expect(result).toBeInstanceOf(Log);
+        });
 
-//     });
+        it('should link a run to a log', async () => {
+            const logId = logArray[0].logId;
+            const runId: LinkRunToLogDto = {
+                runNumber: 1,
+            };
 
-//     // describe('findAll()', () => {
+            // mock linked run to log
+            const log = logArray[0];
+            log.runs = [...log.runs, runArray[0]];
+            expect(await logService.linkRunToLog(logId, runId)).toEqual(log);
+        });
+    });
 
-//     //     it('should return a Log', () => {
-//     //         return chai.expect(logService.create(log)).to.not.be.null;
-//     //     });
+    describe('get()', () => {
+        it('should return one log', async () => {
+            const log = logArray[0];
+            expect(await logService.findLogById(1)).toEqual(log);
+        });
 
-//     // });
-// });
+        it('should return an array of logs', async () => {
+            const logs = logArray;
+            expect(await logService.findAll(null)).toEqual({ logs, count: logs.length});
+        });
+
+        it('should return the logs from the given user', async () => {
+            const logsFromUser = logArray.filter(result => result.user.userId === 1);
+            expect(await logService.findLogsByUserId(1, null))
+                .toEqual({data: logsFromUser, count: logsFromUser.length});
+        });
+    });
+});

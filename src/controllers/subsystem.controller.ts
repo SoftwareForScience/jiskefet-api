@@ -8,9 +8,11 @@
 
 import { Get, Controller, Param, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
-import { SubSystemService } from '../services/susbsystem.service';
-import { SubSystem } from '../entities/sub_system.entity';
+import { SubSystemService } from '../services/subsystem.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItems, createResponseItem } from '../helpers/response.helper';
+import { SubSystem } from '../entities/sub_system.entity';
 
 @ApiUseTags('subsystems')
 @ApiBearerAuth()
@@ -24,8 +26,9 @@ export class SubSystemController {
      * Get all subsystem
      */
     @Get()
-    async findAll(): Promise<SubSystem[]> {
-        return await this.subSystemService.findAll();
+    async findAll(): Promise<CollectionResponseObject<SubSystem>> {
+        const getSubsystems = await this.subSystemService.findAll();
+        return createResponseItems(getSubsystems);
     }
 
     /**
@@ -33,7 +36,8 @@ export class SubSystemController {
      * @param subSystemId number
      */
     @Get(':id')
-    async findById(@Param('id') subSystemId: number): Promise<SubSystem> {
-        return await this.subSystemService.findSubSystemById(subSystemId);
+    async findById(@Param('id') subSystemId: number): Promise<ResponseObject<SubSystem>> {
+        const getSubsystemById = await this.subSystemService.findSubSystemById(subSystemId);
+        return createResponseItem(getSubsystemById);
     }
 }

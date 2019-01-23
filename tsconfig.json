@@ -11,10 +11,11 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "resolveJsonModule": true
   },
   "include": [
-    "src/**/*", "ormconfig.ts", "ormconfig.js"
+    "src/**/*", "ormconfig.ts", "ormconfig.js", "test/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -9,7 +9,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubSystem } from '../entities/sub_system.entity';
-import { SubSystemService } from '../services/susbsystem.service';
+import { SubSystemService } from '../services/subsystem.service';
 import { SubSystemController } from '../controllers/subsystem.controller';
 
 @Module({

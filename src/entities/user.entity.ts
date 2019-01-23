@@ -58,4 +58,8 @@ export class User {
 
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.user)
     detectorQualityHistories: DetectorQualityHistory[];
+
+    constructor(data: User | {} = {}) {
+        Object.assign(this, data);
+    }
 }
