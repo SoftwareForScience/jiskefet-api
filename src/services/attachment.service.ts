@@ -30,17 +30,16 @@ export class AttachmentService {
     async create(createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
         createAttachmentDto.creationTime = new Date();
         const AttachmentEntity = plainToClass(Attachment, createAttachmentDto);
-        await this.repository.save(AttachmentEntity);
-        return AttachmentEntity;
+        return await this.repository.save(AttachmentEntity);
     }
 
     /**
-     * Handler for getting a specific Run item from db.
-     * @param id unique identifier for a Run.
+     * Handler for getting attachments for a specific log.
+     * @param logId unique identifier for a Log
      */
-    async findAttachmentsByLogId(id: number): Promise<Attachment[]> {
+    async findAttachmentsByLogId(logId: number): Promise<Attachment[]> {
         return await this.repository.createQueryBuilder()
-            .where('fk_log_id = :id', { id })
+            .where('fk_log_id = :logId', { logId })
             .getMany()
             .then(res => Promise.resolve(res))
             .catch(err => Promise.reject(err));
