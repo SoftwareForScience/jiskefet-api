@@ -18,9 +18,9 @@ export interface ResponseObject<T> {
     };
 
     error?: {
-        errorCode: number; // 404
-        codeMessage: string; // Not found
-        customMessage?: string; // custom message 'Hello , world not found!'
+        statusCode: number; // 404
+        error: string; // Not found
+        message?: string; // custom message 'Hello , world not found!'
         [key: string]: any;
     };
 }
@@ -37,9 +37,9 @@ export interface CollectionResponseObject<T> {
     };
 
     error?: {
-        errorCode: number; // 404
-        codeMessage: string ; // Not found
-        customMessage?: string; // custom message 'Hello , world not found!'
+        statusCode: number; // 404
+        error: string ; // Not found
+        message?: string; // custom message 'Hello , world not found!'
         [key: string]: any;
     };
 }

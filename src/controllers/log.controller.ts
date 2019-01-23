@@ -39,7 +39,6 @@ export class LogController {
         try {
             const log = await this.logService.create(request);
             return createResponseItem(log);
-            // return createResponseItem(log);
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';

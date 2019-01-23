@@ -33,13 +33,16 @@ export const createResponseItems = <T>(
 };
 
 export const createErrorResponse = <T>(httpError: HttpException, meta?: Meta): ResponseObject<T> => {
-    return {
-        apiVersion: '0.1.0',
-        meta,
-        error: {
-            errorCode: httpError.getStatus(),
-            codeMessage: httpError.name,
-            customMessage: httpError.message
-        },
-    };
+    if (httpError instanceof HttpException) {
+        return {
+            apiVersion: '0.1.0',
+            meta,
+            error: {
+                statusCode: httpError.getStatus(),
+                error: httpError.name,
+                message: httpError.message,
+                stack: httpError.stack
+            },
+        };
+    }
 };
