@@ -15,17 +15,17 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { ResponseObject } from './interfaces/response_object.interface';
 
 /**
  * Check the .env against the array of variables.
  * if one of the variables is missing, the program will exit.
  */
+//#region
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
     let keys: string[] = [
         'PORT',
-        'USE_API_PREFIX',
+        'USE_API_BASE_PATH',
         'USE_CERN_SSO',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
@@ -97,6 +97,7 @@ function preCheck(): void {
         envUtil.checkEnv(keys, values);
     }
 }
+//#endregion
 
 preCheck();
 
@@ -114,12 +115,12 @@ async function bootstrap(): Promise<void> {
         .addTag('runs')
         .addBearerAuth();
 
-    if (process.env.USE_API_PREFIX === 'true') {
+    if (process.env.USE_API_BASE_PATH === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
-        options.setDescription('Running with /api prefix');
+        options.setDescription('Running with /api base path');
     } else {
-        options.setDescription('Running without /api prefix');
+        options.setDescription('Running without /api base path');
     }
 
     const document = SwaggerModule.createDocument(app, options.build());
