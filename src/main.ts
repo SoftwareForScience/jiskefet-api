@@ -15,6 +15,7 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
+import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER } from './constants';
 
 /**
  * Check the .env against the array of variables.
@@ -67,7 +68,7 @@ function preCheck(): void {
     // extra check if the AUTH_REDIRECT_URI contains callback
     envUtil.checkEnv(['AUTH_REDIRECT_URI'], ['endsWith: callback']);
 
-    if (process.env.USE_CERN_SSO === 'true') {
+    if (USE_CERN_SSO === 'true') {
         envUtil.checkEnv(['CERN_REGISTERED_URI'], [`regex:${Regex.IP_OR_URL_OR_LOCALHOST}`]);
     }
 
@@ -115,7 +116,7 @@ async function bootstrap(): Promise<void> {
         .addTag('runs')
         .addBearerAuth();
 
-    if (process.env.USE_API_BASE_PATH === 'true') {
+    if (USE_API_BASE_PATH === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
         options.setDescription('Running with /api base path');
@@ -126,7 +127,7 @@ async function bootstrap(): Promise<void> {
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
 
-    if (process.env.USE_INFO_LOGGER === 'true') {
+    if (USE_INFO_LOGGER === 'true') {
         app.useLogger(app.get(InfoLogService));
 
         // Periodically save InfoLogs that failed to be persisted to the db.
@@ -135,6 +136,6 @@ async function bootstrap(): Promise<void> {
         });
     }
 
-    await app.listen(process.env.PORT ? process.env.PORT : 3000);
+    await app.listen(PORT);
 }
 bootstrap();

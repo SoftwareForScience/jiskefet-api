@@ -7,23 +7,26 @@
  */
 import MissingEnvException from '../exceptions/MissingEnvException';
 import EnvValueDoesNotMatchException from '../exceptions/EnvValueDoesNotMatchException';
+import * as constants from '../constants';
 export class EnvironmentUtility {
     /**
-     * Check if process.env['key'] has been set.
-     * If values is provided, the function will also check if process.env['key'] matches the provided values.
-     * The provided values array must have the same size as the keys array
+     * Check if constants['key'] has been set.
+     * If values is provided, the function will also check if constants['key'] matches the provided values.
+     * The values array must have the same size as the keys array
      *
      * @param keys array of environment variables
-     * @param values array of values to match the env['key'] against,
+     * @param values array of values to match the constants['key'] against,
      * please start the string with either 'regex:', 'string:' or 'endsWith:'.
-     * If an index is left empty, the process.env['key']'s value won't be checked
+     * If an index is left empty, the constants['key']'s value won't be checked
      */
     public checkEnv(keys: string[], values?: string[]): void {
         const missing: string[] = [];
         const errorMsg: string[] = [];
 
         keys.forEach((key) => {
-            if (!process.env[key]) {
+            // TODO: enforce all the constants[key] type to be string
+            const value: string = String(constants[key]).trim();
+            if (value === '' || value === undefined) {
                 missing.push(key);
             }
         });
@@ -44,23 +47,20 @@ export class EnvironmentUtility {
                     case 'regex':
                         let regex: RegExp;
                         regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''));
-                        console.log(`checking ${process.env[keys[i]]} against ${regex}`);
-                        if (!regex.test(process.env[keys[i]])) {
+                        if (!regex.test(constants[keys[i]])) {
                             errorMsg.push(`${[keys[i]]} does not pass regex ${regex}.`);
                         }
                         break;
                     case 'string':
                         let possibleValues: string[];
                         possibleValues = values[i].replace('string:', '').replace(/\s/g, '').split(',');
-                        console.log(`checking ${process.env[keys[i]]} against ${possibleValues}`);
-                        if (possibleValues.indexOf(process.env[keys[i]]) === -1) {
+                        if (possibleValues.indexOf(constants[keys[i]]) === -1) {
                             errorMsg.push(`${[keys[i]]} does not match the possible string(s): ${possibleValues}.`);
                         }
                         break;
                     case 'endsWith':
                         const endingString: string = values[i].replace('endsWith:', '').replace(/\s/g, '');
-                        console.log(`checking ${process.env[keys[i]]} against ${endingString}`);
-                        if (!process.env[keys[i]].endsWith(endingString)) {
+                        if (!constants[keys[i]].endsWith(endingString)) {
                             errorMsg.push(`${[keys[i]]} does not end with ${endingString}.`);
                         }
                         break;

@@ -16,6 +16,7 @@ import { TimeUtility } from '../utility/time.utility';
 import * as fs from 'fs';
 import * as rimraf from 'rimraf';
 import CouldNotSaveInfoLogFilesException from '../exceptions/CouldNotSaveInfoLogFilesException';
+import { USE_INFO_LOGGER } from '../constants';
 
 @Injectable()
 export class InfoLogService extends Logger {
@@ -83,7 +84,7 @@ export class InfoLogService extends Logger {
             const fileContent = fs.readFileSync(`${this.INFO_LOG_DIR_PATH}/${file}`, 'utf-8');
             infoLogs.push(JSON.parse(fileContent));
         });
-        if (process.env.USE_INFO_LOGGER === 'true') {
+        if (USE_INFO_LOGGER === 'true') {
             this.infoLogRepository.save(infoLogs).then(() => {
                 const infoLog = new CreateInfologDto();
                 // tslint:disable-next-line:no-trailing-whitespace
@@ -102,7 +103,7 @@ export class InfoLogService extends Logger {
      * @param infoLogEntity
      */
     private async persist(infoLogEntity: InfoLog): Promise<void> {
-        if (process.env.USE_INFO_LOGGER === 'true') {
+        if (USE_INFO_LOGGER === 'true') {
             this.infoLogRepository.save(infoLogEntity).then().catch(() => {
                 fs.writeFile(
                     `${this.INFO_LOG_DIR_PATH}/${infoLogEntity.timestamp}.json`,

@@ -12,6 +12,7 @@ import { INestApplication } from '@nestjs/common';
 
 // Import dotenv so end-to-end tests can find the env variables.
 import * as dotenv from 'dotenv';
+import { JWT_SECRET_KEY } from '../constants';
 dotenv.config();
 
 /**
@@ -23,7 +24,7 @@ dotenv.config();
  */
 export const getJwt = async (app: INestApplication): Promise<string> => {
     const bcryptService = new BCryptService();
-    const hashedSecret = await bcryptService.hashToken(process.env.JWT_SECRET_KEY);
+    const hashedSecret = await bcryptService.hashToken(JWT_SECRET_KEY);
     const response = await request(app.getHttpServer())
         .get(`/test-token?hashedSecret=${hashedSecret}`);
     const jwt = response.body;

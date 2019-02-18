@@ -17,14 +17,14 @@ import { GithubAuthService } from '../services/github.auth.service';
 import { CernAuthService } from '../services/cern.auth.service';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import { AuthController } from '../controllers/auth.controller';
-
+import { USE_CERN_SSO, JWT_SECRET_KEY, JWT_EXPIRE_TIME } from '../constants';
 // Import dotenv so end-to-end tests can find the env variables.
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 const authServiceProvider = {
     provide: AuthService,
-    useClass: process.env.USE_CERN_SSO === 'true'
+    useClass: USE_CERN_SSO === 'true'
         ? CernAuthService
         : GithubAuthService,
 };
@@ -33,9 +33,9 @@ const authServiceProvider = {
     imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
-            secretOrPrivateKey: process.env.JWT_SECRET_KEY,
+            secretOrPrivateKey: JWT_SECRET_KEY,
             signOptions: {
-                expiresIn: process.env.JWT_EXPIRE_TIME,
+                expiresIn: JWT_EXPIRE_TIME,
             },
         }),
     ],
