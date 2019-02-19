@@ -8,6 +8,7 @@
 import MissingEnvException from '../exceptions/MissingEnvException';
 import EnvValueDoesNotMatchException from '../exceptions/EnvValueDoesNotMatchException';
 import * as constants from '../constants';
+import { Regex } from '../enums/env.enum';
 export class EnvironmentUtility {
     /**
      * Check if constants['key'] has been set.
@@ -45,10 +46,22 @@ export class EnvironmentUtility {
 
                 switch (startingKey) {
                     case 'regex':
-                        let regex: RegExp;
-                        regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''));
+                        const regex = new RegExp(values[i].replace('regex:', '').replace(/\s/g, ''));
                         if (!regex.test(constants[keys[i]])) {
-                            errorMsg.push(`${[keys[i]]} does not pass regex ${regex}.`);
+                            switch (regex.source) {
+                                case RegExp(Regex.IP_OR_URL_OR_LOCALHOST).source:
+                                    errorMsg.push(`${[keys[i]]} is not a valid URL, IP- or localhost address.`);
+                                    break;
+                                case RegExp(Regex.PORT_NUMBER).source:
+                                    errorMsg.push(`${[keys[i]]} must be a port number between 1 - 65535`);
+                                    break;
+                                case RegExp(Regex.BOOLEAN).source:
+                                    errorMsg.push(`${[keys[i]]} is not a boolean value,
+                                    expected value : true or false`);
+                                    break;
+                                default:
+                                    errorMsg.push(`${[keys[i]]} does not pass regex ${regex}.`);
+                            }
                         }
                         break;
                     case 'string':
