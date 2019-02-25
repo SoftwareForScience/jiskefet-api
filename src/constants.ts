@@ -46,7 +46,8 @@ export let TEST_DB_CONNECTION = process.env.TEST_DB_CONNECTION ? process.env.TES
 export const TEST_DB_HOST = process.env.TEST_DB_HOST;
 export const TEST_DB_USERNAME = process.env.TEST_DB_USERNAME;
 export const TEST_DB_PASSWORD = process.env.TEST_DB_PASSWORD;
-export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE;
+export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE ?
+    process.env.TEST_DB_DATABASE : 'test_' + TYPEORM_DATABASE;
 export let TEST_DB_PORT = process.env.TEST_DB_PORT ? process.env.TEST_DB_PORT : 3306;
 export let TEST_DB_SYNCHRONIZE = process.env.TEST_DB_SYNCHRONIZE ? process.env.TEST_DB_SYNCHRONIZE : 'true';
 export let TEST_DB_LOGGING = process.env.TEST_DB_LOGGING ? process.env.TEST_DB_LOGGING : 'true';

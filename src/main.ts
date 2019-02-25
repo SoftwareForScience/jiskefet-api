@@ -19,7 +19,7 @@ import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER } from './consta
 
 /**
  * Check the .env against the array of variables.
- * if one of the variables is missing, the program will exit.
+ * if one of the variables is missing or does not pass the check, the program will exit.
  */
 //#region
 function preCheck(): void {
