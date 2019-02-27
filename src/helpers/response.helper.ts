@@ -6,10 +6,10 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ResponseObject, Meta, CollectionResponseObject } from '../interfaces/response_object.interface';
+import { Meta, CollectionSuccessObject, SuccessObject, ErrorObject } from '../interfaces/response_object.interface';
 import { HttpException } from '@nestjs/common';
 
-export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): ResponseObject<T> => {
+export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): SuccessObject<T> => {
     return {
         apiVersion: '0.1.0',
         meta,
@@ -21,7 +21,7 @@ export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any
 };
 
 export const createResponseItems = <T>(
-    items: any[], meta?: Meta, additionalData?: any): CollectionResponseObject<T> => {
+    items: any[], meta?: Meta, additionalData?: any): CollectionSuccessObject<T> => {
     return {
         apiVersion: '0.1.0',
         meta,
@@ -32,7 +32,7 @@ export const createResponseItems = <T>(
     };
 };
 
-export const createErrorResponse = <T>(httpError: HttpException, meta?: Meta): ResponseObject<T> => {
+export const createErrorResponse = (httpError: HttpException, meta?: Meta): ErrorObject => {
     if (httpError instanceof HttpException) {
         return {
             apiVersion: '0.1.0',

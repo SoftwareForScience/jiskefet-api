@@ -15,7 +15,6 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { ResponseObject } from './interfaces/response_object.interface';
 
 /**
  * Check the .env against the array of variables.

@@ -21,7 +21,7 @@ import { QueryLogDto } from '../dtos/query.log.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
-import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
+import { SuccessObject, CollectionSuccessObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createResponseItem } from '../helpers/response.helper';
 import { User } from '../entities/user.entity';
 import { Collection } from 'typeorm';
@@ -47,7 +47,7 @@ export class UserController {
      * @param userId number
      */
     @Get(':id')
-    async findById(@Param('id') userId: number): Promise<ResponseObject<User>> {
+    async findById(@Param('id') userId: number): Promise<SuccessObject<User>> {
         const findUserById = await this.userService.findUserById(userId);
         return createResponseItem(findUserById);
     }
@@ -58,7 +58,7 @@ export class UserController {
      */
     @Get(':id/tokens')
     async findTokensByExternalUserId(@Param('id') userId: number):
-        Promise<CollectionResponseObject<SubSystemPermission>> {
+        Promise<CollectionSuccessObject<SubSystemPermission>> {
         const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
         return createResponseItems(tokenByExternalId);
     }
@@ -68,7 +68,7 @@ export class UserController {
      */
     @Post(':id/tokens')
     async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto):
-        Promise<ResponseObject<CreateSubSystemPermissionDto>> {
+        Promise<SuccessObject<CreateSubSystemPermissionDto>> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
 
@@ -102,7 +102,7 @@ export class UserController {
     @Get(':id/logs')
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
-    ): Promise<CollectionResponseObject<Log>> {
+    ): Promise<CollectionSuccessObject<Log>> {
         const logsByUserId = await this.logService.findLogsByUserId(userId, query);
         return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);
     }
