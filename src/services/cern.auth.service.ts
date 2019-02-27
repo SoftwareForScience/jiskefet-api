@@ -15,6 +15,7 @@ import { BCryptService } from './bcrypt.service';
 import { OptionsWithUrl } from 'request-promise';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import InvalidSettingException from '../exceptions/InvalidSettingException';
+import { CLIENT_ID, CLIENT_SECRET, CERN_REGISTERED_URI } from '../constants';
 
 /**
  * Handles authorization via CERN OAuth2.
@@ -32,15 +33,15 @@ export class CernAuthService extends AuthService {
     ) {
         super(userService, subSystemPermissionService, bcryptService, jwtService);
         // set oAuth credentials
-        this.oAuth2Config.client.id = process.env.CLIENT_ID;
-        this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
+        this.oAuth2Config.client.id = CLIENT_ID;
+        this.oAuth2Config.client.secret = CLIENT_SECRET;
 
-        if (process.env.CERN_REGISTERED_URI === undefined
-            || process.env.CERN_REGISTERED_URI === '') {
-            throw new InvalidSettingException('CERN_REGISTERED_URI must be filled in');
-        }
+        // if (CERN_REGISTERED_URI === undefined
+        //     || CERN_REGISTERED_URI === '') {
+        //     throw new InvalidSettingException('CERN_REGISTERED_URI must be filled in');
+        // }
 
-        this.cernRegisteredURI = process.env.CERN_REGISTERED_URI;
+        this.cernRegisteredURI = CERN_REGISTERED_URI;
 
         // set resource host
         this.oAuth2Config.auth.tokenHost = 'https://oauth.web.cern.ch/';
