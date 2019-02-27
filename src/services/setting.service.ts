@@ -8,25 +8,24 @@
 
 import { Injectable } from '@nestjs/common';
 import { Setting } from '../interfaces/setting.interface';
-import { USE_CERN_SSO, CLIENT_ID, AUTH_REDIRECT_URI } from '../constants';
 
 @Injectable()
 export class SettingService {
 
     async getSettings(): Promise<Setting> {
-        if (USE_CERN_SSO === 'true') {
+        if (process.env.USE_CERN_SSO === 'true') {
             return {
-                    ['USE_CERN_SSO']: USE_CERN_SSO,
+                    ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
                     ['AUTH_URL']:
                         `https://oauth.web.cern.ch/OAuth/Authorize?response_type=code`
-                        + `&client_id=${CLIENT_ID}&redirect_uri=${AUTH_REDIRECT_URI}`
+                        + `&client_id=${process.env.CLIENT_ID}&redirect_uri=${ process.env.AUTH_REDIRECT_URI}`
             };
         }
         return {
-                ['USE_CERN_SSO']: USE_CERN_SSO,
+                ['USE_CERN_SSO']: process.env.USE_CERN_SSO,
                 ['AUTH_URL']:
-                    `https://github.com/login/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&`
-                    + `redirect_uri=${AUTH_REDIRECT_URI}`
+                    `https://github.com/login/oauth/authorize?response_type=code&client_id=${process.env.CLIENT_ID}&`
+                    + `redirect_uri=${process.env.AUTH_REDIRECT_URI}`
         };
     }
 }

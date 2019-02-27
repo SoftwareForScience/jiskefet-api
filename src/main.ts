@@ -15,18 +15,17 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER } from './constants';
+import { ResponseObject } from './interfaces/response_object.interface';
 
 /**
  * Check the .env against the array of variables.
- * if one of the variables is missing or does not pass the check, the program will exit.
+ * if one of the variables is missing, the program will exit.
  */
-//#region
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
     let keys: string[] = [
         'PORT',
-        'USE_API_BASE_PATH',
+        'USE_API_PREFIX',
         'USE_CERN_SSO',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
@@ -68,7 +67,7 @@ function preCheck(): void {
     // extra check if the AUTH_REDIRECT_URI contains callback
     envUtil.checkEnv(['AUTH_REDIRECT_URI'], ['endsWith: callback']);
 
-    if (USE_CERN_SSO === 'true') {
+    if (process.env.USE_CERN_SSO === 'true') {
         envUtil.checkEnv(['CERN_REGISTERED_URI'], [`regex:${Regex.IP_OR_URL_OR_LOCALHOST}`]);
     }
 
@@ -98,7 +97,6 @@ function preCheck(): void {
         envUtil.checkEnv(keys, values);
     }
 }
-//#endregion
 
 preCheck();
 
@@ -116,18 +114,18 @@ async function bootstrap(): Promise<void> {
         .addTag('runs')
         .addBearerAuth();
 
-    if (USE_API_BASE_PATH === 'true') {
+    if (process.env.USE_API_PREFIX === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
-        options.setDescription('Running with /api base path');
+        options.setDescription('Running with /api prefix');
     } else {
-        options.setDescription('Running without /api base path');
+        options.setDescription('Running without /api prefix');
     }
 
     const document = SwaggerModule.createDocument(app, options.build());
     SwaggerModule.setup('doc', app, document);
 
-    if (USE_INFO_LOGGER === 'true') {
+    if (process.env.USE_INFO_LOGGER === 'true') {
         app.useLogger(app.get(InfoLogService));
 
         // Periodically save InfoLogs that failed to be persisted to the db.
@@ -136,6 +134,6 @@ async function bootstrap(): Promise<void> {
         });
     }
 
-    await app.listen(PORT);
+    await app.listen(process.env.PORT ? process.env.PORT : 3000);
 }
 bootstrap();

@@ -7,9 +7,8 @@
  */
 
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { USE_INFO_LOGGER } from '../constants';
 
-@Entity('messages', { database: 'INFOLOGGER', synchronize: USE_INFO_LOGGER === 'true' ? true : false })
+@Entity('messages', { database: 'INFOLOGGER', synchronize: process.env.USE_INFO_LOGGER === 'true' ? true : false })
 export class InfoLog {
     @Column({
         name: 'severity',
