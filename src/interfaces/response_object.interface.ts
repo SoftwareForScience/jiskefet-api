@@ -45,7 +45,14 @@ export interface CollectionResponseObject<T> {
 }
 
 export interface Meta {
-    [key: string]: string;
+    id: string;
+    name: string;
+    properties: Properties;
+}
+
+export interface Properties {
+    date: Date;
+    contentType: string;
 }
 
 export interface AdditionalOptions {
