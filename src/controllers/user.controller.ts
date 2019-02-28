@@ -22,9 +22,8 @@ import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import { SuccessObject, CollectionSuccessObject } from '../interfaces/response_object.interface';
-import { createResponseItems, createResponseItem } from '../helpers/response.helper';
+import { createResponseItems, createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { User } from '../entities/user.entity';
-import { Collection } from 'typeorm';
 import { Log } from '../entities/log.entity';
 
 @ApiUseTags('users')
@@ -48,8 +47,12 @@ export class UserController {
      */
     @Get(':id')
     async findById(@Param('id') userId: number): Promise<SuccessObject<User>> {
-        const findUserById = await this.userService.findUserById(userId);
-        return createResponseItem(findUserById);
+        try {
+            const findUserById = await this.userService.findUserById(userId);
+            return createResponseItem(findUserById);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -59,8 +62,12 @@ export class UserController {
     @Get(':id/tokens')
     async findTokensByExternalUserId(@Param('id') userId: number):
         Promise<CollectionSuccessObject<SubSystemPermission>> {
-        const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
-        return createResponseItems(tokenByExternalId);
+        try {
+            const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
+            return createResponseItems(tokenByExternalId);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -92,6 +99,7 @@ export class UserController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Token could not be created.';
             this.loggerService.logWarnInfoLog(infoLog);
+            return createErrorResponse(error);
         }
     }
 
@@ -103,7 +111,11 @@ export class UserController {
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
     ): Promise<CollectionSuccessObject<Log>> {
-        const logsByUserId = await this.logService.findLogsByUserId(userId, query);
-        return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);
+        try {
+            const logsByUserId = await this.logService.findLogsByUserId(userId, query);
+            return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

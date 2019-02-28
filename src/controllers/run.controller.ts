@@ -17,7 +17,7 @@ import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { SuccessObject, CollectionSuccessObject } from '../interfaces/response_object.interface';
-import { createResponseItem, createResponseItems } from '../helpers/response.helper';
+import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Run } from '../entities/run.entity';
 
 @ApiUseTags('runs')
@@ -50,6 +50,7 @@ export class RunController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'The run could not be created';
             this.loggerService.logErrorInfoLog(infoLog);
+            return createErrorResponse(error);
         }
     }
 
@@ -60,8 +61,12 @@ export class RunController {
      */
     @Get()
     async findAll(@Query() query?: QueryRunDto): Promise<CollectionSuccessObject<Run>> {
-        const getRuns = await this.runService.findAll(query);
-        return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
+        try {
+            const getRuns = await this.runService.findAll(query);
+            return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -70,8 +75,13 @@ export class RunController {
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<SuccessObject<Run>> {
-        const runById = await this.runService.findById(id);
-        return createResponseItem(runById);
+        try {
+            const runById = await this.runService.findById(id);
+            return createResponseItem(runById);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+
     }
 
     /**

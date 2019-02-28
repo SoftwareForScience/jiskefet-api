@@ -6,12 +6,20 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Meta, CollectionSuccessObject, SuccessObject, ErrorObject } from '../interfaces/response_object.interface';
+import {
+    Meta,
+    CollectionSuccessObject,
+    SuccessObject,
+    ErrorObject,
+    AdditionalErrorOptions
+} from '../interfaces/response_object.interface';
 import { HttpException } from '@nestjs/common';
+
+const version = '0.1.0';
 
 export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): SuccessObject<T> => {
     return {
-        apiVersion: '0.1.0',
+        apiVersion: version,
         meta,
         data: {
             ...additionalData,
@@ -23,7 +31,7 @@ export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any
 export const createResponseItems = <T>(
     items: any[], meta?: Meta, additionalData?: any): CollectionSuccessObject<T> => {
     return {
-        apiVersion: '0.1.0',
+        apiVersion: version,
         meta,
         data: {
             ...additionalData,
@@ -32,16 +40,17 @@ export const createResponseItems = <T>(
     };
 };
 
-export const createErrorResponse = (httpError: HttpException, meta?: Meta): ErrorObject => {
+export const createErrorResponse = (
+    httpError: HttpException, meta?: Meta, additionalErrorData?: AdditionalErrorOptions): ErrorObject => {
     if (httpError instanceof HttpException) {
         return {
-            apiVersion: '0.1.0',
+            apiVersion: version,
             meta,
             error: {
-                statusCode: httpError.getStatus(),
                 error: httpError.name,
+                code: httpError.getStatus(),
                 message: httpError.message,
-                stack: httpError.stack
+                ...additionalErrorData
             },
         };
     }

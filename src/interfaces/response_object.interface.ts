@@ -1,3 +1,5 @@
+import { InternalServerErrorException } from '@nestjs/common';
+
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
  *
@@ -15,14 +17,14 @@ export interface ResponseObject {
 }
 
 export interface SuccessObject<T> extends ResponseObject {
-    data: {
+    data?: {
         [key: string]: any;
         item: T;
     };
 }
 
 export interface CollectionSuccessObject<T> extends ResponseObject {
-    data: {
+    data?: {
         [key: string]: any;
         items: T[];
     };
@@ -30,10 +32,9 @@ export interface CollectionSuccessObject<T> extends ResponseObject {
 
 export interface ErrorObject extends ResponseObject {
     error: {
-        statusCode: number; // 404
-        error: string; // Not found
-        message?: string; // custom message 'Hello , world not found!'
-        [key: string]: any;
+        error: string;
+        code: number;
+        message: string;
     };
 }
 
@@ -47,4 +48,15 @@ export interface AdditionalOptions {
     pageIndex?: number | string;
     totalPages?: number | string;
     [key: string]: number | string;
+}
+
+export interface AdditionalErrorOptions {
+    target: string;
+    details: ErrorObject[];
+    innerError: InnerError;
+}
+
+export interface InnerError {
+    code: string;
+    innerError: InnerError;
 }

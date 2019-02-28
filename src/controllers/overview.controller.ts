@@ -13,7 +13,7 @@ import { GetOverviewDto } from '../dtos/get.overview.dto';
 import { QueryOverviewDto } from '../dtos/query.overview.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CollectionSuccessObject } from '../interfaces/response_object.interface';
-import { createResponseItems } from '../helpers/response.helper';
+import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
 
 @ApiUseTags('overview')
 @ApiBearerAuth()
@@ -29,7 +29,11 @@ export class OverviewController {
      */
     @Get()
     async find(@Query() query?: QueryOverviewDto): Promise<CollectionSuccessObject<GetOverviewDto>> {
-        const overview = await this.attachmentservice.find(query);
-        return createResponseItems(overview);
+        try {
+            const overview = await this.attachmentservice.find(query);
+            return createResponseItems(overview);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

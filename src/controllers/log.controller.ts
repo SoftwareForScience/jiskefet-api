@@ -44,7 +44,7 @@ export class LogController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
             this.loggerService.logWarnInfoLog(infoLog);
-            // return createErrorResponse(error);
+            return createErrorResponse(error);
         }
     }
 
@@ -53,8 +53,12 @@ export class LogController {
      */
     @Get()
     async findAll(@Query() query?: QueryLogDto): Promise<CollectionSuccessObject<Log>> {
-        const getLogs = await this.logService.findAll(query);
-        return createResponseItems(getLogs.logs, undefined, getLogs.additionalInformation);
+        try {
+            const getLogs = await this.logService.findAll(query);
+            return createResponseItems(getLogs.logs, undefined, getLogs.additionalInformation);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -63,8 +67,12 @@ export class LogController {
      */
     @Get(':id')
     async findById(@Param('id') id: number): Promise<SuccessObject<Log>> {
-        const logById = await this.logService.findLogById(id);
-        return createResponseItem(logById);
+        try {
+            const logById = await this.logService.findLogById(id);
+            return createResponseItem(logById);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -73,6 +81,6 @@ export class LogController {
      */
     @Patch(':id/runs')
     async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
-        return await this.logService.linkRunToLog(logId, request);
+            return await this.logService.linkRunToLog(logId, request);
     }
 }
