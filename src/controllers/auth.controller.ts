@@ -34,6 +34,7 @@ import { BCryptService } from '../services/bcrypt.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem } from '../helpers/response.helper';
 import { User } from '../entities/user.entity';
+import { JWT_SECRET_KEY } from '../constants';
 
 /**
  * Controller for authentication related endpoints.
@@ -142,7 +143,7 @@ export class AuthController {
         if (query.hashedSecret === undefined) {
             throw new BadRequestException('The required query parameter \'hashedSecret\' is missing.');
         }
-        const secretsMatch = await this.bcryptService.checkToken(process.env.JWT_SECRET_KEY, query.hashedSecret);
+        const secretsMatch = await this.bcryptService.checkToken(JWT_SECRET_KEY, query.hashedSecret);
         if (secretsMatch) {
             const jwt = await this.authService.sign({ string: 'testTokenString' });
             return createResponseItem(jwt);

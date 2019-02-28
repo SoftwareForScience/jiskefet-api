@@ -43,43 +43,61 @@ import { AuthService } from './abstracts/auth.service.abstract';
 import { SettingService } from './services/setting.service';
 import { SettingController } from './controllers/setting.controller';
 import { SettingModule } from './modules/setting.module';
+import {
+  TEST_DB_CONNECTION,
+  TEST_DB_HOST,
+  TEST_DB_PORT,
+  TEST_DB_USERNAME,
+  TEST_DB_PASSWORD,
+  TEST_DB_DATABASE,
+  TEST_DB_SYNCHRONIZE,
+  TYPEORM_CONNECTION,
+  TYPEORM_HOST,
+  TYPEORM_PORT,
+  TYPEORM_USERNAME,
+  TYPEORM_PASSWORD,
+  TYPEORM_DATABASE,
+  TYPEORM_LOGGING,
+  TYPEORM_SYNCHRONIZE,
+  USE_CERN_SSO
+} from './constants';
 
 let databaseOptions;
 // Use a different database for running tests.
 if (process.env.NODE_ENV === 'test') {
-    databaseOptions = {
-        type: process.env.TEST_DB_CONNECTION,
-        host: process.env.TEST_DB_HOST,
-        port: +process.env.TEST_DB_PORT,
-        username: process.env.TEST_DB_USERNAME,
-        password: process.env.TEST_DB_PASSWORD,
-        database: process.env.TEST_DB_DATABASE,
-        entities: ['src/**/**.entity{.ts,.js}'],
-        synchronize: process.env.TEST_DB_SYNCHRONIZE ? true : false,
-        migrations: ['populate/*{.ts,.js}'],
-        migrationsRun: true
-    };
+  databaseOptions = {
+    type: TEST_DB_CONNECTION,
+    host: TEST_DB_HOST,
+    port: +TEST_DB_PORT,
+    username: TEST_DB_USERNAME,
+    password: TEST_DB_PASSWORD,
+    database: TEST_DB_DATABASE,
+    entities: ['src/**/**.entity{.ts,.js}'],
+    synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
+    migrations: ['populate/*{.ts,.js}'],
+    migrationsRun: true
+  };
 } else {
-    databaseOptions = {
-      type: process.env.TYPEORM_CONNECTION,
-      host: process.env.TYPEORM_HOST,
-      port: process.env.TYPEORM_PORT,
-      username: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE,
-      entities: ['src/**/**.entity{.ts,.js}'],
-      logging: process.env.TYPEORM_LOGGING,
-      synchronize: process.env.TYPEORM_SYNCHRONIZE ? true : false,
-      migrations: ['src/migration/*{.ts,.js}']
-      // what to do with the cli variable from ormconfig.json
-    };
+  databaseOptions = {
+    type: TYPEORM_CONNECTION,
+    host: TYPEORM_HOST,
+    port: TYPEORM_PORT,
+    username: TYPEORM_USERNAME,
+    password: TYPEORM_PASSWORD,
+    database: TYPEORM_DATABASE,
+    entities: ['src/**/**.entity{.ts,.js}'],
+    logging: TYPEORM_LOGGING,
+    synchronize: TYPEORM_SYNCHRONIZE === 'true' ? true : false,
+    migrations: ['src/migration/*{.ts,.js}']
+    // what to do with the cli variable from ormconfig.json
+  };
 }
 
 const authServiceProvider = {
-    provide: AuthService,
-    useClass: process.env.USE_CERN_SSO === 'true'
-        ? CernAuthService
-        : GithubAuthService,
+  provide: AuthService,
+  useClass: USE_CERN_SSO === 'true'
+    ? CernAuthService
+    : GithubAuthService,
 };
 @Module({
   imports: [
