@@ -35,6 +35,8 @@ export interface ErrorObject extends ResponseObject {
         error: string;
         code: number;
         message: string;
+        details?: ErrorObject[];
+        innerError?: InnerError;
     };
 }
 
@@ -48,12 +50,6 @@ export interface AdditionalOptions {
     pageIndex?: number | string;
     totalPages?: number | string;
     [key: string]: number | string;
-}
-
-export interface AdditionalErrorOptions {
-    target: string;
-    details: ErrorObject[];
-    innerError: InnerError;
 }
 
 export interface InnerError {

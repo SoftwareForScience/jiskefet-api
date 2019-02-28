@@ -11,7 +11,7 @@ import {
     CollectionSuccessObject,
     SuccessObject,
     ErrorObject,
-    AdditionalErrorOptions
+    InnerError
 } from '../interfaces/response_object.interface';
 import { HttpException } from '@nestjs/common';
 
@@ -41,7 +41,7 @@ export const createResponseItems = <T>(
 };
 
 export const createErrorResponse = (
-    httpError: HttpException, meta?: Meta, additionalErrorData?: AdditionalErrorOptions): ErrorObject => {
+    httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: ErrorObject[]): ErrorObject => {
     if (httpError instanceof HttpException) {
         return {
             apiVersion: version,
@@ -50,7 +50,8 @@ export const createErrorResponse = (
                 error: httpError.name,
                 code: httpError.getStatus(),
                 message: httpError.message,
-                ...additionalErrorData
+                details,
+                innerError
             },
         };
     }
