@@ -9,7 +9,7 @@
 /**
  * Interface of information for every API response
  */
-export interface ResponseObject {
+export interface ResponseObject<T> {
     apiVersion: string;
     meta?: Meta;
 }
@@ -17,8 +17,8 @@ export interface ResponseObject {
 /**
  * Interface to standardize the response of a API object containing a single item
  */
-export interface SuccessObject<T> extends ResponseObject {
-    data?: {
+export interface SuccessObject<T> extends ResponseObject<T> {
+    data: {
         [key: string]: any;
         item: T;
     };
@@ -27,8 +27,8 @@ export interface SuccessObject<T> extends ResponseObject {
 /**
  * Interface to standardize the response of a API object containing multiple items
  */
-export interface CollectionSuccessObject<T> extends ResponseObject {
-    data?: {
+export interface CollectionSuccessObject<T> extends ResponseObject<T> {
+    data: {
         [key: string]: any;
         items: T[];
     };
@@ -37,12 +37,12 @@ export interface CollectionSuccessObject<T> extends ResponseObject {
 /**
  * Interface to standardize the error response of the API
  */
-export interface ErrorObject extends ResponseObject {
+export interface ErrorObject<T> extends ResponseObject<T> {
     error: {
         error: string;
         code: number;
         message: string;
-        details?: ErrorObject[];
+        details?: Array<ErrorObject<T>>;
         innerError?: InnerError;
     };
 }
