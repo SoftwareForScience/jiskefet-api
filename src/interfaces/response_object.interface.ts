@@ -1,5 +1,3 @@
-import { InternalServerErrorException } from '@nestjs/common';
-
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
  *
@@ -8,14 +6,17 @@ import { InternalServerErrorException } from '@nestjs/common';
  * copied verbatim in the file "LICENSE"
  */
 
- /**
-  * Interface to standardize the response of a API object containing a single item
-  */
+/**
+ * Interface of information for every API response
+ */
 export interface ResponseObject {
     apiVersion: string;
     meta?: Meta;
 }
 
+/**
+ * Interface to standardize the response of a API object containing a single item
+ */
 export interface SuccessObject<T> extends ResponseObject {
     data?: {
         [key: string]: any;
@@ -23,6 +24,9 @@ export interface SuccessObject<T> extends ResponseObject {
     };
 }
 
+/**
+ * Interface to standardize the response of a API object containing multiple items
+ */
 export interface CollectionSuccessObject<T> extends ResponseObject {
     data?: {
         [key: string]: any;
@@ -30,6 +34,9 @@ export interface CollectionSuccessObject<T> extends ResponseObject {
     };
 }
 
+/**
+ * Interface to standardize the error response of the API
+ */
 export interface ErrorObject extends ResponseObject {
     error: {
         error: string;
@@ -40,10 +47,16 @@ export interface ErrorObject extends ResponseObject {
     };
 }
 
+/**
+ * Interface for Meta object
+ */
 export interface Meta {
     [key: string]: string;
 }
 
+/**
+ * Interface for page options
+ */
 export interface AdditionalOptions {
     itemsPerPage?: number;
     totalItems?: number;
@@ -52,6 +65,9 @@ export interface AdditionalOptions {
     [key: string]: number | string;
 }
 
+/**
+ * Interface for InnerError object
+ */
 export interface InnerError {
     code: string;
     innerError: InnerError;
