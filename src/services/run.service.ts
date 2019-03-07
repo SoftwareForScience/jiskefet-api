@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
@@ -39,6 +39,12 @@ export class RunService {
      */
     async create(createRunDto: CreateRunDto): Promise<Run> {
         const RunEntity = plainToClass(Run, createRunDto);
+        const run = await this.findById(RunEntity.runNumber);
+        if (run) {
+            throw new HttpException(
+                `The request could not be completed due to a conflict with the run number: ${RunEntity.runNumber}`,
+                HttpStatus.CONFLICT);
+        }
         return await this.repository.save(RunEntity);
     }
 
