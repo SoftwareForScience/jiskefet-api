@@ -56,5 +56,4 @@ export const createErrorResponse = <T>(
         },
                                 httpError.getStatus());
     }
-    throw new HttpException('Oops, something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
 };

@@ -14,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
-import { SuccessObject, CollectionSuccessObject } from '../interfaces/response_object.interface';
+import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
 
 @ApiUseTags('attachments')
@@ -34,7 +34,7 @@ export class AttachmentController {
      */
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<SuccessObject<Attachment>> {
+    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
         try {
             const attachment = await this.attachmentservice.create(createAttachmentDto);
             return createResponseItem(attachment);
@@ -51,7 +51,7 @@ export class AttachmentController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id/logs')
-    async findById(@Param('id') logId: number): Promise<CollectionSuccessObject<Attachment>> {
+    async findById(@Param('id') logId: number): Promise<ResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);
 
         try {
