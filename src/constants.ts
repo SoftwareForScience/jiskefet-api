@@ -6,6 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
+import * as dotenv from 'dotenv';
+dotenv.config();
 /**
  * This file maps all the process.env['key'] values to their respective variable. Whenever an environment key changes,
  * the changes only needs to be applied in this file instead of throughout the application.
