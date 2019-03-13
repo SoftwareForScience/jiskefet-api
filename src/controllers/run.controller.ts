@@ -16,7 +16,7 @@ import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
-import { SuccessObject, CollectionSuccessObject } from '../interfaces/response_object.interface';
+import { SuccessObject, CollectionSuccessObject, ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Run } from '../entities/run.entity';
 
@@ -89,7 +89,13 @@ export class RunController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/logs')
-    async linkLogToRun(@Param('id') runNumber: number, @Body() request: LinkLogToRunDto): Promise<void> {
-        return await this.runService.linkLogToRun(runNumber, request);
+    async linkLogToRun(@Param('id')
+    runNumber: number, @Body() request: LinkLogToRunDto): Promise<ResponseObject<void>> {
+        try {
+            const logToRun = await this.runService.linkLogToRun(runNumber, request);
+            return createResponseItem(logToRun);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

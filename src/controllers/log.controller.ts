@@ -79,7 +79,12 @@ export class LogController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/runs')
-    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
-            return await this.logService.linkRunToLog(logId, request);
+    async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<ResponseObject<void>> {
+        try {
+            const runToLog = await this.logService.linkRunToLog(logId, request);
+            return createResponseItem(runToLog);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

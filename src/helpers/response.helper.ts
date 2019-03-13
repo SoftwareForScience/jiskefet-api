@@ -42,7 +42,6 @@ export const createResponseItems = <T>(
 
 export const createErrorResponse = <T>(
     httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: Array<ErrorObject<T>>): any => {
-    if (httpError instanceof HttpException) {
         throw new HttpException({
             apiVersion: version,
             meta,
@@ -55,5 +54,4 @@ export const createErrorResponse = <T>(
             },
         },
                                 httpError.getStatus());
-    }
 };
