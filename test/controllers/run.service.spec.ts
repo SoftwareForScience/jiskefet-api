@@ -21,6 +21,7 @@ describe('RunService', () => {
     let logRepository: LogRepository;
 
     const runDto: CreateRunDto = {
+        runNumber: 1,
         activityId: 'Test activity',
         bytesReadOut: 12345,
         bytesTimeframeBuilder: 12345,

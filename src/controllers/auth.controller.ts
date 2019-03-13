@@ -15,7 +15,8 @@ import {
     HttpException,
     HttpStatus,
     BadRequestException,
-    UnauthorizedException
+    UnauthorizedException,
+    NotFoundException
 } from '@nestjs/common';
 import {
     ApiImplicitQuery,
@@ -33,7 +34,6 @@ import { AuthService } from '../abstracts/auth.service.abstract';
 import { BCryptService } from '../services/bcrypt.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem } from '../helpers/response.helper';
-import { User } from '../entities/user.entity';
 import { JWT_SECRET_KEY } from '../constants';
 
 /**
@@ -138,17 +138,28 @@ export class AuthController {
         status: 401,
         description: 'Hashed secret was not accepted'
     })
-    @ApiImplicitQuery({ name: 'hashedSecret', required: true })
+    @ApiImplicitQuery({ name: 'hashedSecret', required: false })
     async testToken(@Query() query?: any): Promise<ResponseObject<string>> {
-        if (query.hashedSecret === undefined) {
-            throw new BadRequestException('The required query parameter \'hashedSecret\' is missing.');
-        }
-        const secretsMatch = await this.bcryptService.checkToken(JWT_SECRET_KEY, query.hashedSecret);
-        if (secretsMatch) {
-            const jwt = await this.authService.sign({ string: 'testTokenString' });
-            return createResponseItem(jwt);
-        } else {
-            throw new UnauthorizedException('The hashed secret given does not match the secret in the environment.');
+        let jwt: string;
+        switch (process.env.NODE_ENV) {
+            case 'dev':
+                // Allow creation of JWT's to use for dev purposes (only available in dev mode)
+                jwt = await this.authService.sign({ name: 'localTestToken' });
+                return createResponseItem(jwt);
+            case 'test':
+                if (query.hashedSecret === undefined) {
+                    throw new BadRequestException('The required query parameter \'hashedSecret\' is missing.');
+                }
+                const secretsMatch = await this.bcryptService.checkToken(JWT_SECRET_KEY, query.hashedSecret);
+                if (secretsMatch) {
+                    jwt = await this.authService.sign({ string: 'testTokenString' });
+                    return createResponseItem(jwt);
+                } else {
+                    throw new UnauthorizedException(
+                        'The hashed secret given does not match the secret in the environment.');
+                }
+            default:
+            throw new NotFoundException();
         }
     }
 }

@@ -34,6 +34,7 @@ describe('RunController', () => {
 
     describe('POST /runs', () => {
         const runToPost: CreateRunDto = {
+            runNumber: 1,
             timeO2Start: new Date('2000-01-01'),
             timeTrgStart: new Date('2000-01-01'),
             timeO2End: new Date('2000-01-01'),
@@ -51,6 +52,7 @@ describe('RunController', () => {
         };
 
         it('should return status 201', () => {
+            console.log(`JWT from run controller is: ${jwt}`);
             return request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
