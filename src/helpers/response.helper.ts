@@ -15,11 +15,9 @@ import {
 } from '../interfaces/response_object.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-const version = '0.1.0';
-
 export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): SuccessObject<T> => {
     return {
-        apiVersion: version,
+        apiVersion: (global as any).apiVersion,
         meta,
         data: {
             ...additionalData,
@@ -31,7 +29,7 @@ export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any
 export const createResponseItems = <T>(
     items: any[], meta?: Meta, additionalData?: any): CollectionSuccessObject<T> => {
     return {
-        apiVersion: version,
+        apiVersion: (global as any).apiVersion,
         meta,
         data: {
             ...additionalData,
@@ -44,7 +42,7 @@ export const createErrorResponse = <T>(
     httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: Array<ErrorObject<T>>): any => {
     if (httpError instanceof HttpException) {
         throw new HttpException({
-            apiVersion: version,
+            apiVersion: (global as any).apiVersion,
             meta,
             error: {
                 error: httpError.name,
@@ -57,7 +55,7 @@ export const createErrorResponse = <T>(
                                 httpError.getStatus());
     }
     throw new HttpException({
-        apiVersion: version,
+        apiVersion: (global as any).apiVersion,
         meta,
         error: {
             error: HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
