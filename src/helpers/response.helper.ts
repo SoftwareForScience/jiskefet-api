@@ -13,7 +13,7 @@ import {
     ErrorObject,
     InnerError
 } from '../interfaces/response_object.interface';
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const version = '0.1.0';
 
@@ -42,6 +42,7 @@ export const createResponseItems = <T>(
 
 export const createErrorResponse = <T>(
     httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: Array<ErrorObject<T>>): any => {
+    if (httpError instanceof HttpException) {
         throw new HttpException({
             apiVersion: version,
             meta,
@@ -54,4 +55,16 @@ export const createErrorResponse = <T>(
             },
         },
                                 httpError.getStatus());
+    }
+    throw new HttpException({
+        apiVersion: version,
+        meta,
+        error: {
+            error: HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Oops, something went wrong',
+            details,
+            innerError
+        },
+    },                      HttpStatus.INTERNAL_SERVER_ERROR);
 };
