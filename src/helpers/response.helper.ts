@@ -13,7 +13,7 @@ import {
     ErrorObject,
     InnerError
 } from '../interfaces/response_object.interface';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 
 const version = '0.1.0';
 

@@ -162,7 +162,15 @@ export class RunService {
      */
     async linkLogToRun(runNumber: number, linkLogToRunDto: LinkLogToRunDto): Promise<void> {
         const run = await this.findById(runNumber);
+        if (!run) {
+            throw new HttpException(
+                `Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+        }
         const log = await this.logRepository.findOne(linkLogToRunDto.logId);
+        if (!log) {
+            throw new HttpException(
+                `Log with log number ${linkLogToRunDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
+        }
         run.logs = [...run.logs, log];
         await this.repository.save(run);
     }
