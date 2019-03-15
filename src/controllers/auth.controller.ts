@@ -33,7 +33,7 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import { BCryptService } from '../services/bcrypt.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem } from '../helpers/response.helper';
+import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { JWT_SECRET_KEY } from '../constants';
 
 /**
@@ -121,7 +121,7 @@ export class AuthController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
             this.loggerService.logErrorInfoLog(infoLog);
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            return createErrorResponse(error);
         }
     }
 

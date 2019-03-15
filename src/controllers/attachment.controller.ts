@@ -13,8 +13,8 @@ import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
-import { createResponseItem, createResponseItems } from '../helpers/response.helper';
-import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
+import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
 
 @ApiUseTags('attachments')
@@ -42,6 +42,7 @@ export class AttachmentController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Attachment is not correctly added.';
             this.loggerService.logWarnInfoLog(infoLog);
+            return createErrorResponse(error);
         }
     }
 
@@ -50,13 +51,17 @@ export class AttachmentController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id/logs')
-    async findById(@Param('id') logId: number): Promise<CollectionResponseObject<Attachment>> {
+    async findById(@Param('id') logId: number): Promise<ResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);
 
-        // returns the fileData as base64 string, this should be done in mysql query for faster results
-        for (const iterator of attachmentsById) {
-            iterator.fileData = 'base64;' + iterator.fileData;
+        try {
+            // returns the fileData as base64 string, this should be done in mysql query for faster results
+            for (const iterator of attachmentsById) {
+                iterator.fileData = 'base64;' + iterator.fileData;
+            }
+            return createResponseItems(attachmentsById);
+        } catch (error) {
+            return createErrorResponse(error);
         }
-        return createResponseItems(attachmentsById);
     }
 }

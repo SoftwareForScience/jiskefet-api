@@ -16,8 +16,8 @@ import { QueryRunDto } from '../dtos/query.run.dto';
 import { LinkLogToRunDto } from '../dtos/linkLogToRun.run.dto';
 import { InfoLogService } from '../services/infolog.service';
 import { CreateInfologDto } from '../dtos/create.infolog.dto';
-import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem, createResponseItems } from '../helpers/response.helper';
+import { SuccessObject, CollectionSuccessObject, ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Run } from '../entities/run.entity';
 
 @ApiUseTags('runs')
@@ -35,7 +35,7 @@ export class RunController {
      * @param request CreateRunDto from frontend
      */
     @Post()
-    async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
+    async create(@Body() request: CreateRunDto): Promise<SuccessObject<Run>> {
         try {
             request.timeO2Start = new Date();
             request.timeTrgStart = new Date();
@@ -50,6 +50,7 @@ export class RunController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'The run could not be created';
             this.loggerService.logErrorInfoLog(infoLog);
+            return createErrorResponse(error);
         }
     }
 
@@ -59,9 +60,13 @@ export class RunController {
      * @param query optional filters
      */
     @Get()
-    async findAll(@Query() query?: QueryRunDto): Promise<CollectionResponseObject<Run>> {
-        const getRuns = await this.runService.findAll(query);
-        return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
+    async findAll(@Query() query?: QueryRunDto): Promise<CollectionSuccessObject<Run>> {
+        try {
+            const getRuns = await this.runService.findAll(query);
+            return createResponseItems(getRuns.runs, undefined, getRuns.additionalInformation);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**
@@ -69,9 +74,14 @@ export class RunController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id')
-    async findById(@Param('id') id: number): Promise<ResponseObject<Run>> {
-        const runById = await this.runService.findById(id);
-        return createResponseItem(runById);
+    async findById(@Param('id') id: number): Promise<SuccessObject<Run>> {
+        try {
+            const runById = await this.runService.findById(id);
+            return createResponseItem(runById);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+
     }
 
     /**
@@ -79,7 +89,13 @@ export class RunController {
      * @param request LinkLogToRunDto
      */
     @Patch(':id/logs')
-    async linkLogToRun(@Param('id') runNumber: number, @Body() request: LinkLogToRunDto): Promise<void> {
-        return await this.runService.linkLogToRun(runNumber, request);
+    async linkLogToRun(@Param('id')
+    runNumber: number, @Body() request: LinkLogToRunDto): Promise<ResponseObject<void>> {
+        try {
+            const logToRun = await this.runService.linkLogToRun(runNumber, request);
+            return createResponseItem(logToRun);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

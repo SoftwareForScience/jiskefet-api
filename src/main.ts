@@ -124,7 +124,10 @@ async function bootstrap(): Promise<void> {
         options.setDescription('Running without /api base path');
     }
 
-    const document = SwaggerModule.createDocument(app, options.build());
+    const swaggerInfo = options.build();
+    (global as any).apiVersion = swaggerInfo.info.version;
+
+    const document = SwaggerModule.createDocument(app, swaggerInfo);
     SwaggerModule.setup('doc', app, document);
 
     if (USE_INFO_LOGGER === 'true') {

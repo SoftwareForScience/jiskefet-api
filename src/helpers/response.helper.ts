@@ -6,12 +6,18 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ResponseObject, Meta, CollectionResponseObject } from '../interfaces/response_object.interface';
-import { HttpException } from '@nestjs/common';
+import {
+    Meta,
+    CollectionSuccessObject,
+    SuccessObject,
+    ErrorObject,
+    InnerError
+} from '../interfaces/response_object.interface';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): ResponseObject<T> => {
+export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any): SuccessObject<T> => {
     return {
-        apiVersion: '0.1.0',
+        apiVersion: (global as any).apiVersion,
         meta,
         data: {
             ...additionalData,
@@ -21,9 +27,9 @@ export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any
 };
 
 export const createResponseItems = <T>(
-    items: any[], meta?: Meta, additionalData?: any): CollectionResponseObject<T> => {
+    items: any[], meta?: Meta, additionalData?: any): CollectionSuccessObject<T> => {
     return {
-        apiVersion: '0.1.0',
+        apiVersion: (global as any).apiVersion,
         meta,
         data: {
             ...additionalData,
@@ -32,17 +38,31 @@ export const createResponseItems = <T>(
     };
 };
 
-export const createErrorResponse = <T>(httpError: HttpException, meta?: Meta): ResponseObject<T> => {
+export const createErrorResponse = <T>(
+    httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: Array<ErrorObject<T>>): any => {
     if (httpError instanceof HttpException) {
-        return {
-            apiVersion: '0.1.0',
+        throw new HttpException({
+            apiVersion: (global as any).apiVersion,
             meta,
             error: {
-                statusCode: httpError.getStatus(),
                 error: httpError.name,
+                code: httpError.getStatus(),
                 message: httpError.message,
-                stack: httpError.stack
+                details,
+                innerError
             },
-        };
+        },
+                                httpError.getStatus());
     }
+    throw new HttpException({
+        apiVersion: (global as any).apiVersion,
+        meta,
+        error: {
+            error: HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Oops, something went wrong',
+            details,
+            innerError
+        },
+    },                      HttpStatus.INTERNAL_SERVER_ERROR);
 };

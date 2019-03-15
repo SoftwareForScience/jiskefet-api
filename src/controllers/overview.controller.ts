@@ -12,8 +12,8 @@ import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from '../dtos/get.overview.dto';
 import { QueryOverviewDto } from '../dtos/query.overview.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CollectionResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItems } from '../helpers/response.helper';
+import { ResponseObject } from '../interfaces/response_object.interface';
+import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
 
 @ApiUseTags('overview')
 @ApiBearerAuth()
@@ -28,8 +28,12 @@ export class OverviewController {
      * @param id unique identifier for a Log item.
      */
     @Get()
-    async find(@Query() query?: QueryOverviewDto): Promise<CollectionResponseObject<GetOverviewDto>> {
-        const overview = await this.attachmentservice.find(query);
-        return createResponseItems(overview);
+    async find(@Query() query?: QueryOverviewDto): Promise<ResponseObject<GetOverviewDto>> {
+        try {
+            const overview = await this.attachmentservice.find(query);
+            return createResponseItems(overview);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }
