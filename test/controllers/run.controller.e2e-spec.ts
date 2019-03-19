@@ -16,6 +16,7 @@ import { getJwt } from '../../src/helpers/auth.helper';
 describe('RunController', () => {
     let app: INestApplication;
     let jwt: string;
+    const runNumber = Math.floor(+new Date() / 1000);
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -34,7 +35,7 @@ describe('RunController', () => {
 
     describe('POST /runs', () => {
         const runToPost: CreateRunDto = {
-            runNumber: 1,
+            runNumber,
             timeO2Start: new Date('2000-01-01'),
             timeTrgStart: new Date('2000-01-01'),
             timeO2End: new Date('2000-01-01'),
@@ -52,7 +53,6 @@ describe('RunController', () => {
         };
 
         it('should return status 201', () => {
-            console.log(`JWT from run controller is: ${jwt}`);
             return request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
@@ -61,6 +61,7 @@ describe('RunController', () => {
         });
 
         it('should return JSON', () => {
+            runToPost.runNumber = runToPost.runNumber + 1;
             return request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
@@ -69,12 +70,13 @@ describe('RunController', () => {
         });
 
         it('should return an object containing "Sl4e12ofb83no92ns" as the activityId', async () => {
+            runToPost.runNumber = runToPost.runNumber + 2;
             const response = await request(app.getHttpServer())
                 .post(`/runs`)
-                .send(runToPost)
                 .set('Authorization', `Bearer ${jwt}`)
+                .send(runToPost)
                 .set('Accept', 'application/json');
-            expect(response.body.activityId).toEqual('Sl4e12ofb83no92ns');
+            expect(response.body.data.item.activityId).toEqual('Sl4e12ofb83no92ns');
         });
     });
 
@@ -98,30 +100,30 @@ describe('RunController', () => {
             const response = await request(app.getHttpServer())
                 .get('/runs')
                 .set('Authorization', `Bearer ${jwt}`);
-            expect(Array.isArray(response.body.runs)).toBeTruthy();
+            expect(Array.isArray(response.body.data.items)).toBeTruthy();
         });
     });
 
     describe('GET /runs/{id}', () => {
         it('should return status 200', () => {
             return request(app.getHttpServer())
-                .get(`/runs/${1}`)
+                .get(`/runs/${runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .expect(200);
         });
 
         it('should return JSON', () => {
             return request(app.getHttpServer())
-                .get(`/runs/${1}`)
+                .get(`/runs/${runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .expect('Content-Type', /json/);
         });
 
         it('should return an object', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/runs/${1}`)
+                .get(`/runs/${runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`);
-            expect(typeof response.body).toBe('object');
+            expect(typeof response.body.data).toBe('object');
         });
     });
 });
