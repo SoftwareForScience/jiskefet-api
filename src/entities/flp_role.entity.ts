@@ -29,19 +29,33 @@ export class FlpRole {
     @JoinColumn({ name: 'fk_run_number' })
     run: Run;
 
-    @Column({ name: 'flp_hostname' })
+    @Column({
+        name: 'flp_hostname'
+    })
     flpHostname: string;
 
-    @Column({ name: 'n_sub_timeframes' })
+    @Column({
+        name: 'n_sub_timeframes',
+        nullable: true
+    })
     nSubTimeframes: number;
 
-    @Column({ name: 'equipment_bytes' })
+    @Column({
+        name: 'equipment_bytes',
+        nullable: true
+    })
     equipmentBytes: number;
 
-    @Column({ name: 'recording_bytes' })
+    @Column({
+        name: 'recording_bytes',
+        nullable: true
+    })
     recordingBytes: number;
 
-    @Column({ name: 'fair_mq_bytes' })
+    @Column({
+        name: 'fair_mq_bytes',
+        nullable: true
+    })
     fairMQBytes: number;
 
     // Maybe there is use for it later.

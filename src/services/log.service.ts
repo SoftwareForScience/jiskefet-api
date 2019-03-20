@@ -54,6 +54,7 @@ export class LogService {
                 await logEntity.runs.push(run);
             }
         }
+        console.log(logEntity);
         return await this.repository.save(logEntity);
     }
 

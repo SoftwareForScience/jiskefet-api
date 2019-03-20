@@ -8,27 +8,27 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsInt } from 'class-validator';
+import { IsString } from 'class-validator';
 
-@Entity('flp')
+@Entity('flp_role')
 export class CreateFlpDto {
     @ApiModelProperty({
         example: 'FLP-TPC-1',
         description: 'Name of the flp',
     })
     @IsString()
-    title: string;
+    flpName: string;
 
     @ApiModelProperty({
         example: 'someserver.cern.ch',
         description: 'Name of the hostmachine, where the flp comes from.',
     })
     @IsString()
-    text: string;
+    flpHostname: string;
 
     @ApiModelProperty({
-        example: [1],
+        example: 1,
         description: 'Attached run numbers of this log',
     })
-    runs: number[];
+    run: number;
 }

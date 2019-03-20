@@ -10,12 +10,13 @@ import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FlpController } from '../controllers/flp.controller';
 import { FlpRole } from '../entities/flp_role.entity';
+import { FlpSerivce } from '../services/flp.service';
 
 @Global()
 @Module({
     imports: [TypeOrmModule.forFeature([FlpRole])],
-    providers: [],
+    providers: [FlpSerivce],
     controllers: [FlpController],
-    exports: [],
+    exports: [FlpSerivce],
 })
 export class FlpModule { }

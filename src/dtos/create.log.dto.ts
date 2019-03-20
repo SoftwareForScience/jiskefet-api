@@ -44,7 +44,7 @@ export class CreateLogDto {
         description: 'describes the log in depth',
     })
     @IsString()
-    text: string;
+    body: string;
 
     @ApiModelProperty({
         example: [],

@@ -17,7 +17,7 @@ import { RunQuality } from '../enums/run.runquality.enum';
 export class CreateRunDto {
 
     @ApiModelProperty({
-        example: 1234,
+        example: 1,
         description: 'The id of the run'
     })
     @IsNumber()
@@ -28,41 +28,43 @@ export class CreateRunDto {
         description: 'Current Date'
     })
     @IsDateString()
-    timeO2Start: Date;
+    O2StartTime: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
     @IsDateString()
-    timeTrgStart: Date;
+    TrgStartTime: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
     @IsDateString()
-    timeO2End: Date;
+    O2EndTime: Date;
 
     @ApiModelProperty({
         example: new Date(),
         description: 'Current Date'
     })
     @IsDateString()
-    timeTrgEnd: Date;
+    TrgEndTime: Date;
 
     @ApiModelProperty({
-        example: ['test'],
+        example: ['COSMICS'],
         description: 'What kind of run.',
+        enum: ['PHYSICS' , 'COSMICS' , 'TECHNICAL'],
     })
-    @IsEnum(RunType, { each: true })
+    @IsEnum(RunType, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runType: string;
 
     @ApiModelProperty({
-        example: ['test'],
+        example: ['Good'],
         description: 'The quality of the run.',
+        enum: ['Good' , 'Bad' , 'Unknown'],
     })
-    @IsEnum(RunQuality, { each: true })
+    @IsEnum(RunQuality, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runQuality: string;
 
     @ApiModelProperty({

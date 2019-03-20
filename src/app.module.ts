@@ -63,6 +63,7 @@ import {
 } from './constants';
 import { FlpModule } from './modules/flp.module';
 import { FlpController } from './controllers/flp.controller';
+import { FlpSerivce } from './services/flp.service';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -132,6 +133,7 @@ const authServiceProvider = {
     AppService,
     RunService,
     LogService,
+    FlpSerivce,
     AttachmentService,
     SubSystemService,
     UserService,

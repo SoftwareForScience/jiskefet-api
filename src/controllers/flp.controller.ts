@@ -12,6 +12,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { FlpRole } from '../entities/flp_role.entity';
 import { CreateFlpDto } from '../dtos/create.flp.dto';
+import { FlpSerivce } from '../services/flp.service';
+import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 
 @ApiUseTags('flp')
 @ApiBearerAuth()
@@ -19,6 +21,9 @@ import { CreateFlpDto } from '../dtos/create.flp.dto';
 @Controller('flp')
 export class FlpController {
 
+    constructor(
+        private readonly flpService: FlpSerivce
+    ) { }
     /**
      * Find a specific Flp. /flp/id
      * @param id unique identifier for a Flp.
@@ -36,9 +41,13 @@ export class FlpController {
      * @param request CreateFlpDto
      */
     @Post()
-    async createFlp(@Body() request: CreateFlpDto): Promise<ResponseObject<FlpController>> {
-        // Create initial Flp with a name and hostname.
-        throw new HttpException(`Endpoint is not yet implemented.`, HttpStatus.NOT_IMPLEMENTED);
+    async createFlp(@Body() request: CreateFlpDto): Promise<ResponseObject<FlpRole>> {
+        try {
+            const flp = await this.flpService.create(request);
+            return createResponseItem(flp);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 
     /**

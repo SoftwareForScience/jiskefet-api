@@ -84,7 +84,7 @@ export class AuthController {
             const infoLog = new CreateInfologDto();
             infoLog.message = error.message;
             this.loggerService.logWarnInfoLog(infoLog);
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            return createErrorResponse(error);
         }
     }
 
