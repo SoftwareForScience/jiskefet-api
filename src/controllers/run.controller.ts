@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch, HttpException, HttpStatus } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
@@ -97,5 +97,16 @@ export class RunController {
         } catch (error) {
             return createErrorResponse(error);
         }
+    }
+
+    /**
+     * Updates fields during run or at end of run.
+     * @param runNumber unique indentifier for run object.
+     */
+    @Patch(':id')
+    async updateRun(@Param('id') runNumber: number): Promise<ResponseObject<void>> {
+        // Updates timeframes, subtimeframes and data volume readout derived from flp.
+        // At end of run it updates timestamp fields, trgEndTime and O2EndTime.
+        throw new HttpException(`Endpoint is not yet implemented.`, HttpStatus.NOT_IMPLEMENTED);
     }
 }
