@@ -60,7 +60,7 @@ export class Log {
     title: string;
 
     @Column({ type: 'longtext' })
-    text: string;
+    body: string;
 
     @Column({
         name: 'subsystem_fk_subsystem_id',

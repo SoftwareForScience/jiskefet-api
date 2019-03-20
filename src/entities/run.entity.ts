@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
@@ -25,28 +25,28 @@ export class Run {
     runNumber: number;
 
     @Column({
-        name: 'time_o2_start',
+        name: 'o2_start_time',
         precision: 0,
     })
-    timeO2Start: Date;
+    O2StartTime: Date;
 
     @Column({
-        name: 'time_trg_start',
+        name: 'trg_start_time',
         precision: 0,
     })
-    timeTrgStart: Date;
+    TrgStartTime: Date;
 
     @Column({
-        name: 'time_trg_end',
+        name: 'trg_end_time',
         precision: 0,
     })
-    timeTrgEnd: Date;
+    TrgEndTime: Date;
 
     @Column({
-        name: 'time_o2_end',
+        name: 'o2_end_time',
         precision: 0,
     })
-    timeO2End: Date;
+    O2EndTime: Date;
 
     @Column({
         name: 'activity_id',
@@ -58,16 +58,24 @@ export class Run {
     @Column({
         name: 'run_type',
         type: 'enum',
-        enum: ['test'],
+        enum: [
+            'PHYSICS',
+            'COSMICS',
+            'TECHNICAL'
+        ],
     })
-    runType: ['test'];
+    runType: ['PHYSICS' | 'COSMICS' | 'TECHNICAL'];
 
     @Column({
         name: 'run_quality',
         type: 'enum',
-        enum: ['test'],
+        enum: [
+            'Good',
+            'Bad',
+            'Unknown'
+        ],
     })
-    runQuality: ['test'];
+    runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
     nDetectors: number;
