@@ -27,6 +27,6 @@ export const getJwt = async (app: INestApplication): Promise<string> => {
     const hashedSecret = await bcryptService.hashToken(JWT_SECRET_KEY);
     const response = await request(app.getHttpServer())
         .get(`/test-token?hashedSecret=${hashedSecret}`);
-    const jwt = response.body;
-    return jwt.token;
+    const jwt = response.body.data.item;
+    return jwt;
 };

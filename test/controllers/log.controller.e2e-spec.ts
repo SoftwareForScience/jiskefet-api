@@ -64,7 +64,7 @@ describe('LogController', () => {
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
                 .set('Accept', 'application/json');
-            expect(response.body.title).toEqual('test log');
+            expect(response.body.data.item.title).toEqual('test log');
         });
     });
 
@@ -88,7 +88,7 @@ describe('LogController', () => {
             const response = await request(app.getHttpServer())
                 .get('/logs')
                 .set('Authorization', `Bearer ${jwt}`);
-            expect(Array.isArray(response.body.logs)).toBeTruthy();
+            expect(Array.isArray(response.body.data.items)).toBeTruthy();
         });
     });
 
