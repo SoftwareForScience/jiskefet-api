@@ -1,3 +1,5 @@
 export enum RunQuality {
-    'test'
+    Good = 'Good',
+    Bad = 'Bad',
+    Unknown = 'Unknown'
 }

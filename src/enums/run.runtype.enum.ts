@@ -1,3 +1,5 @@
 export enum RunType {
-    'test'
+    PHYSICS = 'PHYSICS',
+    COSMICS = 'COSMICS',
+    TECHNICAL = 'TECHNICAL'
 }

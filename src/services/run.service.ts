@@ -18,6 +18,8 @@ import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
 import { AdditionalOptions } from '../interfaces/response_object.interface';
+import { PatchRunDto } from '../dtos/patch.run.dto';
+import { RunQuality } from '../enums/run.runquality.enum';
 
 @Injectable()
 export class RunService {
@@ -173,5 +175,20 @@ export class RunService {
         }
         run.logs = [...run.logs, log];
         await this.repository.save(run);
+    }
+
+    async updateRun(runNumber: number, patchRunDto: PatchRunDto): Promise<Run> {
+        let runToUpdate: Run;
+        runToUpdate = await this.findById(runNumber);
+
+        runToUpdate.TrgEndTime = patchRunDto.TrgEndTime;
+        runToUpdate.O2EndTime = patchRunDto.O2EndTime;
+        runToUpdate.runQuality = RunQuality[patchRunDto.runQuality];
+        runToUpdate.nTimeframes = patchRunDto.nTimeframes;
+        runToUpdate.nSubtimeframes = patchRunDto.nSubtimeframes;
+        runToUpdate.bytesReadOut = patchRunDto.bytesReadOut;
+        runToUpdate.bytesTimeframeBuilder = patchRunDto.bytesTimeframeBuilder;
+
+        return await this.repository.save(runToUpdate);
     }
 }

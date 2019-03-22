@@ -39,12 +39,14 @@ export class Run {
     @Column({
         name: 'trg_end_time',
         precision: 0,
+        nullable: true,
     })
     TrgEndTime: Date;
 
     @Column({
         name: 'o2_end_time',
         precision: 0,
+        nullable: true,
     })
     O2EndTime: Date;
 
@@ -74,6 +76,7 @@ export class Run {
             'Bad',
             'Unknown'
         ],
+        nullable: true,
     })
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
@@ -86,16 +89,28 @@ export class Run {
     @Column({ name: 'n_epns' })
     nEpns: number;
 
-    @Column({ name: 'n_timeframes' })
+    @Column({
+        name: 'n_timeframes',
+        nullable: true,
+    })
     nTimeframes: number;
 
-    @Column({ name: 'n_subtimeframes' })
+    @Column({
+        name: 'n_subtimeframes',
+        nullable: true,
+    })
     nSubtimeframes: number;
 
-    @Column({ name: 'bytes_read_out' })
+    @Column({
+        name: 'bytes_read_out',
+        nullable: true,
+    })
     bytesReadOut: number;
 
-    @Column({ name: 'bytes_timeframe_builder' })
+    @Column({
+        name: 'bytes_timeframe_builder',
+        nullable: true,
+    })
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)

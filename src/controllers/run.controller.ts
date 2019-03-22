@@ -19,6 +19,7 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Run } from '../entities/run.entity';
+import { PatchRunDto } from '../dtos/patch.run.dto';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
@@ -39,8 +40,6 @@ export class RunController {
         try {
             request.O2StartTime = new Date();
             request.TrgStartTime = new Date();
-            request.O2EndTime = new Date();
-            request.TrgEndTime = new Date();
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
             this.loggerService.logInfoLog(infoLog);
@@ -104,9 +103,12 @@ export class RunController {
      * @param runNumber unique indentifier for run object.
      */
     @Patch(':id')
-    async updateRun(@Param('id') runNumber: number): Promise<ResponseObject<void>> {
-        // Updates timeframes, subtimeframes and data volume readout derived from flp.
-        // At end of run it updates timestamp fields, trgEndTime and O2EndTime.
-        throw new HttpException(`Endpoint is not yet implemented.`, HttpStatus.NOT_IMPLEMENTED);
+    async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<void>> {
+        try {
+            const patchRun = await this.runService.updateRun(runNumber, request);
+            return createResponseItem(patchRun);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }
