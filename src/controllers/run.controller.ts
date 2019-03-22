@@ -37,10 +37,10 @@ export class RunController {
     @Post()
     async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
-            request.timeO2Start = new Date();
-            request.timeTrgStart = new Date();
-            request.timeO2End = new Date();
-            request.timeTrgEnd = new Date();
+            request.O2StartTime = new Date();
+            request.TrgStartTime = new Date();
+            request.O2EndTime = new Date();
+            request.TrgEndTime = new Date();
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
             this.loggerService.logInfoLog(infoLog);
