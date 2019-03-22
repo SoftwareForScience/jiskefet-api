@@ -36,8 +36,8 @@ export class FlpSerivce {
 
         return await this.flpRepository
             .createQueryBuilder('flp_role')
-            .where('flp_hostname = :flpName', {flpName})
-            .andWhere('fk_run_number = :runNumber', {runNumber})
+            .where('fk_run_number = :runNumber', { runNumber })
+            .andWhere('flp_name = :flpName', { flpName })
             .getOne()
             .then((res: FlpRole) => Promise.resolve(res))
             .catch((err: string) => Promise.reject(err));
@@ -55,14 +55,14 @@ export class FlpSerivce {
 
     async patch(flpName: string, runNumber: number, patchFlpDto: PatchFlpDto): Promise<FlpRole> {
         let flpToUpdate: FlpRole;
-        console.log(patchFlpDto);
         flpToUpdate = await this.findOne(flpName, runNumber);
-        console.log(await flpToUpdate);
+        const run = await this.runRepository.findOne(runNumber);
 
         flpToUpdate.nSubTimeframes = patchFlpDto.nSubTimeframes;
         flpToUpdate.equipmentBytes = patchFlpDto.equipmentBytes;
         flpToUpdate.recordingBytes = patchFlpDto.recordingBytes;
         flpToUpdate.fairMQBytes = patchFlpDto.fairMQBytes;
+        flpToUpdate.run = run;
 
         return await this.flpRepository.save(flpToUpdate);
     }
