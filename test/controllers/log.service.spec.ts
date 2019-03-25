@@ -26,7 +26,7 @@ describe('LogService', () => {
         runs: null
     };
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 LogService
