@@ -21,14 +21,14 @@ import { AdditionalOptions } from '../interfaces/response_object.interface';
 
 @Injectable()
 export class LogService {
-    private readonly repository: Repository<Log>;
+    private readonly logRepository: Repository<Log>;
     private readonly runRepository: Repository<Run>;
 
     constructor(
-        @InjectRepository(Log) repository: Repository<Log>,
+        @InjectRepository(Log) logRepository: Repository<Log>,
         @InjectRepository(Run) runRepository: Repository<Run>
     ) {
-        this.repository = repository;
+        this.logRepository = logRepository;
         this.runRepository = runRepository;
     }
 
@@ -54,15 +54,14 @@ export class LogService {
                 await logEntity.runs.push(run);
             }
         }
-        console.log(logEntity);
-        return await this.repository.save(logEntity);
+        return await this.logRepository.save(logEntity);
     }
 
     /**
      * Returns all Logs from the db.
      */
     async findAll(queryLogDto: QueryLogDto): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
-        let query = await this.repository.createQueryBuilder('log')
+        let query = await this.logRepository.createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
                 title: queryLogDto.searchterm ? `%${queryLogDto.searchterm}%` : '%'
@@ -117,7 +116,7 @@ export class LogService {
      * @param id unique identifier for a Log.
      */
     async findLogById(id: number): Promise<Log> {
-        return await this.repository
+        return await this.logRepository
             .createQueryBuilder('log')
             .leftJoinAndSelect('log.runs', 'runs')
             .innerJoinAndSelect('log.user', 'user')
@@ -142,7 +141,7 @@ export class LogService {
                 `Run with with number ${linkRunToLogDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
         }
         log.runs = [...log.runs, run];
-        await this.repository.save(log);
+        await this.logRepository.save(log);
     }
 
     /**
@@ -153,7 +152,7 @@ export class LogService {
         userId: number,
         queryLogDto: QueryLogDto
     ): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
-        let query = await this.repository
+        let query = await this.logRepository
             .createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('fk_user_id = :userId', { userId });

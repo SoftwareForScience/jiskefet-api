@@ -36,20 +36,13 @@ describe('RunController', () => {
     describe('POST /runs', () => {
         const runToPost: CreateRunDto = {
             runNumber,
-            timeO2Start: new Date('2000-01-01'),
-            timeTrgStart: new Date('2000-01-01'),
-            timeO2End: new Date('2000-01-01'),
-            timeTrgEnd: new Date('2000-01-01'),
-            runType: 'test',
-            runQuality: 'test',
+            O2StartTime: new Date('2000-01-01'),
+            TrgStartTime: new Date('2000-01-01'),
+            runType: 'TECHNICAL',
             activityId: 'Sl4e12ofb83no92ns',
             nDetectors: 16,
             nFlps: 7,
-            nEpns: 8,
-            nTimeframes: 2,
-            nSubtimeframes: 4,
-            bytesReadOut: 5,
-            bytesTimeframeBuilder: 12
+            nEpns: 8
         };
 
         it('should return status 201', () => {

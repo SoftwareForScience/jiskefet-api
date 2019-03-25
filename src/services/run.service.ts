@@ -24,14 +24,14 @@ import { RunQuality } from '../enums/run.runquality.enum';
 @Injectable()
 export class RunService {
 
-    private readonly repository: Repository<Run>;
+    private readonly runRepository: Repository<Run>;
     private readonly logRepository: Repository<Log>;
 
     constructor(
-        @InjectRepository(Run) repository: Repository<Run>,
+        @InjectRepository(Run) runRepository: Repository<Run>,
         @InjectRepository(Log) logRepostiory: Repository<Log>
     ) {
-        this.repository = repository;
+        this.runRepository = runRepository;
         this.logRepository = logRepostiory;
     }
 
@@ -47,7 +47,7 @@ export class RunService {
                 `The request could not be completed due to a conflict with the run number: ${RunEntity.runNumber}`,
                 HttpStatus.CONFLICT);
         }
-        return await this.repository.save(RunEntity);
+        return await this.runRepository.save(RunEntity);
     }
 
     /**
@@ -55,7 +55,7 @@ export class RunService {
      * @param query QueryRunDto
      */
     async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
-        let query = await this.repository.createQueryBuilder()
+        let query = await this.runRepository.createQueryBuilder()
             .where('run_type like :runType', {
                 runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'
             })
@@ -149,7 +149,7 @@ export class RunService {
      * @param id unique identifier for a Run.
      */
     async findById(id: number): Promise<Run> {
-        return await this.repository
+        return await this.runRepository
             .createQueryBuilder('run')
             .leftJoinAndSelect('run.logs', 'logs')
             .where('run_number = :id', { id })
@@ -174,7 +174,7 @@ export class RunService {
                 `Log with log number ${linkLogToRunDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
         }
         run.logs = [...run.logs, log];
-        await this.repository.save(run);
+        await this.runRepository.save(run);
     }
 
     async updateRun(runNumber: number, patchRunDto: PatchRunDto): Promise<Run> {
@@ -189,6 +189,6 @@ export class RunService {
         runToUpdate.bytesReadOut = patchRunDto.bytesReadOut;
         runToUpdate.bytesTimeframeBuilder = patchRunDto.bytesTimeframeBuilder;
 
-        return await this.repository.save(runToUpdate);
+        return await this.runRepository.save(runToUpdate);
     }
 }

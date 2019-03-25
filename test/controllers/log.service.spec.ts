@@ -10,19 +10,16 @@ import { LogService } from '../../src/services/log.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
-import { LogRepository, logArray } from '../mocks/log.repository';
 import { Log } from '../../src/entities/log.entity';
-import { runArray, RunRepository } from '../mocks/run.repository';
+import { RunService } from '../../src/services/run.service';
 
 describe('LogService', () => {
     let logService: LogService;
-
-    let runRepository: RunRepository;
-    let logRepository: LogRepository;
+    let runService: RunService;
 
     const logDto: CreateLogDto = {
         title: 'title',
-        text: 'text',
+        body: 'text',
         subtype: 'run',
         origin: 'human',
         user: 1,
@@ -32,25 +29,26 @@ describe('LogService', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                LogService, LogRepository, RunRepository
+                LogService
             ],
         })
-        .overrideProvider(LogService)
-        .useClass(LogRepository)
         .compile();
 
+        runService = await module.get<RunService>(RunService);
         logService = await module.get<LogService>(LogService);
-        logRepository = await module.get<LogRepository>(LogRepository);
-        logRepository.onModuleInit();
-        runRepository = await module.get<RunRepository>(RunRepository);
-        runRepository.onModuleInit();
+    });
+
+    describe('initialize', () => {
+        it('logService should be defined', async () => {
+            expect(logService).toBeDefined();
+        });
+
+        it('runService should be defined', async () => {
+            expect(runService).toBeDefined();
+        });
     });
 
     describe('post()', () => {
-
-        it('should be defined', async () => {
-            expect(logService).toBeDefined();
-        });
 
         it('should create one log and return it', async () => {
             const result = await logService.create(logDto);

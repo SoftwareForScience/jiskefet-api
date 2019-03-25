@@ -37,7 +37,7 @@ describe('LogController', () => {
             subtype: 'run',
             origin: 'human',
             title: 'test log',
-            text: 'text of test log',
+            body: 'text of test log',
             runs: [1],
             user: 1
         };

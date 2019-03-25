@@ -9,85 +9,109 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RunService } from '../../src/services/run.service';
 import { CreateRunDto } from '../../src/dtos/create.run.dto';
-import { RunRepository, runArray } from '../mocks/run.repository';
 import { Run } from '../../src/entities/run.entity';
 import { LinkLogToRunDto } from '../../src/dtos/linkLogToRun.run.dto';
-import { LogRepository, logArray } from '../mocks/log.repository';
+import { LogService } from '../../src/services/log.service';
+import { Log } from '../../src/entities/log.entity';
+import { Repository } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 describe('RunService', () => {
     let runService: RunService;
+    let logService: LogService;
 
-    let runRepository: RunRepository;
-    let logRepository: LogRepository;
+    // let runRepository: Repository<Run>;
+    // let logRepository: Repository<Log>;
+
+    const runNumber = Math.floor(+new Date() / 1000);
 
     const runDto: CreateRunDto = {
-        runNumber: 1,
+        runNumber,
         activityId: 'Test activity',
-        bytesReadOut: 12345,
-        bytesTimeframeBuilder: 12345,
         nDetectors: 1,
         nEpns: 1,
         nFlps: 1,
-        nSubtimeframes: 1,
-        nTimeframes: 1,
-        runQuality: 'test',
-        runType: 'test',
-        timeO2End: new Date(),
-        timeO2Start: new Date(),
-        timeTrgEnd: new Date(),
-        timeTrgStart: new Date()
+        runType: 'TECHNICAL',
+        O2StartTime: new Date(),
+        TrgStartTime: new Date()
     };
+
+    let run: Run;
+
+    let runArray: Run[];
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                RunService, LogRepository, RunRepository
+                RunService,
+                LogService,
+                {
+                    provide: 'LogRepository',
+                    useClass: Repository,
+                    // useValue: Log,
+                    // inject: Log,
+                },
+                {
+                    provide: 'RunRepository',
+                    useClass: Repository,
+                    // useValue: Run,
+                    // inject: Run
+                }
             ],
+            imports: [
+                TypeOrmModule.forRoot(),
+                TypeOrmModule.forFeature([Run, Log])
+            ]
         })
-        .overrideProvider(RunService)
-        .useClass(RunRepository)
         .compile();
 
+        // runRepository = await module.get<Repository<Run>>(Repository);
         runService = await module.get<RunService>(RunService);
-        runRepository = await module.get<RunRepository>(RunRepository);
-        runRepository.onModuleInit();
-        logRepository = await module.get<LogRepository>(LogRepository);
-        logRepository.onModuleInit();
+        // logRepository = await module.get<Repository<Log>>(Repository);
+        logService = await module.get<LogService>(LogService);
     });
 
-    describe('post()', () => {
+    describe('initialize', () => {
+        it('expects logService to be defined', async () => {
+            expect(logService).toBeDefined();
+        });
 
-        it('should be defined', async () => {
+        it('expects runService to be defined', async () => {
             expect(runService).toBeDefined();
         });
 
+        it('should return a run with runNumber 1', async () => {
+            run = await runService.findById(1);
+            expect(run).toBeGreaterThanOrEqual(1);
+        });
+
+        it('should return an array of runs', async () => {
+            const runResult = await runService.findAll(null);
+            runArray = runResult.runs;
+            expect(runArray).toBeGreaterThanOrEqual(1);
+        });
+    });
+
+    describe('post()', () => {
         it('should create one run and return it', async () => {
             const result = await runService.create(runDto);
             expect(result).toBeInstanceOf(Run);
         });
 
         it('should link a log to a run', async () => {
-            const runId = runArray[0].runNumber;
+            // retrieve the latest run
+            const runs = await runService.findAll(null);
+            const latestRun = runs.runs[runs.runs.length - 1];
+            const runId = latestRun.runNumber;
+
+            // retrieve the latest log
+            const logs = await logService.findAll(null);
+            const latestLog = logs.logs[logs.logs.length - 1];
             const logId: LinkLogToRunDto = {
-                logId: 1,
+                logId: latestLog.logId,
             };
 
-            // mock linked log to run
-            const run = runArray[0];
-            run.logs = [...run.logs, logArray[0]];
-            expect(await runService.linkLogToRun(runId, logId)).toEqual(run);
-        });
-    });
-
-    describe('get()', () => {
-        it('should return one run', async () => {
-            const run = runArray[0];
-            expect(await runService.findById(1)).toEqual(run);
-        });
-
-        it('should return an array of logs', async () => {
-            const runs = runArray;
-            expect(await runService.findAll(null)).toEqual({ runs, count: runs.length});
+            expect(await runService.linkLogToRun(runId, logId)).toHaveBeenCalled();
         });
     });
 });
