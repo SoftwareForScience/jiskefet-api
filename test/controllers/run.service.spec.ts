@@ -24,6 +24,7 @@ import {
     TEST_DB_DATABASE,
     TEST_DB_SYNCHRONIZE,
 } from '../../src/constants';
+import { RunType } from '../../src/enums/run.runtype.enum';
 
 describe('RunService', () => {
     let runService: RunService;
@@ -50,7 +51,7 @@ describe('RunService', () => {
         nDetectors: 1,
         nEpns: 1,
         nFlps: 1,
-        runType: 'TECHNICAL',
+        runType: RunType.TECHNICAL,
         O2StartTime: new Date(),
         TrgStartTime: new Date()
     };
@@ -60,6 +61,7 @@ describe('RunService', () => {
     let runArray: Run[];
 
     beforeAll(async () => {
+        // maybe add a switch to support an in memory db like sqljs
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RunService,
@@ -84,18 +86,6 @@ describe('RunService', () => {
         it('expects runService to be defined', async () => {
             expect(runService).toBeDefined();
         });
-
-        it('should return a run with runNumber 1', async () => {
-            run = await runService.findById(1);
-            expect(run.runNumber).toBe(1);
-        });
-
-        it('should return an array of runs', async () => {
-            const runResult = await runService.findAll();
-            console.log(runResult);
-            runArray = runResult.runs;
-            expect(runArray.length).toBeGreaterThanOrEqual(1);
-        });
     });
 
     describe('post()', () => {
@@ -108,16 +98,37 @@ describe('RunService', () => {
             // retrieve the latest run
             const runs = await runService.findAll(null);
             const latestRun = runs.runs[runs.runs.length - 1];
+            // console.log('latest run is');
+            // console.log(latestRun);
             const runId = latestRun.runNumber;
 
             // retrieve the latest log
             const logs = await logService.findAll(null);
             const latestLog = logs.logs[logs.logs.length - 1];
+            // console.log('latest log is');
+            // console.log(latestLog);
             const logId: LinkLogToRunDto = {
                 logId: latestLog.logId,
             };
 
             expect(await runService.linkLogToRun(runId, logId)).toHaveBeenCalled();
+        });
+    });
+
+    describe('get()', () => {
+        it('should return a run with runNumber 1', async () => {
+            run = await runService.findById(1);
+            // console.log('found run');
+            // console.log(run);
+            expect(run.runNumber).toBe(1);
+        });
+
+        it('should return an array of runs', async () => {
+            const runResult = await runService.findAll();
+            // console.log('result is');
+            // console.log(runResult);
+            runArray = runResult.runs;
+            expect(Array.isArray(runArray)).toBeTruthy();
         });
     });
 });
