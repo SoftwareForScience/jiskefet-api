@@ -55,13 +55,19 @@ export class RunService {
      * @param query QueryRunDto
      */
     async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
-        let query = await this.runRepository.createQueryBuilder()
-            .where('run_type like :runType', {
-                runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'
-            })
-            .andWhere('run_quality like :runQuality', {
+        let query = await this.runRepository.createQueryBuilder();
+
+        if (queryRunDto.runType) {
+            await query.andWhere('run_type like :runType', {
+                runType: queryRunDto.runType ? queryRunDto.runType : '%'
+            });
+        }
+
+        if (queryRunDto.runQuality) {
+            await query.andWhere('run_quality like :runQuality', {
                 runQuality: queryRunDto.runQuality ? queryRunDto.runQuality : '%'
             });
+        }
 
         // o2 start
         if (queryRunDto.startTimeO2Start) {

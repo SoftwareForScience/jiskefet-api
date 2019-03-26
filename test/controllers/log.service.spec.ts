@@ -23,10 +23,13 @@ import {
     TEST_DB_DATABASE,
     TEST_DB_SYNCHRONIZE,
 } from '../../src/constants';
+import { QueryRunDto } from '../../src/dtos/query.run.dto';
+import { QueryLogDto } from '../../src/dtos/query.log.dto';
 
 describe('LogService', () => {
     let logService: LogService;
     let runService: RunService;
+    let log: Log;
 
     const databaseOptions: TypeOrmModuleOptions = {
         type: TEST_DB_CONNECTION as any,
@@ -40,7 +43,11 @@ describe('LogService', () => {
         migrations: ['populate/*{.ts,.js}'],
         migrationsRun: true
     };
-
+    const queryRunDto: QueryRunDto = {
+        pageNumber: '1',
+        pageSize: '25'
+    };
+    const queryLogDto: QueryLogDto = {};
     const logDto: CreateLogDto = {
         title: 'title',
         body: 'text',
@@ -49,10 +56,6 @@ describe('LogService', () => {
         user: 1,
         runs: null
     };
-
-    let log: Log;
-
-    let logArray: Log[];
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -90,11 +93,11 @@ describe('LogService', () => {
 
         it('should link a run to a log', async () => {
             // retrieve the latest run
-            const runs = await runService.findAll(null);
+            const runs = await runService.findAll(queryRunDto);
             const latestRun = runs.runs[runs.runs.length - 1];
 
             // retrieve the latest log
-            const logs = await logService.findAll(null);
+            const logs = await logService.findAll(queryLogDto);
             const latestLog = logs.logs[logs.logs.length - 1];
             const logId = latestLog.logId;
 
@@ -103,7 +106,7 @@ describe('LogService', () => {
             };
 
             // mock linked run to log
-            log.runs = [...log.runs, latestRun];
+            latestLog.runs = [latestRun];
             expect(await logService.linkRunToLog(logId, runId)).toEqual(log);
         });
     });
@@ -114,16 +117,18 @@ describe('LogService', () => {
             expect(log.logId).toBe(1);
         });
 
-        it('should return an array of logs', async () => {
-            const logs = await logService.findAll(null);
-            logArray = logs.logs;
-            expect(Array.isArray(logArray)).toBeTruthy();
+        it('should return multiple logs', async () => {
+            const logs = await logService.findAll(queryLogDto);
+            expect(logs.logs.length).toBeGreaterThanOrEqual(1);
         });
 
         it('should return the logs from the given user', async () => {
-            const logsFromUser = logArray.filter(result => result.user.userId === 1);
-            expect(await logService.findLogsByUserId(1, null))
-                .toEqual({data: logsFromUser, count: logsFromUser.length});
+            const logsFromUser = await logService.findLogsByUserId(1, queryLogDto);
+            expect(await logService.findLogsByUserId(1, queryLogDto))
+                .toEqual({
+                    logs: logsFromUser.logs,
+                    additionalInformation: logsFromUser.additionalInformation
+                });
         });
     });
 });

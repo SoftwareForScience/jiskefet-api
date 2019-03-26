@@ -55,7 +55,7 @@ function preCheck(): void {
         '',
         `regex:${Regex.PORT_NUMBER}`,
         `regex:${Regex.BOOLEAN}`,
-        `regex:${Regex.BOOLEAN}`,
+        'string:true, false, all, query, error, schema, warn, info, log',
         '',
         '',
         '',

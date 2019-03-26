@@ -16,7 +16,9 @@ import { getJwt } from '../../src/helpers/auth.helper';
 describe('RunController', () => {
     let app: INestApplication;
     let jwt: string;
+
     const runNumber = Math.floor(+new Date() / 1000);
+    const activityId: string = 'run.controller.e2e-spec.ts';
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,11 +37,11 @@ describe('RunController', () => {
 
     describe('POST /runs', () => {
         const runToPost: CreateRunDto = {
-            runNumber,
+            runNumber: runNumber + 1,
             O2StartTime: new Date('2000-01-01'),
             TrgStartTime: new Date('2000-01-01'),
             runType: 'TECHNICAL',
-            activityId: 'Sl4e12ofb83no92ns',
+            activityId,
             nDetectors: 16,
             nFlps: 7,
             nEpns: 8
@@ -54,7 +56,7 @@ describe('RunController', () => {
         });
 
         it('should return JSON', () => {
-            runToPost.runNumber = runToPost.runNumber + 1;
+            runToPost.runNumber = runToPost.runNumber + 2;
             return request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
@@ -62,14 +64,14 @@ describe('RunController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object containing "Sl4e12ofb83no92ns" as the activityId', async () => {
-            runToPost.runNumber = runToPost.runNumber + 2;
+        it(`should return an object containing ${activityId} as the activityId`, async () => {
+            runToPost.runNumber = runToPost.runNumber + 3;
             const response = await request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
                 .set('Accept', 'application/json');
-            expect(response.body.data.item.activityId).toEqual('Sl4e12ofb83no92ns');
+            expect(response.body.data.item.activityId).toEqual(activityId);
         });
     });
 

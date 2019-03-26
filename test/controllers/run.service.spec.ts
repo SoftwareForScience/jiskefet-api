@@ -25,10 +25,13 @@ import {
     TEST_DB_SYNCHRONIZE,
 } from '../../src/constants';
 import { RunType } from '../../src/enums/run.runtype.enum';
+import { QueryRunDto } from '../../src/dtos/query.run.dto';
+import { QueryLogDto } from '../../src/dtos/query.log.dto';
 
 describe('RunService', () => {
     let runService: RunService;
     let logService: LogService;
+    let run: Run;
 
     const databaseOptions: TypeOrmModuleOptions = {
         type: TEST_DB_CONNECTION as any,
@@ -40,11 +43,15 @@ describe('RunService', () => {
         entities: ['src/**/**.entity{.ts,.js}'],
         synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
         migrations: ['populate/*{.ts,.js}'],
-        migrationsRun: true
+        migrationsRun: true,
+        // logging: 'all'
     };
-
     const runNumber = Math.floor(+new Date() / 1000);
-
+    const queryRunDto: QueryRunDto = {
+        pageNumber: '1',
+        pageSize: '25'
+    };
+    const queryLogDto: QueryLogDto = {};
     const runDto: CreateRunDto = {
         runNumber,
         activityId: 'Test activity',
@@ -55,10 +62,6 @@ describe('RunService', () => {
         O2StartTime: new Date(),
         TrgStartTime: new Date()
     };
-
-    let run: Run;
-
-    let runArray: Run[];
 
     beforeAll(async () => {
         // maybe add a switch to support an in memory db like sqljs
@@ -95,40 +98,31 @@ describe('RunService', () => {
         });
 
         it('should link a log to a run', async () => {
-            // retrieve the latest run
-            const runs = await runService.findAll(null);
+            const runs = await runService.findAll(queryRunDto);
             const latestRun = runs.runs[runs.runs.length - 1];
-            // console.log('latest run is');
-            // console.log(latestRun);
             const runId = latestRun.runNumber;
 
             // retrieve the latest log
-            const logs = await logService.findAll(null);
+            const logs = await logService.findAll(queryLogDto);
             const latestLog = logs.logs[logs.logs.length - 1];
-            // console.log('latest log is');
-            // console.log(latestLog);
             const logId: LinkLogToRunDto = {
                 logId: latestLog.logId,
             };
 
-            expect(await runService.linkLogToRun(runId, logId)).toHaveBeenCalled();
+            latestRun.logs = [latestLog];
+            expect(await runService.linkLogToRun(runId, logId)).toEqual(run);
         });
     });
 
     describe('get()', () => {
         it('should return a run with runNumber 1', async () => {
             run = await runService.findById(1);
-            // console.log('found run');
-            // console.log(run);
             expect(run.runNumber).toBe(1);
         });
 
-        it('should return an array of runs', async () => {
-            const runResult = await runService.findAll();
-            // console.log('result is');
-            // console.log(runResult);
-            runArray = runResult.runs;
-            expect(Array.isArray(runArray)).toBeTruthy();
+        it('should return multiple runs', async () => {
+            const runResult = await runService.findAll(queryRunDto);
+            expect(runResult.runs.length).toBeGreaterThanOrEqual(1);
         });
     });
 });

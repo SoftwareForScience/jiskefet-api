@@ -137,6 +137,7 @@ export class QueryRunDto {
 
     @ApiModelProperty({
         description: 'The type of the run.',
+        enum: _.values(RunType),
         required: false,
     })
     @IsOptional()
