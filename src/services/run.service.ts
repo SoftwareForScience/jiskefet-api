@@ -189,7 +189,7 @@ export class RunService {
 
         runToUpdate.TrgEndTime = patchRunDto.TrgEndTime;
         runToUpdate.O2EndTime = patchRunDto.O2EndTime;
-        runToUpdate.runQuality = RunQuality[patchRunDto.runQuality];
+        runToUpdate.runQuality = patchRunDto.runQuality;
         runToUpdate.nTimeframes = patchRunDto.nTimeframes;
         runToUpdate.nSubtimeframes = patchRunDto.nSubtimeframes;
         runToUpdate.bytesReadOut = patchRunDto.bytesReadOut;

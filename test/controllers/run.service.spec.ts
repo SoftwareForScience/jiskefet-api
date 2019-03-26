@@ -27,12 +27,16 @@ import {
 import { RunType } from '../../src/enums/run.runtype.enum';
 import { QueryRunDto } from '../../src/dtos/query.run.dto';
 import { QueryLogDto } from '../../src/dtos/query.log.dto';
+import { PatchRunDto } from '../../src/dtos/patch.run.dto';
 
 describe('RunService', () => {
     let runService: RunService;
     let logService: LogService;
     let run: Run;
+    let latestRun: Run;
+    let patchRunDto: PatchRunDto;
 
+    // define databaseOptions since this test does not provide the AppModule
     const databaseOptions: TypeOrmModuleOptions = {
         type: TEST_DB_CONNECTION as any,
         host: TEST_DB_HOST,
@@ -64,7 +68,8 @@ describe('RunService', () => {
     };
 
     beforeAll(async () => {
-        // maybe add a switch to support an in memory db like sqljs
+        // maybe add a switch to support an in memory db like sqljs,
+        // so that tests can be run in a CI pipeline like Travis
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RunService,
@@ -99,7 +104,7 @@ describe('RunService', () => {
 
         it('should link a log to a run', async () => {
             const runs = await runService.findAll(queryRunDto);
-            const latestRun = runs.runs[runs.runs.length - 1];
+            latestRun = runs.runs[runs.runs.length - 1];
             const runId = latestRun.runNumber;
 
             // retrieve the latest log
@@ -111,6 +116,28 @@ describe('RunService', () => {
 
             latestRun.logs = [latestLog];
             expect(await runService.linkLogToRun(runId, logId)).toEqual(run);
+        });
+
+        it('should update a specific run and return it', async () => {
+            patchRunDto = {
+                O2EndTime: new Date(),
+                TrgEndTime: new Date(),
+                bytesReadOut: 1234567890,
+                bytesTimeframeBuilder: 9876543210,
+                nSubtimeframes: 1234,
+                nTimeframes: 123,
+                runQuality: 'Unknown'
+            };
+
+            const updatedRun = await runService.updateRun(latestRun.runNumber, patchRunDto);
+            expect(updatedRun.runNumber).toBe(latestRun.runNumber);
+            expect(updatedRun.O2EndTime).toBe(patchRunDto.O2EndTime);
+            expect(updatedRun.TrgEndTime).toBe(patchRunDto.TrgEndTime);
+            expect(updatedRun.bytesReadOut).toBe(patchRunDto.bytesReadOut);
+            expect(updatedRun.bytesTimeframeBuilder).toBe(patchRunDto.bytesTimeframeBuilder);
+            expect(updatedRun.nSubtimeframes).toBe(patchRunDto.nSubtimeframes);
+            expect(updatedRun.nTimeframes).toBe(patchRunDto.nTimeframes);
+            expect(updatedRun.runQuality).toBe(patchRunDto.runQuality);
         });
     });
 

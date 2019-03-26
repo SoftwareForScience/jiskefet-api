@@ -78,7 +78,7 @@ export class Run {
         ],
         nullable: true,
     })
-    runQuality: ['Good' | 'Bad' | 'Unknown'];
+    runQuality: 'Good' | 'Bad' | 'Unknown';
 
     @Column({ name: 'n_detectors' })
     nDetectors: number;

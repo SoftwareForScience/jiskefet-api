@@ -33,7 +33,7 @@ export class PatchRunDto {
         enum: ['Good', 'Bad', 'Unknown'],
     })
     @IsEnum(RunQuality, { each: true, message: 'Each value in subtype must be a valid enum value' })
-    readonly runQuality: string;
+    readonly runQuality: 'Good' | 'Bad' | 'Unknown';
 
     @ApiModelProperty({
         example: 2,

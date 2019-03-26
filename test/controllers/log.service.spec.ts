@@ -31,6 +31,7 @@ describe('LogService', () => {
     let runService: RunService;
     let log: Log;
 
+    // define databaseOptions since this test does not provide the AppModule
     const databaseOptions: TypeOrmModuleOptions = {
         type: TEST_DB_CONNECTION as any,
         host: TEST_DB_HOST,
@@ -58,6 +59,8 @@ describe('LogService', () => {
     };
 
     beforeAll(async () => {
+        // maybe add a switch to support an in memory db like sqljs,
+        // so that tests can be run in a CI pipeline like Travis
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RunService,
@@ -124,11 +127,10 @@ describe('LogService', () => {
 
         it('should return the logs from the given user', async () => {
             const logsFromUser = await logService.findLogsByUserId(1, queryLogDto);
-            expect(await logService.findLogsByUserId(1, queryLogDto))
-                .toEqual({
-                    logs: logsFromUser.logs,
-                    additionalInformation: logsFromUser.additionalInformation
-                });
+            expect(typeof logsFromUser.logs).toBe('object');
+            expect(logsFromUser.logs[0].user.userId).toBe(1);
+            expect(logsFromUser.logs.length).toBeGreaterThanOrEqual(1);
+            expect(logsFromUser.additionalInformation).toBeDefined();
         });
     });
 });
