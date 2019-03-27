@@ -138,7 +138,7 @@ export class LogService {
         const run = await this.runRepository.findOne(linkRunToLogDto.runNumber);
         if (!run) {
             throw new HttpException(
-                `Run with with number ${linkRunToLogDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+                `Run with run number ${linkRunToLogDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
         }
         log.runs = [...log.runs, run];
         await this.logRepository.save(log);

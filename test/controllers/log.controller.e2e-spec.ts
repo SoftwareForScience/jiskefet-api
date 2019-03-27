@@ -12,6 +12,7 @@ import { INestApplication } from '@nestjs/common';
 import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { AppModule } from '../../src/app.module';
 import { getJwt } from '../../src/helpers/auth.helper';
+import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
 
 describe('LogController', () => {
     let app: INestApplication;
@@ -33,7 +34,7 @@ describe('LogController', () => {
     });
 
     describe('POST /logs', () => {
-        const logToPost: CreateLogDto = {
+        let logToPost: CreateLogDto = {
             subtype: 'run',
             origin: 'human',
             title: 'test log',
@@ -42,19 +43,12 @@ describe('LogController', () => {
             user: 1
         };
 
-        it('should return status 201', () => {
+        it('should return status 201 and JSON Content-Type', () => {
             return request(app.getHttpServer())
                 .post(`/logs`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
-                .expect(201);
-            });
-
-        it('should return JSON', () => {
-            return request(app.getHttpServer())
-                .post(`/logs`)
-                .set('Authorization', `Bearer ${jwt}`)
-                .send(logToPost)
+                .expect(201)
                 .expect('Content-Type', /json/);
         });
 
@@ -66,17 +60,30 @@ describe('LogController', () => {
                 .set('Accept', 'application/json');
             expect(response.body.data.item.title).toEqual('test log');
         });
+
+        it('should return status 404 and JSON Content-Type', () => {
+            logToPost.runs = [-1];
+            return request(app.getHttpServer())
+                .post(`/logs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(logToPost)
+                .expect(404)
+                .expect('Content-Type', /json/);
+        });
+
+        it('should return status 500 and JSON Content-Type', () => {
+            logToPost = null;
+            return request(app.getHttpServer())
+                .post(`/logs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(logToPost)
+                .expect(500)
+                .expect('Content-Type', /json/);
+        });
     });
 
     describe('GET /logs', () => {
-        it('should return status 200', () => {
-            return request(app.getHttpServer())
-                .get('/logs')
-                .set('Authorization', `Bearer ${jwt}`)
-                .expect(200);
-        });
-
-        it('should return JSON', () => {
+        it('should return status 200 and JSON Content-Type', () => {
             return request(app.getHttpServer())
                 .get('/logs')
                 .set('Authorization', `Bearer ${jwt}`)
@@ -89,21 +96,16 @@ describe('LogController', () => {
                 .get('/logs')
                 .set('Authorization', `Bearer ${jwt}`);
             expect(Array.isArray(response.body.data.items)).toBeTruthy();
+            expect(response.body.data.items.length).toBeGreaterThanOrEqual(1);
         });
     });
 
     describe('GET /logs/{id}', () => {
-        it('should return status 200', () => {
+        it('should return status 200 and JSON Content-Type', () => {
             return request(app.getHttpServer())
                 .get(`/logs/${1}`)
                 .set('Authorization', `Bearer ${jwt}`)
-                .expect(200);
-        });
-
-        it('should return JSON', () => {
-            return request(app.getHttpServer())
-                .get(`/logs/${1}`)
-                .set('Authorization', `Bearer ${jwt}`)
+                .expect(200)
                 .expect('Content-Type', /json/);
         });
 
@@ -112,6 +114,41 @@ describe('LogController', () => {
                 .get(`/logs/${1}`)
                 .set('Authorization', `Bearer ${jwt}`);
             expect(typeof response.body).toBe('object');
+            expect(response.body.data.item).toBeDefined();
+        });
+    });
+
+    describe('PATCH /logs/{id}/runs', () => {
+        const linkRunToLogDto: LinkRunToLogDto = {
+            runNumber: 1
+        };
+
+        it('should link a run to a log', () => {
+            return request(app.getHttpServer())
+                .patch(`/logs/${1}/runs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(linkRunToLogDto)
+                .expect(200)
+                .expect('Content-Type', /json/);
+        });
+
+        it('should return status 404 with message "Log with log number x does not exist"', () => {
+            return request(app.getHttpServer())
+                .patch(`/logs/${-1}/runs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(linkRunToLogDto)
+                .expect(404)
+                .expect('Content-Type', /json/);
+        });
+
+        it('should return status 404 with message "Run with run number x does not exist"', () => {
+            linkRunToLogDto.runNumber = -1;
+            return request(app.getHttpServer())
+                .patch(`/logs/${1}/runs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(linkRunToLogDto)
+                .expect(404)
+                .expect('Content-Type', /json/);
         });
     });
 });

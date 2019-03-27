@@ -12,10 +12,13 @@ import { INestApplication } from '@nestjs/common';
 import { CreateRunDto } from '../../src/dtos/create.run.dto';
 import { AppModule } from '../../src/app.module';
 import { getJwt } from '../../src/helpers/auth.helper';
+import { LinkLogToRunDto } from '../../src/dtos/linkLogToRun.run.dto';
+import { PatchRunDto } from '../../src/dtos/patch.run.dto';
 
 describe('RunController', () => {
     let app: INestApplication;
     let jwt: string;
+    let runToPost: CreateRunDto;
 
     const runNumber = Math.floor(+new Date() / 1000);
     const activityId: string = 'run.controller.e2e-spec.ts';
@@ -36,7 +39,7 @@ describe('RunController', () => {
     });
 
     describe('POST /runs', () => {
-        const runToPost: CreateRunDto = {
+        runToPost = {
             runNumber: runNumber + 1,
             O2StartTime: new Date('2000-01-01'),
             TrgStartTime: new Date('2000-01-01'),
@@ -47,20 +50,12 @@ describe('RunController', () => {
             nEpns: 8
         };
 
-        it('should return status 201', () => {
+        it('should return status 201 and JSON Cotent-Type', () => {
             return request(app.getHttpServer())
                 .post(`/runs`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
-                .expect(201);
-        });
-
-        it('should return JSON', () => {
-            runToPost.runNumber = runToPost.runNumber + 2;
-            return request(app.getHttpServer())
-                .post(`/runs`)
-                .set('Authorization', `Bearer ${jwt}`)
-                .send(runToPost)
+                .expect(201)
                 .expect('Content-Type', /json/);
         });
 
@@ -76,14 +71,7 @@ describe('RunController', () => {
     });
 
     describe('GET /runs', () => {
-        it('should return status 200', () => {
-            return request(app.getHttpServer())
-                .get('/runs')
-                .set('Authorization', `Bearer ${jwt}`)
-                .expect(200);
-        });
-
-        it('should return JSON', () => {
+        it('should return status 200 and JSON Content-Type', () => {
             return request(app.getHttpServer())
                 .get('/runs')
                 .set('Authorization', `Bearer ${jwt}`)
@@ -96,29 +84,61 @@ describe('RunController', () => {
                 .get('/runs')
                 .set('Authorization', `Bearer ${jwt}`);
             expect(Array.isArray(response.body.data.items)).toBeTruthy();
+            expect(response.body.data.items.length).toBeGreaterThanOrEqual(1);
         });
     });
 
     describe('GET /runs/{id}', () => {
-        it('should return status 200', () => {
+        it('should return status 200 and JSON Content-Type', () => {
             return request(app.getHttpServer())
-                .get(`/runs/${runNumber}`)
+                .get(`/runs/${runToPost.runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`)
-                .expect(200);
-        });
-
-        it('should return JSON', () => {
-            return request(app.getHttpServer())
-                .get(`/runs/${runNumber}`)
-                .set('Authorization', `Bearer ${jwt}`)
+                .expect(200)
                 .expect('Content-Type', /json/);
         });
 
         it('should return an object', async () => {
             const response = await request(app.getHttpServer())
-                .get(`/runs/${runNumber}`)
+                .get(`/runs/${runToPost.runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`);
+
             expect(typeof response.body.data).toBe('object');
+            expect(response.body.data.item).toBeDefined();
+        });
+    });
+
+    describe('PATCH /runs/{id}/logs', () => {
+        const linkLogToRunDto: LinkLogToRunDto = {
+            logId: 1
+        };
+
+        it('should return status 200 and JSON Content-Type', () => {
+            return request(app.getHttpServer())
+                .patch(`/runs/${runToPost.runNumber}/logs`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(linkLogToRunDto)
+                .expect(200)
+                .expect('Content-Type', /json/);
+        });
+    });
+
+    describe('PATCH /runs/{id}', () => {
+        it('should return update a run and return status 200', () => {
+            const patchRunDto: PatchRunDto = {
+                O2EndTime: new Date(),
+                TrgEndTime: new Date(),
+                bytesReadOut: 1234567890,
+                bytesTimeframeBuilder: 9876543210,
+                nSubtimeframes: 1234,
+                nTimeframes: 123,
+                runQuality: 'Unknown'
+            };
+
+            return request(app.getHttpServer())
+                .patch(`/runs/${runToPost.runNumber}`)
+                .set('Authorization', `Bearer ${jwt}`)
+                .send(patchRunDto)
+                .expect(200);
         });
     });
 });
