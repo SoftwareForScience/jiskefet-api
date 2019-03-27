@@ -32,9 +32,6 @@ export class FlpController {
      */
     @Get(':name/runs/:id')
     async findById(@Param('id') runId: number, @Param('name') flpName: string): Promise<ResponseObject<FlpRole>> {
-        // Aggegrate readout bytes so it can be updated for the run table,
-        // aswell as the number of timeframes and subtimeframes.
-        // throw new HttpException(`Endpoint is not yet implemented.`, HttpStatus.NOT_IMPLEMENTED);
         try {
             return createResponseItem(await this.flpService.findOne(flpName, runId));
         } catch (error) {
@@ -66,7 +63,7 @@ export class FlpController {
     async updateById(
         @Param('id') runId: number,
         @Param('name') flpName: string,
-        @Body() request: PatchFlpDto): Promise<ResponseObject<void>> {
+        @Body() request: PatchFlpDto): Promise<ResponseObject<FlpRole>> {
         // Update bytes that are produced for the flp (during runtime).
         try {
             const flp = await this.flpService.patch(flpName, runId, request);

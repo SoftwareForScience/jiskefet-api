@@ -35,31 +35,31 @@ export class PatchRunDto {
     @IsEnum(RunQuality, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runQuality: string;
 
-    @ApiModelProperty({
-        example: 2,
-        description: 'Number of timeframes',
-    })
-    @IsInt()
-    readonly nTimeframes: number;
+    // @ApiModelProperty({
+    //     example: 2,
+    //     description: 'Number of timeframes',
+    // })
+    // @IsInt()
+    // readonly nTimeframes: number;
 
-    @ApiModelProperty({
-        example: 4,
-        description: 'Number of subtimeframes',
-    })
-    @IsInt()
-    readonly nSubtimeframes: number;
+    // @ApiModelProperty({
+    //     example: 4,
+    //     description: 'Number of subtimeframes',
+    // })
+    // @IsInt()
+    // readonly nSubtimeframes: number;
 
-    @ApiModelProperty({
-        example: 5,
-        description: 'Amount of bytes read out',
-    })
-    @IsInt()
-    readonly bytesReadOut: number;
+    // @ApiModelProperty({
+    //     example: 5,
+    //     description: 'Amount of bytes read out',
+    // })
+    // @IsInt()
+    // readonly bytesReadOut: number;
 
-    @ApiModelProperty({
-        example: 12,
-        description: 'What builder was used.',
-    })
-    @IsInt()
-    readonly bytesTimeframeBuilder: number;
+    // @ApiModelProperty({
+    //     example: 12,
+    //     description: 'What builder was used.',
+    // })
+    // @IsInt()
+    // readonly bytesTimeframeBuilder: number;
 }

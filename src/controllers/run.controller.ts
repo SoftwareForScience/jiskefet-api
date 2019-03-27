@@ -103,7 +103,7 @@ export class RunController {
      * @param runNumber unique indentifier for run object.
      */
     @Patch(':id')
-    async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<void>> {
+    async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<Run>> {
         try {
             const patchRun = await this.runService.updateRun(runNumber, request);
             return createResponseItem(patchRun);

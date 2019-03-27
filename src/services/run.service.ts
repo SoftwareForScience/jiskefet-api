@@ -20,19 +20,24 @@ import * as _ from 'lodash';
 import { AdditionalOptions } from '../interfaces/response_object.interface';
 import { PatchRunDto } from '../dtos/patch.run.dto';
 import { RunQuality } from '../enums/run.runquality.enum';
+import { FlpRole } from '../entities/flp_role.entity';
 
 @Injectable()
 export class RunService {
 
     private readonly repository: Repository<Run>;
     private readonly logRepository: Repository<Log>;
+    private readonly flpRepository: Repository<FlpRole>;
 
     constructor(
+        // private readonly flpService: FlpSerivce, mag niet
         @InjectRepository(Run) repository: Repository<Run>,
-        @InjectRepository(Log) logRepostiory: Repository<Log>
+        @InjectRepository(Log) logRepostiory: Repository<Log>,
+        @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>
     ) {
         this.repository = repository;
         this.logRepository = logRepostiory;
+        this.flpRepository = flpRepository;
     }
 
     /**
@@ -177,17 +182,36 @@ export class RunService {
         await this.repository.save(run);
     }
 
+    /**
+     * Updates a Run. The fields nSubTimeFrames and equimentBytes are the sum of the FLPs assigend to the Run.
+     * @param runNumber unique indentifier for a Run.
+     * @param patchRunDto is the Dto to update a Run.
+     */
     async updateRun(runNumber: number, patchRunDto: PatchRunDto): Promise<Run> {
-        let runToUpdate: Run;
-        runToUpdate = await this.findById(runNumber);
+        const runToUpdate: Run = await this.findById(runNumber);
+        if (!runToUpdate) {
+            throw new HttpException(
+                `Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+        }
+        let accSubtimeframes = 0;
+        let accBytesReadOut = 0;
+
+        const flpArray: FlpRole[] = await this.flpRepository.createQueryBuilder()
+            .where('fk_run_number = :runNumber', { runNumber })
+            .getMany();
+
+        if (flpArray !== undefined || flpArray.length !== 0) {
+            for (const flp of flpArray) {
+                accSubtimeframes = accSubtimeframes + flp.nSubTimeframes;
+                accBytesReadOut = accBytesReadOut + flp.equipmentBytes;
+            }
+        }
 
         runToUpdate.TrgEndTime = patchRunDto.TrgEndTime;
         runToUpdate.O2EndTime = patchRunDto.O2EndTime;
         runToUpdate.runQuality = RunQuality[patchRunDto.runQuality];
-        runToUpdate.nTimeframes = patchRunDto.nTimeframes;
-        runToUpdate.nSubtimeframes = patchRunDto.nSubtimeframes;
-        runToUpdate.bytesReadOut = patchRunDto.bytesReadOut;
-        runToUpdate.bytesTimeframeBuilder = patchRunDto.bytesTimeframeBuilder;
+        runToUpdate.nSubtimeframes = accSubtimeframes;
+        runToUpdate.bytesReadOut = accBytesReadOut;
 
         return await this.repository.save(runToUpdate);
     }
