@@ -7,7 +7,7 @@
  */
 
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
-import { UseGuards, Controller, Get, Param, HttpException, HttpStatus, Patch, Post, Body } from '@nestjs/common';
+import { UseGuards, Controller, Get, Param, Patch, Post, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { FlpRole } from '../entities/flp_role.entity';

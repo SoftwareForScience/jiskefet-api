@@ -12,8 +12,6 @@ import {
     Controller,
     Query,
     UnprocessableEntityException,
-    HttpException,
-    HttpStatus,
     BadRequestException,
     UnauthorizedException,
     NotFoundException

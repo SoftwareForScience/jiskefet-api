@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UseGuards, Patch, HttpException, HttpStatus } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
