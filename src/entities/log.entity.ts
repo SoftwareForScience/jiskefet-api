@@ -126,11 +126,11 @@ export class Log {
             referencedColumnName: 'runNumber'
         }
     })
-    // @ApiModelProperty({
-    //     type: Run,
-    //     isArray: true,
+    @ApiModelProperty({
+        type: Run,
+        // isArray: true,
     //     minProperties: 1
-    // })
+    })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log, {
