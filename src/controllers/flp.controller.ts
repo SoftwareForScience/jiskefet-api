@@ -7,7 +7,7 @@
  */
 
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
-import { UseGuards, Controller, Get, Param, Patch, Post, Body } from '@nestjs/common';
+import { UseGuards, Controller, Get, Param, Patch, Post, Body, UseFilters } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { FlpRole } from '../entities/flp_role.entity';
@@ -15,10 +15,12 @@ import { CreateFlpDto } from '../dtos/create.flp.dto';
 import { FlpSerivce } from '../services/flp.service';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { PatchFlpDto } from '../dtos/patch.flp.dto';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('flp')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('flp')
 export class FlpController {
 

@@ -52,8 +52,6 @@ export class RunController {
             infoLog.message = 'The run could not be created';
             this.loggerService.logErrorInfoLog(infoLog);
             return createErrorResponse(error);
-            // console.log(error);
-            // throw new HttpException(error, error.status);
         }
     }
 

@@ -11,53 +11,42 @@ import { Request, Response } from 'express';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-    // tslint:disable-next-line:typedef
-    catch(exception: HttpException, host: ArgumentsHost) {
+    catch(exception: HttpException, host: ArgumentsHost): void {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const request = ctx.getRequest<Request>();
+        // const request = ctx.getRequest<Request>();
         const status = exception.getStatus();
 
-        // const stackTrace = exception.stack;
-        // let msg: string;
-        // if (String(exception.message).trim.toString() !== '') {
-        //     msg = exception.message;
-        // } else {
-        //     msg = 'Oof, something went wrong';
-        // }
-        // console.log(msg);
+        let errorObject: any;
+        let errorMsg: string;
+        // Check if exception.message is empty
+        if (String(exception.message).trim.toString() !== '') {
+            errorObject = exception.message;
+            errorMsg = exception.message.error;
+        } else {
+            errorObject = 'Oof, something went wrong';
+        }
+
+        if (errorObject.statusCode) {
+            delete errorObject.error;
+            delete errorObject.statusCode;
+            errorObject.apiVersion = (global as any).apiVersion;
+            errorObject.error = {
+                error: exception.name,
+                code: exception.getStatus(),
+                message: errorMsg,
+            };
+        }
 
         switch (process.env.NODE_ENV) {
             case 'dev':
-                response
-                    .status(status)
-                    .json({
-                        statusCode: status,
-                        timestamp: new Date().toISOString(),
-                        path: request.url,
-                        apiVersion: (global as any).apiVersion,
-                        error: {
-                            error: exception.name ? exception.name : HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
-                            code: status,
-                            message: exception.message ? exception.message : 'Oof, something went wrong',
-                            details: exception.stack
-                        }
-                    });
+                errorObject.error.details = exception.stack;
                 break;
             default:
-                response
-                    .status(status)
-                    .json({
-                        statusCode: status,
-                        timestamp: new Date().toISOString(),
-                        path: request.url,
-                        apiVersion: (global as any).apiVersion,
-                        error: {
-                            error: exception ? exception.name : HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
-                            code: status,
-                            message: exception.message ? exception.message : 'Oof, something went wrong',
-                        }
-                    });
         }
+
+        response
+            .status(status)
+            .json(errorObject);
     }
 }
