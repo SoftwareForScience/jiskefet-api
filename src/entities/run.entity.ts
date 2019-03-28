@@ -15,6 +15,7 @@ import { DetectorQualityHistory } from './detector_quality_history.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { RunEorHistory } from './run_eor_history.entity';
 import { Tag } from './tag.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('run')
 export class Run {
@@ -22,18 +23,21 @@ export class Run {
     @PrimaryColumn({
         name: 'run_number'
     })
+    @ApiModelProperty()
     runNumber: number;
 
     @Column({
         name: 'o2_start_time',
         precision: 0,
     })
+    @ApiModelProperty()
     O2StartTime: Date;
 
     @Column({
         name: 'trg_start_time',
         precision: 0,
     })
+    @ApiModelProperty()
     TrgStartTime: Date;
 
     @Column({
@@ -41,6 +45,7 @@ export class Run {
         precision: 0,
         nullable: true,
     })
+    @ApiModelProperty()
     TrgEndTime: Date;
 
     @Column({
@@ -48,6 +53,7 @@ export class Run {
         precision: 0,
         nullable: true,
     })
+    @ApiModelProperty()
     O2EndTime: Date;
 
     @Column({
@@ -55,6 +61,7 @@ export class Run {
         type: 'char',
         length: 64
     })
+    @ApiModelProperty()
     activityId: string;
 
     @Column({
@@ -66,6 +73,7 @@ export class Run {
             'TECHNICAL'
         ],
     })
+    @ApiModelProperty()
     runType: ['PHYSICS' | 'COSMICS' | 'TECHNICAL'];
 
     @Column({
@@ -78,39 +86,47 @@ export class Run {
         ],
         nullable: true,
     })
+    @ApiModelProperty()
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
+    @ApiModelProperty()
     nDetectors: number;
 
     @Column({ name: 'n_flps' })
+    @ApiModelProperty()
     nFlps: number;
 
     @Column({ name: 'n_epns' })
+    @ApiModelProperty()
     nEpns: number;
 
     @Column({
         name: 'n_timeframes',
         nullable: true,
     })
+    @ApiModelProperty()
     nTimeframes: number;
 
     @Column({
         name: 'n_subtimeframes',
         nullable: true,
     })
+    @ApiModelProperty()
     nSubtimeframes: number;
 
     @Column({
         name: 'bytes_read_out',
         nullable: true,
     })
+    @ApiModelProperty()
     bytesReadOut: number;
 
     @Column({
         name: 'bytes_timeframe_builder',
         nullable: true,
     })
+    @ApiModelProperty()
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)
@@ -128,12 +144,21 @@ export class Run {
     tags: Tag[];
 
     @ManyToMany(type => Log, log => log.runs)
+    @ApiModelProperty({
+        type: Log,
+        isArray: true,
+        minProperties: 1
+    })
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
     epnRoleSessions: EpnRoleSession[];
 
     @OneToMany(type => FlpRole, flpRole => flpRole.run)
+    @ApiModelProperty({
+        type: FlpRole,
+        isArray: true
+    })
     flpRoles: FlpRole[];
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)

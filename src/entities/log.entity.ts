@@ -20,11 +20,13 @@ import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 import { Run } from './run.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('log')
 export class Log {
 
     @PrimaryGeneratedColumn({ name: 'log_id' })
+    @ApiModelProperty()
     logId: number;
 
     @Column({
@@ -48,24 +50,29 @@ export class Log {
         type: 'enum',
         enum: ['human', 'process'],
     })
+    @ApiModelProperty()
     origin: 'human' | 'process';
 
     @Column({
         name: 'creation_time',
         precision: 0,
     })
+    @ApiModelProperty()
     creationTime: Date;
 
     @Column()
+    @ApiModelProperty()
     title: string;
 
     @Column({ type: 'longtext' })
+    @ApiModelProperty()
     body: string;
 
     @Column({
         name: 'subsystem_fk_subsystem_id',
         nullable: true,
     })
+    @ApiModelProperty()
     subsystemFkSubsystemId: number;
 
     @Column({
@@ -73,18 +80,21 @@ export class Log {
         precision: 0,
         nullable: true,
     })
+    @ApiModelProperty()
     announcementValidUntil: Date;
 
     @Column({
         name: 'comment_fk_parent_log_id',
         nullable: true
     })
+    @ApiModelProperty()
     commentFkParentLogId: number;
 
     @Column({
         name: 'comment_fk_root_log_id',
         nullable: true
     })
+    @ApiModelProperty()
     commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)
@@ -116,6 +126,11 @@ export class Log {
             referencedColumnName: 'runNumber'
         }
     })
+    // @ApiModelProperty({
+    //     type: Run,
+    //     isArray: true,
+    //     minProperties: 1
+    // })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log, {

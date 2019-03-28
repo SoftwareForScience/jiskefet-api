@@ -37,7 +37,7 @@ export class LogController {
      */
     @Post()
     @ApiOperation({ title: 'Creates a Log.' })
-    @ApiOkResponse({ description: 'Succesfully created a Log' })
+    @ApiOkResponse({ description: 'Succesfully created a Log', type: Log })
     async create(@Body() request: CreateLogDto): Promise<ResponseObject<Log>> {
         try {
             const log = await this.logService.create(request);

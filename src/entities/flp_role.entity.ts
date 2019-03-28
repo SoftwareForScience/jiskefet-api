@@ -8,6 +8,7 @@
 
 import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('flp_role')
 export class FlpRole {
@@ -27,6 +28,9 @@ export class FlpRole {
         }
     )
     @JoinColumn({ name: 'fk_run_number' })
+    @ApiModelProperty({
+        type: Run
+    })
     run: Run;
 
     @Column({

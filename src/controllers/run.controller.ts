@@ -8,7 +8,7 @@
 
 import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -37,7 +37,11 @@ export class RunController {
      */
     @Post()
     @ApiOperation({ title: 'Creates a Run.' })
-    @ApiOkResponse({ description: 'Succesfully created a Run.' })
+    @ApiOkResponse({ description: 'Succesfully created a Run.', type: Run })
+    @ApiResponse({
+        status: 409,
+        description: 'There already exist a Run with this Run number.'
+    })
     async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
             request.O2StartTime = new Date();
@@ -63,6 +67,10 @@ export class RunController {
     @Get()
     @ApiOperation({ title: 'Returns all Runs.' })
     @ApiOkResponse({ description: 'Succesfully returned Runs.' })
+    @ApiResponse({
+        status: 204,
+        description: 'There are no Runs.'
+    })
     async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject<Run>> {
         try {
             const getRuns = await this.runService.findAll(query);
@@ -79,6 +87,10 @@ export class RunController {
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Run.' })
     @ApiOkResponse({ description: 'Succesfully returned a specific Run.' })
+    @ApiResponse({
+        status: 204,
+        description: 'There is no Run with the give Run number.'
+    })
     async findById(@Param('id') id: number): Promise<ResponseObject<Run>> {
         try {
             const runById = await this.runService.findById(id);
