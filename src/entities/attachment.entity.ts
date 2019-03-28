@@ -33,7 +33,7 @@ export class Attachment {
     })
     creationTime: Date;
 
-    @Column()
+    @Column({ nullable: true })
     title: string;
 
     @Column({ name: 'file_name' })
