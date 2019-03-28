@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { UseGuards, Controller, Get, Param, Patch, Post, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
@@ -31,6 +31,8 @@ export class FlpController {
      * @param name of FLP.
      */
     @Get(':name/runs/:id')
+    @ApiOperation({ title: 'Returns a specific FLP based on RunId.' })
+    @ApiOkResponse({ description: 'Succesfully returned a FLP.' })
     async findById(@Param('id') runId: number, @Param('name') flpName: string): Promise<ResponseObject<FlpRole>> {
         try {
             return createResponseItem(await this.flpService.findOne(flpName, runId));
@@ -44,6 +46,8 @@ export class FlpController {
      * @param request CreateFlpDto
      */
     @Post()
+    @ApiOperation({ title: 'Creates a FLP.' })
+    @ApiOkResponse({ description: 'Succesfully created a FLP.' })
     async createFlp(@Body() request: CreateFlpDto): Promise<ResponseObject<FlpRole>> {
         try {
             const flp = await this.flpService.create(request);
@@ -60,6 +64,8 @@ export class FlpController {
      * @param request fields to update
      */
     @Patch(':name/runs/:id')
+    @ApiOperation({ title: 'Updates a FLP based on a RunId and FLPName.' })
+    @ApiOkResponse({ description: 'Succesfully updated a FLP.' })
     async updateById(
         @Param('id') runId: number,
         @Param('name') flpName: string,

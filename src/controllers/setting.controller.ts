@@ -7,7 +7,7 @@
  */
 
 import { Get, Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { SettingService } from '../services/setting.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
@@ -22,6 +22,8 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
+    @ApiOperation({ title: 'Returns settings.' })
+    @ApiOkResponse({ description: 'Succesfully returns setting.' })
     async getSettings(): Promise<ResponseObject<Setting>> {
         try {
             const setting = await this.settingService.getSettings();

@@ -7,7 +7,7 @@
  */
 
 import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -33,6 +33,8 @@ export class AttachmentController {
      * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post()
+    @ApiOperation({ title: 'Creates a Attachment.' })
+    @ApiOkResponse({ description: 'Succesfully created a Attachment.' })
     @UsePipes(ValidationPipe)
     async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
         try {
@@ -51,6 +53,8 @@ export class AttachmentController {
      * @param id unique identifier for a Log item.
      */
     @Get(':id/logs')
+    @ApiOperation({ title: 'Returns Attachments that belong to a specific Log.' })
+    @ApiOkResponse({ description: 'Succesfully returned the Attachments.' })
     async findById(@Param('id') logId: number): Promise<ResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);
 

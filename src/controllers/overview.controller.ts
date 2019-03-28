@@ -7,7 +7,7 @@
  */
 
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from '../dtos/get.overview.dto';
 import { QueryOverviewDto } from '../dtos/query.overview.dto';
@@ -28,6 +28,8 @@ export class OverviewController {
      * @param id unique identifier for a Log item.
      */
     @Get()
+    @ApiOperation({ title: 'Returns all Overviews that belong to a specific Log.' })
+    @ApiOkResponse({ description: 'Succesfully returned Overviews.' })
     async find(@Query() query?: QueryOverviewDto): Promise<ResponseObject<GetOverviewDto>> {
         try {
             const overview = await this.attachmentservice.find(query);
