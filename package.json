@@ -6,11 +6,12 @@
   "license": "GPL-3.0",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts",
-    "dev": "nodemon --exec 'ts-node -r dotenv/config src/main.ts' src/main.ts",
+    "dev": "nodemon --exec ts-node -r dotenv/config src/main.ts src/main.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest --coverage",
     "showcoverage": "open ./coverage/lcov-report/index.html",
-    "typeorm": "npx ts-node node_modules/typeorm/cli.js"
+    "typeorm": "npx ts-node node_modules/typeorm/cli.js",
+    "debug": "nodemon --config nodemon-debug.json"
   },
   "dependencies": {
     "@nestjs/common": "^5.1.0",

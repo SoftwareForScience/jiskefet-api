@@ -43,6 +43,9 @@ import { AuthService } from './abstracts/auth.service.abstract';
 import { SettingService } from './services/setting.service';
 import { SettingController } from './controllers/setting.controller';
 import { SettingModule } from './modules/setting.module';
+import { ThreadController } from './controllers/thread.controller';
+import { ThreadService } from './services/thread.service';
+import { ThreadModule } from './modules/thread.module';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -93,7 +96,8 @@ const authServiceProvider = {
     SubSystemPermissionModule,
     OverviewModule,
     InfoLogModule,
-    SettingModule
+    SettingModule,
+    ThreadModule
   ],
   controllers: [
     AppController,
@@ -104,7 +108,8 @@ const authServiceProvider = {
     UserController,
     AuthController,
     OverviewController,
-    SettingController
+    SettingController,
+    ThreadController
   ],
   providers: [
     AppService,
@@ -120,7 +125,8 @@ const authServiceProvider = {
     OverviewService,
     InfoLogService,
     TimeUtility,
-    SettingService
+    SettingService,
+    ThreadService
   ],
 })
 export class AppModule { }
