@@ -35,6 +35,11 @@ export class ThreadDto {
     title: string;
 
     @ApiModelProperty({
+        description: 'Content of the comment'
+    })
+    description: string;
+
+    @ApiModelProperty({
         description: 'List of sub comments of a specific comment or thread'
     })
     comments?: ThreadDto[];

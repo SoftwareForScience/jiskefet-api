@@ -47,17 +47,24 @@ export class ThreadService {
         const rootLog = logs.filter(x => x.commentFkRootLogId === x.commentFkParentLogId)[0];
         const parentThread = this.mapLogToThreadDto(rootLog);
         const parentLogs = logs.filter(x => x.commentFkRootLogId !== x.commentFkParentLogId)
-                                .sort(x => x.commentFkParentLogId);
+                                .sort((x, y) => {
+                                    const a = x.commentFkParentLogId;
+                                    const b = y.commentFkParentLogId;
+                                    return a > b ? 1 : b > a ? -1 : 0;
+                                });
 
         for (let index = 0; index < parentLogs.length; index++) {
             let list = new Array<ThreadDto>();
             const comment = this.mapLogToThreadDto(parentLogs[index]);
-            const nextParentId = parentLogs[index + 1].commentFkParentLogId;
+            let nextParentId = 0;
+            if (index !== parentLogs.length - 1) {
+                nextParentId = parentLogs[index + 1].commentFkParentLogId;
+            }
 
             if (index + 1 < parentLogs.length && nextParentId === comment.parentId) {
-                for (let subIndex = index; subIndex < parentLogs.length; subIndex++) {
-                    if (parentLogs[index].commentFkParentLogId === comment.parentId) {
-                        const subComment = this.mapLogToThreadDto(parentLogs[subIndex]);
+                for (let subIndex = index + 1; subIndex < parentLogs.length; subIndex++) {
+                    const subComment = this.mapLogToThreadDto(parentLogs[subIndex]);
+                    if (subComment.parentId === comment.parentId) {
                         list.push(subComment);
                         index = subIndex;
                     }
@@ -80,6 +87,7 @@ export class ThreadService {
     private mapLogToThreadDto(log: Log): ThreadDto {
         const thread = new ThreadDto();
         thread.title = log.title;
+        thread.description = log.text;
         thread.createdAt = log.creationTime;
         thread.parentId = log.commentFkParentLogId;
         thread.rootId = log.commentFkRootLogId;
