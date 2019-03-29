@@ -6,7 +6,6 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
