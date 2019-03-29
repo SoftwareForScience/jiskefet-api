@@ -30,14 +30,20 @@ export class Run {
         name: 'o2_start_time',
         precision: 0,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time',
+    })
     O2StartTime: Date;
 
     @Column({
         name: 'trg_start_time',
         precision: 0,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time',
+    })
     TrgStartTime: Date;
 
     @Column({
@@ -45,7 +51,11 @@ export class Run {
         precision: 0,
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        required: false,
+        type: 'string',
+        format: 'date-time'
+    })
     TrgEndTime: Date;
 
     @Column({
@@ -53,7 +63,11 @@ export class Run {
         precision: 0,
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        required: false,
+        type: 'string',
+        format: 'date-time'
+    })
     O2EndTime: Date;
 
     @Column({
@@ -86,7 +100,7 @@ export class Run {
         ],
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false})
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
@@ -105,28 +119,28 @@ export class Run {
         name: 'n_timeframes',
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false})
     nTimeframes: number;
 
     @Column({
         name: 'n_subtimeframes',
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false})
     nSubtimeframes: number;
 
     @Column({
         name: 'bytes_read_out',
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     bytesReadOut: number;
 
     @Column({
         name: 'bytes_timeframe_builder',
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)

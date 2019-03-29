@@ -57,7 +57,10 @@ export class Log {
         name: 'creation_time',
         precision: 0,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
+    })
     creationTime: Date;
 
     @Column()
@@ -72,7 +75,7 @@ export class Log {
         name: 'subsystem_fk_subsystem_id',
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     subsystemFkSubsystemId: number;
 
     @Column({
@@ -80,21 +83,21 @@ export class Log {
         precision: 0,
         nullable: true,
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     announcementValidUntil: Date;
 
     @Column({
         name: 'comment_fk_parent_log_id',
         nullable: true
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     commentFkParentLogId: number;
 
     @Column({
         name: 'comment_fk_root_log_id',
         nullable: true
     })
-    @ApiModelProperty()
+    @ApiModelProperty({ required: false })
     commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)

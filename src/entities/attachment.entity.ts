@@ -8,6 +8,7 @@
 
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Log } from './log.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('attachment')
 export class Attachment {
@@ -30,6 +31,10 @@ export class Attachment {
     @Column({
         name: 'creation_time',
         precision: 0,
+    })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
     })
     creationTime: Date;
 

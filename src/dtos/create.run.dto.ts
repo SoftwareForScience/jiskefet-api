@@ -13,7 +13,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsInt, IsString, IsEnum, IsDateString, IsNumber } from 'class-validator';
 import { RunType } from '../enums/run.runtype.enum';
-import { RunQuality } from '../enums/run.runquality.enum';
+
 export class CreateRunDto {
 
     @ApiModelProperty({
@@ -25,14 +25,18 @@ export class CreateRunDto {
 
     @ApiModelProperty({
         example: new Date(),
-        description: 'Current Date'
+        description: 'Current Date',
+        type: 'string',
+        format: 'date-time'
     })
     @IsDateString()
     O2StartTime: Date;
 
     @ApiModelProperty({
         example: new Date(),
-        description: 'Current Date'
+        description: 'Current Date',
+        type: 'string',
+        format: 'date-time'
     })
     @IsDateString()
     TrgStartTime: Date;

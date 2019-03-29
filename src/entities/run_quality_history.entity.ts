@@ -9,6 +9,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Run } from './run.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('run_quality_history')
 export class RunQualityHistory {
@@ -39,6 +40,10 @@ export class RunQualityHistory {
     @Column({
         name: 'change_time',
         precision: 0,
+    })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
     })
     changeTime: Date;
 
