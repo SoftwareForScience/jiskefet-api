@@ -6,8 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Param, Post, Body, UseGuards, Query } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Get, Controller, Param, Post, Body, UseGuards, Query, UseFilters } from '@nestjs/common';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
@@ -25,10 +25,12 @@ import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { User } from '../entities/user.entity';
 import { Log } from '../entities/log.entity';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('users')
 export class UserController {
 

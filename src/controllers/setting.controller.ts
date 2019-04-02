@@ -6,14 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller } from '@nestjs/common';
 import { ApiUseTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Get, Controller, UseFilters } from '@nestjs/common';
 import { SettingService } from '../services/setting.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { Setting } from '../interfaces/setting.interface';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('setting')
+@UseFilters(new HttpExceptionFilter())
 @Controller()
 export class SettingController {
 

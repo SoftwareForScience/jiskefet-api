@@ -6,8 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Post, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,11 +18,12 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Log } from '../entities/log.entity';
-import { LogModule } from '../modules/log.module';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('logs')
 export class LogController {
 

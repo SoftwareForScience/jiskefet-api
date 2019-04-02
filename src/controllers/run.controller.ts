@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UseGuards, Patch } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
 import { Post } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
@@ -20,10 +20,12 @@ import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Run } from '../entities/run.entity';
 import { PatchRunDto } from '../dtos/patch.run.dto';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('runs')
 export class RunController {
     constructor(

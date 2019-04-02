@@ -6,8 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards, UseFilters } from '@nestjs/common';
 import { AttachmentService } from '../services/attachment.service';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,10 +16,12 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('attachments')
 export class AttachmentController {
 
