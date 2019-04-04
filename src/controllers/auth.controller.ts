@@ -12,11 +12,10 @@ import {
     Controller,
     Query,
     UnprocessableEntityException,
-    HttpException,
-    HttpStatus,
     BadRequestException,
     UnauthorizedException,
-    NotFoundException
+    NotFoundException,
+    UseFilters
 } from '@nestjs/common';
 import {
     ApiImplicitQuery,
@@ -35,11 +34,13 @@ import { BCryptService } from '../services/bcrypt.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { JWT_SECRET_KEY } from '../constants';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 /**
  * Controller for authentication related endpoints.
  */
 @ApiUseTags('authentication')
+@UseFilters(new HttpExceptionFilter())
 @Controller()
 export class AuthController {
     constructor(
@@ -84,7 +85,7 @@ export class AuthController {
             const infoLog = new CreateInfologDto();
             infoLog.message = error.message;
             this.loggerService.logWarnInfoLog(infoLog);
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            return createErrorResponse(error);
         }
     }
 

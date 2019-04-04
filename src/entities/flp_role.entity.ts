@@ -8,16 +8,17 @@
 
 import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('flp_role')
 export class FlpRole {
 
     @PrimaryColumn({
-        name: 'flp_role_name',
+        name: 'flp_name',
         type: 'char',
         length: 16
     })
-    flpRoleName: string;
+    flpName: string;
 
     @ManyToOne(
         type => Run, run => run.flpRoles,
@@ -27,14 +28,41 @@ export class FlpRole {
         }
     )
     @JoinColumn({ name: 'fk_run_number' })
+    @ApiModelProperty({
+        type: Run
+    })
     run: Run;
 
-    @Column({ name: 'flp_hostname' })
+    @Column({
+        name: 'flp_hostname'
+    })
     flpHostname: string;
 
-    @Column({ name: 'n_timeframes' })
-    nTimeframes: number;
+    @Column({
+        name: 'n_sub_timeframes',
+        nullable: true
+    })
+    nSubTimeframes: number;
 
-    @Column({ name: 'bytes_processed' })
-    bytesProcessed: number;
+    @Column({
+        name: 'equipment_bytes',
+        nullable: true
+    })
+    equipmentBytes: number;
+
+    @Column({
+        name: 'recording_bytes',
+        nullable: true
+    })
+    recordingBytes: number;
+
+    @Column({
+        name: 'fair_mq_bytes',
+        nullable: true
+    })
+    fairMQBytes: number;
+
+    // Maybe there is use for it later.
+    // @Column({ name: 'bytes_processed' })
+    // bytesProcessed: number;
 }

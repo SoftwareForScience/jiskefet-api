@@ -18,19 +18,25 @@ import { QueryRunDto } from '../dtos/query.run.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
 import * as _ from 'lodash';
 import { AdditionalOptions } from '../interfaces/response_object.interface';
+import { PatchRunDto } from '../dtos/patch.run.dto';
+import { RunQuality } from '../enums/run.runquality.enum';
+import { FlpRole } from '../entities/flp_role.entity';
 
 @Injectable()
 export class RunService {
 
-    private readonly repository: Repository<Run>;
+    private readonly runRepository: Repository<Run>;
     private readonly logRepository: Repository<Log>;
+    private readonly flpRepository: Repository<FlpRole>;
 
     constructor(
-        @InjectRepository(Run) repository: Repository<Run>,
-        @InjectRepository(Log) logRepostiory: Repository<Log>
+        @InjectRepository(Run) runRepository: Repository<Run>,
+        @InjectRepository(Log) logRepostiory: Repository<Log>,
+        @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>
     ) {
-        this.repository = repository;
+        this.runRepository = runRepository;
         this.logRepository = logRepostiory;
+        this.flpRepository = flpRepository;
     }
 
     /**
@@ -45,7 +51,7 @@ export class RunService {
                 `The request could not be completed due to a conflict with the run number: ${RunEntity.runNumber}`,
                 HttpStatus.CONFLICT);
         }
-        return await this.repository.save(RunEntity);
+        return await this.runRepository.save(RunEntity);
     }
 
     /**
@@ -53,13 +59,19 @@ export class RunService {
      * @param query QueryRunDto
      */
     async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
-        let query = await this.repository.createQueryBuilder()
-            .where('run_type like :runType', {
-                runType: queryRunDto.runType ? `%${queryRunDto.runType}%` : '%'
-            })
-            .andWhere('run_quality like :runQuality', {
+        let query = await this.runRepository.createQueryBuilder();
+
+        if (queryRunDto.runType) {
+            await query.andWhere('run_type like :runType', {
+                runType: queryRunDto.runType ? queryRunDto.runType : '%'
+            });
+        }
+
+        if (queryRunDto.runQuality) {
+            await query.andWhere('run_quality like :runQuality', {
                 runQuality: queryRunDto.runQuality ? queryRunDto.runQuality : '%'
             });
+        }
 
         // o2 start
         if (queryRunDto.startTimeO2Start) {
@@ -147,7 +159,7 @@ export class RunService {
      * @param id unique identifier for a Run.
      */
     async findById(id: number): Promise<Run> {
-        return await this.repository
+        return await this.runRepository
             .createQueryBuilder('run')
             .leftJoinAndSelect('run.logs', 'logs')
             .where('run_number = :id', { id })
@@ -172,6 +184,40 @@ export class RunService {
                 `Log with log number ${linkLogToRunDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
         }
         run.logs = [...run.logs, log];
-        await this.repository.save(run);
+        await this.runRepository.save(run);
+    }
+
+    /**
+     * Updates a Run. The fields nSubTimeFrames and equimentBytes are the sum of the FLPs assigend to the Run.
+     * @param runNumber unique indentifier for a Run.
+     * @param patchRunDto is the Dto to update a Run.
+     */
+    async updateRun(runNumber: number, patchRunDto: PatchRunDto): Promise<Run> {
+        const runToUpdate: Run = await this.findById(runNumber);
+        if (!runToUpdate) {
+            throw new HttpException(
+                `Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+        }
+        let accSubtimeframes = 0;
+        let accBytesReadOut = 0;
+
+        const flpArray: FlpRole[] = await this.flpRepository.createQueryBuilder()
+            .where('fk_run_number = :runNumber', { runNumber })
+            .getMany();
+
+        if (flpArray !== undefined || flpArray.length !== 0) {
+            for (const flp of flpArray) {
+                accSubtimeframes = accSubtimeframes + flp.nSubTimeframes;
+                accBytesReadOut = accBytesReadOut + flp.equipmentBytes;
+            }
+        }
+
+        runToUpdate.TrgEndTime = patchRunDto.TrgEndTime;
+        runToUpdate.O2EndTime = patchRunDto.O2EndTime;
+        runToUpdate.runQuality = RunQuality[patchRunDto.runQuality];
+        runToUpdate.nSubtimeframes = accSubtimeframes;
+        runToUpdate.bytesReadOut = accBytesReadOut;
+
+        return await this.runRepository.save(runToUpdate);
     }
 }

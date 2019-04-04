@@ -6,18 +6,20 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Controller, Get, Query, Param, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Controller, Get, Query, UseGuards, UseFilters } from '@nestjs/common';
 import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from '../dtos/get.overview.dto';
 import { QueryOverviewDto } from '../dtos/query.overview.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('overview')
 @ApiBearerAuth()
 @UseGuards(AuthGuard())
+@UseFilters(new HttpExceptionFilter())
 @Controller('overview')
 export class OverviewController {
 
@@ -28,6 +30,8 @@ export class OverviewController {
      * @param id unique identifier for a Log item.
      */
     @Get()
+    @ApiOperation({ title: 'Returns all Overviews that belong to a specific Log.' })
+    @ApiOkResponse({ description: 'Succesfully returned Overviews.' })
     async find(@Query() query?: QueryOverviewDto): Promise<ResponseObject<GetOverviewDto>> {
         try {
             const overview = await this.attachmentservice.find(query);

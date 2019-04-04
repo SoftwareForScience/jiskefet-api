@@ -6,14 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { Get, Controller, UseFilters } from '@nestjs/common';
 import { SettingService } from '../services/setting.service';
-import { SuccessObject } from '../interfaces/response_object.interface';
+import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { Setting } from '../interfaces/setting.interface';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('setting')
+@UseFilters(new HttpExceptionFilter())
 @Controller()
 export class SettingController {
 
@@ -22,7 +24,9 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
-    async getSettings(): Promise<SuccessObject<Setting>> {
+    @ApiOperation({ title: 'Returns settings.' })
+    @ApiOkResponse({ description: 'Succesfully returns setting.' })
+    async getSettings(): Promise<ResponseObject<Setting>> {
         try {
             const setting = await this.settingService.getSettings();
             return createResponseItem(setting);

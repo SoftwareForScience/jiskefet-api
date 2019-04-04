@@ -61,6 +61,9 @@ import {
   TYPEORM_SYNCHRONIZE,
   USE_CERN_SSO
 } from './constants';
+import { FlpModule } from './modules/flp.module';
+import { FlpController } from './controllers/flp.controller';
+import { FlpSerivce } from './services/flp.service';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -104,6 +107,7 @@ const authServiceProvider = {
     TypeOrmModule.forRoot(databaseOptions),
     RunModule,
     LogModule,
+    FlpModule,
     AttachmentModule,
     SubSystemModule,
     UserModule,
@@ -117,6 +121,7 @@ const authServiceProvider = {
     AppController,
     RunController,
     LogController,
+    FlpController,
     AttachmentController,
     SubSystemController,
     UserController,
@@ -128,6 +133,7 @@ const authServiceProvider = {
     AppService,
     RunService,
     LogService,
+    FlpSerivce,
     AttachmentService,
     SubSystemService,
     UserService,

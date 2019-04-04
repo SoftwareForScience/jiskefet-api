@@ -10,47 +10,84 @@ import { LogService } from '../../src/services/log.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateLogDto } from '../../src/dtos/create.log.dto';
 import { LinkRunToLogDto } from '../../src/dtos/linkRunToLog.log.dto';
-import { LogRepository, logArray } from '../mocks/log.repository';
 import { Log } from '../../src/entities/log.entity';
-import { runArray, RunRepository } from '../mocks/run.repository';
+import { RunService } from '../../src/services/run.service';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Run } from '../../src/entities/run.entity';
+import {
+    TEST_DB_CONNECTION,
+    TEST_DB_HOST,
+    TEST_DB_PORT,
+    TEST_DB_USERNAME,
+    TEST_DB_PASSWORD,
+    TEST_DB_DATABASE,
+    TEST_DB_SYNCHRONIZE,
+} from '../../src/constants';
+import { QueryRunDto } from '../../src/dtos/query.run.dto';
+import { QueryLogDto } from '../../src/dtos/query.log.dto';
 
 describe('LogService', () => {
     let logService: LogService;
+    let runService: RunService;
+    let log: Log;
 
-    let runRepository: RunRepository;
-    let logRepository: LogRepository;
-
+    // define databaseOptions since this test does not provide the AppModule
+    const databaseOptions: TypeOrmModuleOptions = {
+        type: TEST_DB_CONNECTION as any,
+        host: TEST_DB_HOST,
+        port: +TEST_DB_PORT,
+        username: TEST_DB_USERNAME,
+        password: TEST_DB_PASSWORD,
+        database: TEST_DB_DATABASE,
+        entities: ['src/**/**.entity{.ts,.js}'],
+        synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
+        migrations: ['populate/*{.ts,.js}'],
+        migrationsRun: true
+    };
+    const queryRunDto: QueryRunDto = {
+        pageNumber: '1',
+        pageSize: '25'
+    };
+    const queryLogDto: QueryLogDto = {};
     const logDto: CreateLogDto = {
         title: 'title',
-        text: 'text',
+        body: 'text',
         subtype: 'run',
         origin: 'human',
         user: 1,
         runs: null
     };
 
-    beforeEach(async () => {
+    beforeAll(async () => {
+        // maybe add a switch to support an in memory db like sqljs,
+        // so that tests can be run in a CI pipeline like Travis
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                LogService, LogRepository, RunRepository
+                RunService,
+                LogService
             ],
+            imports: [
+                TypeOrmModule.forRoot(databaseOptions),
+                TypeOrmModule.forFeature([Run, Log])
+            ]
         })
-        .overrideProvider(LogService)
-        .useClass(LogRepository)
         .compile();
 
+        runService = await module.get<RunService>(RunService);
         logService = await module.get<LogService>(LogService);
-        logRepository = await module.get<LogRepository>(LogRepository);
-        logRepository.onModuleInit();
-        runRepository = await module.get<RunRepository>(RunRepository);
-        runRepository.onModuleInit();
+    });
+
+    describe('initialize', () => {
+        it('logService should be defined', async () => {
+            expect(logService).toBeDefined();
+        });
+
+        it('runService should be defined', async () => {
+            expect(runService).toBeDefined();
+        });
     });
 
     describe('post()', () => {
-
-        it('should be defined', async () => {
-            expect(logService).toBeDefined();
-        });
 
         it('should create one log and return it', async () => {
             const result = await logService.create(logDto);
@@ -58,33 +95,42 @@ describe('LogService', () => {
         });
 
         it('should link a run to a log', async () => {
-            const logId = logArray[0].logId;
+            // retrieve the latest run
+            const runs = await runService.findAll(queryRunDto);
+            const latestRun = runs.runs[runs.runs.length - 1];
+
+            // retrieve the latest log
+            const logs = await logService.findAll(queryLogDto);
+            const latestLog = logs.logs[logs.logs.length - 1];
+            const logId = latestLog.logId;
+
             const runId: LinkRunToLogDto = {
-                runNumber: 1,
+                runNumber: latestRun.runNumber,
             };
 
             // mock linked run to log
-            const log = logArray[0];
-            log.runs = [...log.runs, runArray[0]];
+            latestLog.runs = [latestRun];
             expect(await logService.linkRunToLog(logId, runId)).toEqual(log);
         });
     });
 
     describe('get()', () => {
-        it('should return one log', async () => {
-            const log = logArray[0];
-            expect(await logService.findLogById(1)).toEqual(log);
+        it('should return a log with logId 1', async () => {
+            log = await logService.findLogById(1);
+            expect(log.logId).toBe(1);
         });
 
-        it('should return an array of logs', async () => {
-            const logs = logArray;
-            expect(await logService.findAll(null)).toEqual({ logs, count: logs.length});
+        it('should return multiple logs', async () => {
+            const logs = await logService.findAll(queryLogDto);
+            expect(logs.logs.length).toBeGreaterThanOrEqual(1);
         });
 
         it('should return the logs from the given user', async () => {
-            const logsFromUser = logArray.filter(result => result.user.userId === 1);
-            expect(await logService.findLogsByUserId(1, null))
-                .toEqual({data: logsFromUser, count: logsFromUser.length});
+            const logsFromUser = await logService.findLogsByUserId(1, queryLogDto);
+            expect(typeof logsFromUser.logs).toBe('object');
+            expect(logsFromUser.logs[0].user.userId).toBe(1);
+            expect(logsFromUser.logs.length).toBeGreaterThanOrEqual(1);
+            expect(logsFromUser.additionalInformation).toBeDefined();
         });
     });
 });

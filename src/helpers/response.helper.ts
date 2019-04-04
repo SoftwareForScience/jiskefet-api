@@ -40,29 +40,42 @@ export const createResponseItems = <T>(
 
 export const createErrorResponse = <T>(
     httpError: HttpException, meta?: Meta, innerError?: InnerError, details?: Array<ErrorObject<T>>): any => {
-    if (httpError instanceof HttpException) {
-        throw new HttpException({
-            apiVersion: (global as any).apiVersion,
-            meta,
-            error: {
-                error: httpError.name,
-                code: httpError.getStatus(),
-                message: httpError.message,
-                details,
-                innerError
-            },
-        },
-                                httpError.getStatus());
+    let errorObject;
+    let errorCode;
+    if (typeof httpError.getStatus === 'function') {
+        errorCode = httpError.getStatus();
+    } else {
+        errorCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
-    throw new HttpException({
-        apiVersion: (global as any).apiVersion,
-        meta,
-        error: {
-            error: HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
-            code: HttpStatus.INTERNAL_SERVER_ERROR,
-            message: 'Oops, something went wrong',
-            details,
-            innerError
-        },
-    },                      HttpStatus.INTERNAL_SERVER_ERROR);
+
+    const stackTrace = httpError.stack;
+    switch (process.env.NODE_ENV) {
+        case 'dev':
+            errorObject = {
+                apiVersion: (global as any).apiVersion,
+                meta,
+                error: {
+                    error: httpError ? httpError.name : HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
+                    code: errorCode,
+                    message: httpError ? httpError.message : 'Oops, something went wrong',
+                    details: stackTrace,
+                    innerError
+                },
+            };
+            break;
+        default:
+            errorObject = {
+                apiVersion: (global as any).apiVersion,
+                meta,
+                error: {
+                    error: httpError ? httpError.name : HttpStatus[HttpStatus.INTERNAL_SERVER_ERROR],
+                    code: errorCode,
+                    message: httpError ? httpError.message : 'Oops, something went wrong',
+                    details,
+                    innerError
+                },
+            };
+    }
+
+    throw new HttpException(errorObject, errorCode);
 };
