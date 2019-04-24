@@ -46,8 +46,6 @@ export class RunController {
     })
     async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
-            request.O2StartTime = new Date();
-            request.TrgStartTime = new Date();
             const infoLog = new CreateInfologDto();
             infoLog.message = 'A new run has been created.';
             this.loggerService.logInfoLog(infoLog);
