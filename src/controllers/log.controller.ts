@@ -6,7 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import {
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiOkResponse,
+    ApiCreatedResponse,
+    ApiConflictResponse,
+    ApiNotFoundResponse
+} from '@nestjs/swagger';
 import { Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
@@ -38,7 +46,8 @@ export class LogController {
      */
     @Post()
     @ApiOperation({ title: 'Creates a Log.' })
-    @ApiOkResponse({ description: 'Succesfully created a Log', type: Log })
+    @ApiCreatedResponse({ description: 'Succesfully created a Log', type: Log })
+    @ApiConflictResponse({ description: 'There already exist a Log with this ID.' })
     async create(@Body() request: CreateLogDto): Promise<ResponseObject<Log>> {
         try {
             const log = await this.logService.create(request);
@@ -57,6 +66,7 @@ export class LogController {
     @Get()
     @ApiOperation({ title: 'Returns all Logs.' })
     @ApiOkResponse({ description: 'Succesfully returns Logs.' })
+    @ApiNotFoundResponse({ description: 'There are no Logs.' })
     async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
             const getLogs = await this.logService.findAll(query);
@@ -73,6 +83,7 @@ export class LogController {
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Log.' })
     @ApiOkResponse({ description: 'Succesfully returns a specific Log.' })
+    @ApiNotFoundResponse({ description: 'There is no Log with this ID.' })
     async findById(@Param('id') id: number): Promise<ResponseObject<Log>> {
         try {
             const logById = await this.logService.findLogById(id);
@@ -89,6 +100,8 @@ export class LogController {
     @Patch(':id/runs')
     @ApiOperation({ title: 'Links a Run to a specific Log.' })
     @ApiOkResponse({ description: 'Succesfully linked a Run to a Log.' })
+    @ApiConflictResponse({ description: 'The Run is already linked to the Log.' })
+    @ApiNotFoundResponse({ description: 'The Run or Log does not exist.' })
     async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<ResponseObject<void>> {
         try {
             const runToLog = await this.logService.linkRunToLog(logId, request);

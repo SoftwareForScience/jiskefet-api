@@ -107,10 +107,7 @@ export class RunController {
      */
     @Patch(':id/logs')
     @ApiOperation({ title: 'Links a Log to a specific Run.' })
-    @ApiResponse({
-        status: 204,
-        description: 'The Log is successfully linked to the Run.'
-    })
+    @ApiOkResponse({ description: 'The Log is successfully linked to the Run.' })
     @ApiConflictResponse({ description: 'The Log is already linked to the Run.' })
     @ApiNotFoundResponse({ description: 'The Log or Run does not exist.' })
     async linkLogToRun(@Param('id')
@@ -129,10 +126,7 @@ export class RunController {
      */
     @Patch(':id')
     @ApiOperation({ title: 'Updates certain fields of a Run.' })
-    @ApiResponse({
-        status: 204,
-        description: 'Succesfully updated a Run.'
-    })
+    @ApiOkResponse({ description: 'Succesfully updated a Run.' })
     async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<Run>> {
         try {
             const patchRun = await this.runService.updateRun(runNumber, request);
