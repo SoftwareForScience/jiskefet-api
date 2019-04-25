@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Controller, Get, Query, UseGuards, UseFilters } from '@nestjs/common';
 import { OverviewService } from '../services/overview.service';
 import { GetOverviewDto } from '../dtos/get.overview.dto';
@@ -32,6 +32,7 @@ export class OverviewController {
     @Get()
     @ApiOperation({ title: 'Returns all Overviews that belong to a specific Log.' })
     @ApiOkResponse({ description: 'Succesfully returned Overviews.' })
+    @ApiNotFoundResponse({ description: 'The Log does not exist, the overview could not be shown.' })
     async find(@Query() query?: QueryOverviewDto): Promise<ResponseObject<GetOverviewDto>> {
         try {
             const overview = await this.attachmentservice.find(query);
