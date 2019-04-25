@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Get, Controller, UseFilters } from '@nestjs/common';
 import { SettingService } from '../services/setting.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
@@ -26,6 +26,7 @@ export class SettingController {
     @Get('/setting')
     @ApiOperation({ title: 'Returns settings.' })
     @ApiOkResponse({ description: 'Succesfully returns setting.' })
+    @ApiNotFoundResponse({ description: 'No settings were found.' })
     async getSettings(): Promise<ResponseObject<Setting>> {
         try {
             const setting = await this.settingService.getSettings();
