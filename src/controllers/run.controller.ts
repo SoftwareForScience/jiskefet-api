@@ -8,7 +8,16 @@
 
 import { Get, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
 import { Post } from '@nestjs/common';
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import {
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiOkResponse,
+    ApiResponse,
+    ApiConflictResponse,
+    ApiCreatedResponse,
+    ApiNotFoundResponse
+} from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -39,11 +48,8 @@ export class RunController {
      */
     @Post()
     @ApiOperation({ title: 'Creates a Run.' })
-    @ApiOkResponse({ description: 'Succesfully created a Run.', type: Run })
-    @ApiResponse({
-        status: 409,
-        description: 'There already exist a Run with this Run number.'
-    })
+    @ApiCreatedResponse({ description: 'Succesfully created a Run.', type: Run })
+    @ApiConflictResponse({ description: 'There already exist a Run with this Run number.' })
     async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
             const infoLog = new CreateInfologDto();
@@ -67,10 +73,7 @@ export class RunController {
     @Get()
     @ApiOperation({ title: 'Returns all Runs.' })
     @ApiOkResponse({ description: 'Succesfully returned Runs.' })
-    @ApiResponse({
-        status: 204,
-        description: 'There are no Runs.'
-    })
+    @ApiNotFoundResponse({ description: 'There are no Runs.' })
     async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject<Run>> {
         try {
             const getRuns = await this.runService.findAll(query);
@@ -87,10 +90,7 @@ export class RunController {
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Run.' })
     @ApiOkResponse({ description: 'Succesfully returned a specific Run.' })
-    @ApiResponse({
-        status: 204,
-        description: 'There is no Run with the give Run number.'
-    })
+    @ApiNotFoundResponse({ description: 'There is no Run with the given Run number.' })
     async findById(@Param('id') id: number): Promise<ResponseObject<Run>> {
         try {
             const runById = await this.runService.findById(id);
@@ -107,7 +107,12 @@ export class RunController {
      */
     @Patch(':id/logs')
     @ApiOperation({ title: 'Links a Log to a specific Run.' })
-    @ApiOkResponse({ description: 'Succesfully linked a Log to a Run.' })
+    @ApiResponse({
+        status: 204,
+        description: 'The Log is successfully linked to the Run.'
+    })
+    @ApiConflictResponse({ description: 'The Log is already linked to the Run.' })
+    @ApiNotFoundResponse({ description: 'The Log or Run does not exist.' })
     async linkLogToRun(@Param('id')
     runNumber: number, @Body() request: LinkLogToRunDto): Promise<ResponseObject<void>> {
         try {
@@ -124,7 +129,10 @@ export class RunController {
      */
     @Patch(':id')
     @ApiOperation({ title: 'Updates certain fields of a Run.' })
-    @ApiOkResponse({ description: 'Succesfully updated a Run.' })
+    @ApiResponse({
+        status: 204,
+        description: 'Succesfully updated a Run.'
+    })
     async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<Run>> {
         try {
             const patchRun = await this.runService.updateRun(runNumber, request);
