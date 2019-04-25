@@ -79,15 +79,25 @@ export class LogController {
         return await this.logService.linkRunToLog(logId, request);
     }
 
+    /**
+     * Gets the full thread including the topic(run's log) by run's log id
+     * @param threadId Run's log id
+     */
     @Get('/thread/:id')
     async findRunLogId(@Param('id') threadId: number): Promise<ResponseObject<ThreadDto>> {
         const getThreadById = await this.threadService.findThreadById(threadId);
         return createResponseItem(getThreadById);
     }
 
+    /**
+     * Creates a comment on the specific run's log and under the specific parent's log id
+     * @param createThreadDto Model to create a log
+     * - run Id refers to the run's log id
+     * - parent Id refers to the parent comment's id
+     */
     @Post('/thread')
-    async addComment(@Body() createThreadDto: CreateCommentDto): Promise<ThreadDto> {
+    async addComment(@Body() createThreadDto: CreateCommentDto): Promise<ResponseObject<ThreadDto>> {
         const threadCreated = await this.threadService.replyToRun(createThreadDto);
-        return threadCreated;
+        return createResponseItem(threadCreated);
     }
 }

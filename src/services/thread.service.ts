@@ -26,10 +26,11 @@ export class ThreadService {
         this.logRepository = logRepository;
         this.runRepository = runRepository;
     }
+
     /**
      * Creates a Comment on a Run
      * Root Id refers to the Run's Log id
-     * Parent Id refers to the comment Log id
+     * Parent Id refers to the Comment Log id
      * @param createThreadDto
      */
     async replyToRun(createThreadDto: CreateCommentDto): Promise<ThreadDto> {
@@ -86,6 +87,11 @@ export class ThreadService {
         return thread;
     }
 
+    /**
+     * Creates the thread hierarchy
+     * @param topic The run is the topic of the thread
+     * @param comments The logs which are belonging to the run
+     */
     private createThreadStructure(topic: Log, comments: Log[]): ThreadDto {
         let thread = new ThreadDto();
         thread = topic.toThreadDto();
