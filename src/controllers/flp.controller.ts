@@ -6,7 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import {
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiOkResponse,
+    ApiNotFoundResponse,
+    ApiCreatedResponse,
+    ApiConflictResponse
+} from '@nestjs/swagger';
 import { UseGuards, Controller, Get, Param, Patch, Post, Body, UseFilters } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
@@ -35,6 +43,7 @@ export class FlpController {
     @Get(':name/runs/:id')
     @ApiOperation({ title: 'Returns a specific FLP based on RunId.' })
     @ApiOkResponse({ description: 'Succesfully returned a FLP.' })
+    @ApiNotFoundResponse({ description: 'There is no FLP for the Run with this run number.' })
     async findById(@Param('id') runId: number, @Param('name') flpName: string): Promise<ResponseObject<FlpRole>> {
         try {
             return createResponseItem(await this.flpService.findOne(flpName, runId));
@@ -49,7 +58,8 @@ export class FlpController {
      */
     @Post()
     @ApiOperation({ title: 'Creates a FLP.' })
-    @ApiOkResponse({ description: 'Succesfully created a FLP.' })
+    @ApiCreatedResponse({ description: 'Succesfully created a FLP.' })
+    @ApiConflictResponse({ description: 'There already exist a FLP with this Name and Hostname.' })
     async createFlp(@Body() request: CreateFlpDto): Promise<ResponseObject<FlpRole>> {
         try {
             const flp = await this.flpService.create(request);
@@ -68,6 +78,7 @@ export class FlpController {
     @Patch(':name/runs/:id')
     @ApiOperation({ title: 'Updates a FLP based on a RunId and FLPName.' })
     @ApiOkResponse({ description: 'Succesfully updated a FLP.' })
+    @ApiNotFoundResponse({ description: 'The Run number or/and FLP name does not exist.' })
     async updateById(
         @Param('id') runId: number,
         @Param('name') flpName: string,
