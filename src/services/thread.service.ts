@@ -6,92 +6,117 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Log } from '../entities/log.entity';
 import { ThreadDto } from '../dtos/thread.dto';
-import _ from 'underscore';
+import { CreateCommentDto } from '../dtos/create.comment.dto';
+import { plainToClass } from 'class-transformer';
+import { Run } from '../entities/run.entity';
 
 @Injectable()
 export class ThreadService {
 
-    private readonly repository: Repository<Log>;
+    private readonly logRepository: Repository<Log>;
+    private readonly runRepository: Repository<Run>;
 
-    constructor(@InjectRepository(Log) repository: Repository<Log>) {
-        this.repository = repository;
+    constructor(@InjectRepository(Log) logRepository: Repository <Log>,
+                @InjectRepository(Run) runRepository: Repository <Run> ) {
+        this.logRepository = logRepository;
+        this.runRepository = runRepository;
+    }
+    /**
+     * Creates a Comment on a Run
+     * Root Id refers to the Run's Log id
+     * Parent Id refers to the comment Log id
+     * @param createThreadDto
+     */
+    async replyToRun(createThreadDto: CreateCommentDto): Promise<ThreadDto> {
+        const logEntity = plainToClass(Log, createThreadDto);
+        logEntity.commentFkRootLogId = createThreadDto.runId;
+        logEntity.commentFkParentLogId = createThreadDto.parentId;
+        logEntity.creationTime = new Date();
+        logEntity.subtype = 'comment';
+        logEntity.origin = 'human';
+        logEntity.runs = [];
+
+        const threadTopic = await this.logRepository.findOne(createThreadDto.runId);
+        if (!threadTopic) {
+            throw new HttpException('There is no log with the given id.', 404);
+        }
+
+        if (createThreadDto.runId) {
+            const run = await this.runRepository.findOne(createThreadDto.runId);
+            if (!run) {
+                throw new HttpException('There is no run with the given id.', 404);
+            }
+            await logEntity.runs.push(run);
+        }
+
+        const newThread = (await this.logRepository.save(logEntity)).toThreadDto();
+        return newThread;
     }
 
     /**
-     * Find a thread by id with it's comments
+     * Find a thread by run id with it's comments
      * @param threadId number
      */
-    async findThreadById(threadId: number): Promise<ThreadDto> {
-        const logs = await this.repository.find({
+    async findThreadById(runLogId: number): Promise<ThreadDto> {
+        const topic = await this.logRepository.findOne({
             where: {
-                commentFkRootLogId: threadId
+                subtype: 'run',
+                logId: runLogId
             }
         });
+        if (!topic) {
+            throw new HttpException('Couldn\'t find the specifed run with the given log id.', 404);
+        }
 
-        const thread = this.determaniteThreadHierarchy(logs);
+        const comments = await this.logRepository.find({
+            where: {
+                commentFkRootLogId: runLogId
+            }
+        });
+        if (comments.length === 0) {
+            throw new HttpException('Couldn\'t find comments on this log.', 404);
+        }
 
+        const thread = this.createThreadStructure(topic, comments);
         return thread;
     }
 
-    /**
-     * Determanates a thread based on a log entity
-     * @param logs
-     */
-    private determaniteThreadHierarchy(logs: Log[]): ThreadDto {
-        const listOfComments = new Array<ThreadDto>();
-        const rootLog = logs.filter(x => x.commentFkRootLogId === x.commentFkParentLogId)[0];
-        const parentThread = this.mapLogToThreadDto(rootLog);
-        const parentLogs = logs.filter(x => x.commentFkRootLogId !== x.commentFkParentLogId)
-                                .sort((x, y) => {
-                                    const a = x.commentFkParentLogId;
-                                    const b = y.commentFkParentLogId;
-                                    return a > b ? 1 : b > a ? -1 : 0;
-                                });
+    private createThreadStructure(topic: Log, comments: Log[]): ThreadDto {
+        let thread = new ThreadDto();
+        thread = topic.toThreadDto();
+        thread.comments = [];
 
-        for (let index = 0; index < parentLogs.length; index++) {
-            let list = new Array<ThreadDto>();
-            const comment = this.mapLogToThreadDto(parentLogs[index]);
-            let nextParentId = 0;
-            if (index !== parentLogs.length - 1) {
-                nextParentId = parentLogs[index + 1].commentFkParentLogId;
-            }
+        comments
+            .sort((x, y) => {
+                const a = x.creationTime;
+                const b = y.creationTime;
+                return a > b ? 1 : b > a ? -1 : 0;
+            })
+            .sort((x, y) => {
+                const a = x.commentFkParentLogId;
+                const b = y.commentFkParentLogId;
+                return a > b ? 1 : b > a ? -1 : 0;
+            });
 
-            if (index + 1 < parentLogs.length && nextParentId === comment.parentId) {
-                for (let subIndex = index + 1; subIndex < parentLogs.length; subIndex++) {
-                    const subComment = this.mapLogToThreadDto(parentLogs[subIndex]);
-                    if (subComment.parentId === comment.parentId) {
-                        list.push(subComment);
-                        index = subIndex;
-                    }
+        for (let a = 0; a <= comments.length - 1; a++) {
+            const parentComment = comments[a].toThreadDto();
+            parentComment.comments = [];
+            for (let b = a + 1; b <= comments.length - 1; b++) {
+                if (parentComment.logId === comments[b].commentFkParentLogId) {
+                    let subComment = new ThreadDto();
+                    subComment = comments[b].toThreadDto();
+                    parentComment.comments.push(subComment);
+                    comments.splice(b, 1);
+                    b -= 1;
                 }
-                comment.comments = list;
-            } else {
-                list = new Array<ThreadDto>();
             }
-            listOfComments.push(comment);
+            thread.comments.push(parentComment);
         }
-        parentThread.comments = listOfComments;
-
-        return parentThread;
-    }
-
-    /**
-     * Maps a Log entity to a ThreadDto object
-     * @param log
-     */
-    private mapLogToThreadDto(log: Log): ThreadDto {
-        const thread = new ThreadDto();
-        thread.title = log.title;
-        thread.description = log.text;
-        thread.createdAt = log.creationTime;
-        thread.parentId = log.commentFkParentLogId;
-        thread.rootId = log.commentFkRootLogId;
-
         return thread;
     }
 }

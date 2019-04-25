@@ -20,6 +20,7 @@ import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 import { Run } from './run.entity';
+import { ThreadDto } from '../dtos/thread.dto';
 
 @Entity('log')
 export class Log {
@@ -125,5 +126,20 @@ export class Log {
 
     constructor(data: Log | {} = {}) {
         Object.assign(this, data);
+    }
+
+    /**
+     * Method to convert Log to a ThreadDto
+     */
+    toThreadDto?(this: Log): ThreadDto {
+        const thread = new ThreadDto();
+        thread.logId = this.logId;
+        thread.commentFkParentLogId = this.commentFkParentLogId;
+        thread.commentFkRootLogId = this.commentFkRootLogId;
+        thread.creationTime = this.creationTime;
+        thread.text = this.text;
+        thread.title = this.title;
+        thread.user = this.user;
+        return thread;
     }
 }

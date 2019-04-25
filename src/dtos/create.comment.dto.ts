@@ -1,5 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { User } from '../entities/user.entity';
+import { Log } from 'entities/log.entity';
+import { IsString, IsInt } from 'class-validator';
+import { User } from 'entities/user.entity';
 
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
@@ -14,47 +16,37 @@ import { User } from '../entities/user.entity';
  * The app only saves the external (OAuth provider) ID and no additional information
  * in order to prevent redundancy.
  */
-export class ThreadDto {
+export class CreateCommentDto {
     @ApiModelProperty({
-        description: 'log_id'
+        description: 'Id of the run\'s log id'
     })
-    logId: number;
-    @ApiModelProperty({
-        description: 'The id of the run\'s log id'
-    })
-    commentFkRootLogId: number;
+    @IsInt()
+    runId: number;
 
     @ApiModelProperty({
-        description: 'The id of the comment on a thread'
+        description: 'Log id of Parent comment'
     })
-    commentFkParentLogId: number;
-
-    @ApiModelProperty({
-        description: 'Date and Time when the comment was created'
-    })
-    creationTime: Date;
+    parentId: number;
 
     @ApiModelProperty({
         description: 'Title of the comment'
     })
+    @IsString()
     title: string;
 
     @ApiModelProperty({
         description: 'Content of the comment'
     })
+    @IsString()
     text: string;
 
     @ApiModelProperty({
-        description: 'user'
+        description: 'Id of the run\'s log id'
     })
-    user: User;
+    @IsInt()
+    user: number;
 
-    @ApiModelProperty({
-        description: ''
-    })
-    comments: ThreadDto[];
-
-    constructor(data: ThreadDto | {} = {}) {
+    constructor(data: CreateCommentDto | {} = {}) {
         Object.assign(this, data);
     }
 }

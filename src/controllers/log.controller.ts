@@ -18,6 +18,9 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { ResponseObject, CollectionResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Log } from '../entities/log.entity';
+import { ThreadDto } from '../dtos/thread.dto';
+import { CreateCommentDto } from '../dtos/create.comment.dto';
+import { ThreadService } from '../services/thread.service';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -27,7 +30,8 @@ export class LogController {
 
     constructor(
         private readonly logService: LogService,
-        private readonly loggerService: InfoLogService
+        private readonly loggerService: InfoLogService,
+        private readonly threadService: ThreadService
     ) { }
 
     /**
@@ -73,5 +77,17 @@ export class LogController {
     @Patch(':id/runs')
     async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<void> {
         return await this.logService.linkRunToLog(logId, request);
+    }
+
+    @Get('/thread/:id')
+    async findRunLogId(@Param('id') threadId: number): Promise<ResponseObject<ThreadDto>> {
+        const getThreadById = await this.threadService.findThreadById(threadId);
+        return createResponseItem(getThreadById);
+    }
+
+    @Post('/thread')
+    async addComment(@Body() createThreadDto: CreateCommentDto): Promise<ThreadDto> {
+        const threadCreated = await this.threadService.replyToRun(createThreadDto);
+        return threadCreated;
     }
 }

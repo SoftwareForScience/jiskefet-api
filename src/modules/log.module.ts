@@ -11,12 +11,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LogService } from '../services/log.service';
 import { LogController } from '../controllers/log.controller';
 import { Log } from '../entities/log.entity';
+import { ThreadService } from '../services/thread.service';
 
 @Global()
 @Module({
     imports: [TypeOrmModule.forFeature([Log])],
-    providers: [LogService],
+    providers: [LogService, ThreadService],
     controllers: [LogController],
-    exports: [LogService],
+    exports: [LogService, ThreadService],
 })
 export class LogModule { }

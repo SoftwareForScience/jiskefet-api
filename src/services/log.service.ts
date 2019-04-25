@@ -54,10 +54,6 @@ export class LogService {
                 await logEntity.runs.push(run);
             }
         }
-        if (createLogDto.subtype === 'comment') {
-            logEntity.commentFkParentLogId = createLogDto.commentParentId;
-            logEntity.commentFkRootLogId = createLogDto.commentRootId;
-        }
         return await this.repository.save(logEntity);
     }
 

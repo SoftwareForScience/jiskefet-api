@@ -65,20 +65,6 @@ export class CreateLogDto {
     @IsInt()
     user: number;
 
-    @ApiModelProperty({
-        example: 1,
-        description: 'Comment under the thread and the id which it replies to'
-    })
-    @IsInt()
-    commentParentId: number;
-
-    @ApiModelProperty({
-        example: 1,
-        description: 'Topic of the thread'
-    })
-    @IsInt()
-    commentRootId: number;
-    
     constructor(data: CreateLogDto | {} = {}) {
         Object.assign(this, data);
     }
