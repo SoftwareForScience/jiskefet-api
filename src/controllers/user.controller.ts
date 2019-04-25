@@ -6,7 +6,14 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import {
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiOkResponse,
+    ApiNotFoundResponse,
+    ApiConflictResponse
+} from '@nestjs/swagger';
 import { Get, Controller, Param, Post, Body, UseGuards, Query, UseFilters } from '@nestjs/common';
 import * as uuid from 'uuid/v4';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
@@ -48,6 +55,9 @@ export class UserController {
      * @param userId number
      */
     @Get(':id')
+    @ApiOperation({ title: 'Retrieves a specific User.' })
+    @ApiOkResponse({ description: 'Successfully retrieved the User for the given ID.' })
+    @ApiNotFoundResponse({ description: 'The User with the given ID does not exist.' })
     async findById(@Param('id') userId: number): Promise<ResponseObject<User>> {
         try {
             const findUserById = await this.userService.findUserById(userId);
@@ -64,6 +74,7 @@ export class UserController {
     @Get(':id/tokens')
     @ApiOperation({ title: 'Returns all generated Tokens for a specific User.' })
     @ApiOkResponse({ description: 'Succesfully returned Tokens.' })
+    @ApiNotFoundResponse({ description: 'There are no Tokens for this User ID.' })
     async findTokensByExternalUserId(@Param('id') userId: number):
         Promise<ResponseObject<SubSystemPermission>> {
         try {
@@ -116,6 +127,7 @@ export class UserController {
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns all Logs for a specific User.' })
     @ApiOkResponse({ description: 'Succesfully returened Logs.' })
+    @ApiNotFoundResponse({ description: 'This User has no Logs.' })
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
     ): Promise<ResponseObject<Log>> {
