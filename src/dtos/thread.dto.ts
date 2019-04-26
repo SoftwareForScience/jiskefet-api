@@ -8,15 +8,9 @@ import { User } from '../entities/user.entity';
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
-
-/**
- * User to create based on the authentication via OAuth 2.
- * The app only saves the external (OAuth provider) ID and no additional information
- * in order to prevent redundancy.
- */
 export class ThreadDto {
     @ApiModelProperty({
-        description: 'log_id'
+        description: 'The id of the thread/log'
     })
     logId: number;
     @ApiModelProperty({
@@ -50,7 +44,7 @@ export class ThreadDto {
     user: User;
 
     @ApiModelProperty({
-        description: ''
+        description: 'A list of sub-comment of the parent comment'
     })
     comments: ThreadDto[];
 

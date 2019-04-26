@@ -11,11 +11,6 @@ import { User } from 'entities/user.entity';
  * copied verbatim in the file "LICENSE"
  */
 
-/**
- * User to create based on the authentication via OAuth 2.
- * The app only saves the external (OAuth provider) ID and no additional information
- * in order to prevent redundancy.
- */
 export class CreateCommentDto {
     @ApiModelProperty({
         description: 'Id of the run\'s log id'
@@ -41,7 +36,7 @@ export class CreateCommentDto {
     text: string;
 
     @ApiModelProperty({
-        description: 'Id of the run\'s log id'
+        description: 'The user\'s id'
     })
     @IsInt()
     user: number;
