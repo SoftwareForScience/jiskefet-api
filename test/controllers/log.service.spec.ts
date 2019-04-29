@@ -25,10 +25,13 @@ import {
 } from '../../src/constants';
 import { QueryRunDto } from '../../src/dtos/query.run.dto';
 import { QueryLogDto } from '../../src/dtos/query.log.dto';
+import { FlpRole } from '../../src/entities/flp_role.entity';
+import { FlpSerivce } from '../../src/services/flp.service';
 
 describe('LogService', () => {
     let logService: LogService;
     let runService: RunService;
+    let flpService: FlpSerivce;
     let log: Log;
 
     // define databaseOptions since this test does not provide the AppModule
@@ -64,17 +67,19 @@ describe('LogService', () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RunService,
-                LogService
+                LogService,
+                FlpSerivce
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log])
+                TypeOrmModule.forFeature([Run, Log, FlpRole])
             ]
         })
         .compile();
 
         runService = await module.get<RunService>(RunService);
         logService = await module.get<LogService>(LogService);
+        flpService = await module.get<FlpSerivce>(FlpSerivce);
     });
 
     describe('initialize', () => {

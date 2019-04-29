@@ -36,9 +36,15 @@ export const CLIENT_SECRET = process.env.CLIENT_SECRET;
 export const CERN_REGISTERED_URI = process.env.CERN_REGISTERED_URI;
 
 // JWT settings
-export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-export const JWT_EXPIRE_TIME = process.env.JWT_EXPIRE_TIME;
-export const SUB_SYSTEM_TOKEN_EXPIRES_IN = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
+export let JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+export let JWT_EXPIRE_TIME = process.env.JWT_EXPIRE_TIME;
+export let SUB_SYSTEM_TOKEN_EXPIRES_IN = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
+
+if (process.env.NODE_ENV === 'test') {
+    JWT_SECRET_KEY = 'hunter2LooksLikeStarsToMe';
+    JWT_EXPIRE_TIME = '1h';
+    SUB_SYSTEM_TOKEN_EXPIRES_IN = '2 days';
+}
 
 // InfoLogger setting
 export const USE_INFO_LOGGER = process.env.USE_INFO_LOGGER ? process.env.USE_INFO_LOGGER : 'false';

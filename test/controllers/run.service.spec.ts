@@ -28,10 +28,13 @@ import { RunType } from '../../src/enums/run.runtype.enum';
 import { QueryRunDto } from '../../src/dtos/query.run.dto';
 import { QueryLogDto } from '../../src/dtos/query.log.dto';
 import { PatchRunDto } from '../../src/dtos/patch.run.dto';
+import { FlpRole } from '../../src/entities/flp_role.entity';
+import { FlpSerivce } from '../../src/services/flp.service';
 
 describe('RunService', () => {
     let runService: RunService;
     let logService: LogService;
+    let flpService: FlpSerivce;
     let run: Run;
     let latestRun: Run;
     let patchRunDto: PatchRunDto;
@@ -73,17 +76,19 @@ describe('RunService', () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RunService,
-                LogService
+                LogService,
+                FlpSerivce
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log])
+                TypeOrmModule.forFeature([Run, Log, FlpRole])
             ]
         })
             .compile();
 
         runService = await module.get<RunService>(RunService);
         logService = await module.get<LogService>(LogService);
+        flpService = await module.get<FlpSerivce>(FlpSerivce);
     });
 
     describe('initialize', () => {

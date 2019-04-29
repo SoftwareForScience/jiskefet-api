@@ -4,7 +4,7 @@ addons:
 node_js:
   - 'stable'
 before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
+  - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
 install:
   - npm install
 script:
