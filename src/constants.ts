@@ -14,19 +14,19 @@ dotenv.config();
  */
 
 // Application wide settings
-export let PORT = process.env.PORT ? process.env.PORT : 3000;
+export const PORT = process.env.PORT ? process.env.PORT : 3000;
 export const USE_API_BASE_PATH = process.env.USE_API_BASE_PATH;
 export const USE_CERN_SSO = process.env.USE_CERN_SSO;
 
 // Database credentials
-export let TYPEORM_CONNECTION = process.env.TYPEORM_CONNECTION ? process.env.TYPEORM_CONNECTION : 'mysql';
+export const TYPEORM_CONNECTION = process.env.TYPEORM_CONNECTION ? process.env.TYPEORM_CONNECTION : 'mysql';
 export const TYPEORM_HOST = process.env.TYPEORM_HOST;
 export const TYPEORM_USERNAME = process.env.TYPEORM_USERNAME;
 export const TYPEORM_PASSWORD = process.env.TYPEORM_PASSWORD;
 export const TYPEORM_DATABASE = process.env.TYPEORM_DATABASE;
-export let TYPEORM_PORT = process.env.TYPEORM_PORT ? process.env.TYPEORM_PORT : 3306;
-export let TYPEORM_SYNCHRONIZE = process.env.TYPEORM_SYNCHRONIZE ? process.env.TYPEORM_SYNCHRONIZE : 'true';
-export let TYPEORM_LOGGING = process.env.TYPEORM_LOGGING ? process.env.TYPEORM_LOGGING : 'false';
+export const TYPEORM_PORT = process.env.TYPEORM_PORT ? process.env.TYPEORM_PORT : 3306;
+export const TYPEORM_SYNCHRONIZE = process.env.TYPEORM_SYNCHRONIZE ? process.env.TYPEORM_SYNCHRONIZE : 'true';
+export const TYPEORM_LOGGING = process.env.TYPEORM_LOGGING ? process.env.TYPEORM_LOGGING : 'false';
 
 // OAuth settings
 export const CLIENT_ID = process.env.CLIENT_ID;
@@ -41,18 +41,21 @@ export const JWT_EXPIRE_TIME = process.env.JWT_EXPIRE_TIME;
 export const SUB_SYSTEM_TOKEN_EXPIRES_IN = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
 
 // InfoLogger setting
-export let USE_INFO_LOGGER = process.env.USE_INFO_LOGGER ? process.env.USE_INFO_LOGGER : 'false';
+export const USE_INFO_LOGGER = process.env.USE_INFO_LOGGER ? process.env.USE_INFO_LOGGER : 'false';
 
 // Test database credentials used when running `$ npm test`
-export let TEST_DB_CONNECTION = process.env.TEST_DB_CONNECTION ? process.env.TEST_DB_CONNECTION : 'mysql';
-export const TEST_DB_HOST = process.env.TEST_DB_HOST;
-export const TEST_DB_USERNAME = process.env.TEST_DB_USERNAME;
+// Variable is used for travis CI
+const TRAVIS_TEST_DATABASE = TYPEORM_DATABASE ? 'test_' + TYPEORM_DATABASE : 'test_jiskefet';
+
+export const TEST_DB_CONNECTION = process.env.TEST_DB_CONNECTION ? process.env.TEST_DB_CONNECTION : 'mysql';
+export const TEST_DB_HOST = process.env.TEST_DB_HOST ? process.env.TEST_DB_HOST : '127.0.0.1';
+export const TEST_DB_USERNAME = process.env.TEST_DB_USERNAME ? process.env.TEST_DB_USERNAME : 'root';
 export const TEST_DB_PASSWORD = process.env.TEST_DB_PASSWORD;
 export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE ?
-    process.env.TEST_DB_DATABASE : 'test_' + TYPEORM_DATABASE;
-export let TEST_DB_PORT = process.env.TEST_DB_PORT ? process.env.TEST_DB_PORT : 3306;
-export let TEST_DB_SYNCHRONIZE = process.env.TEST_DB_SYNCHRONIZE ? process.env.TEST_DB_SYNCHRONIZE : 'true';
-export let TEST_DB_LOGGING = process.env.TEST_DB_LOGGING ? process.env.TEST_DB_LOGGING : 'true';
+    process.env.TEST_DB_DATABASE : TRAVIS_TEST_DATABASE;
+export const TEST_DB_PORT = process.env.TEST_DB_PORT ? process.env.TEST_DB_PORT : 3306;
+export const TEST_DB_SYNCHRONIZE = process.env.TEST_DB_SYNCHRONIZE ? process.env.TEST_DB_SYNCHRONIZE : 'true';
+export const TEST_DB_LOGGING = process.env.TEST_DB_LOGGING ? process.env.TEST_DB_LOGGING : 'true';
 
 // Variables for the UI endpoint
 export const AUTH_REDIRECT_URI = process.env.AUTH_REDIRECT_URI;
