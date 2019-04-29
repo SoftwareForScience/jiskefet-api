@@ -47,7 +47,7 @@ export class LogController {
     @Post()
     @ApiOperation({ title: 'Creates a Log.' })
     @ApiCreatedResponse({ description: 'Succesfully created a Log', type: Log })
-    @ApiConflictResponse({ description: 'There already exist a Log with this ID.' })
+    @ApiConflictResponse({ description: 'A Log already exists with this ID.' })
     async create(@Body() request: CreateLogDto): Promise<ResponseObject<Log>> {
         try {
             const log = await this.logService.create(request);

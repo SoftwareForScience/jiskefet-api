@@ -126,7 +126,7 @@ export class UserController {
      */
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns all Logs for a specific User.' })
-    @ApiOkResponse({ description: 'Succesfully returened Logs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
     @ApiNotFoundResponse({ description: 'No Logs found for this User.' })
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto

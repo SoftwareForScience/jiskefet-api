@@ -72,7 +72,7 @@ export class RunController {
     @Get()
     @ApiOperation({ title: 'Returns all Runs.' })
     @ApiOkResponse({ description: 'Succesfully returned Runs.' })
-    @ApiNotFoundResponse({ description: 'There are no Runs.' })
+    @ApiNotFoundResponse({ description: 'There are no Runs found with given query params.' })
     async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject<Run>> {
         try {
             const getRuns = await this.runService.findAll(query);
