@@ -24,9 +24,9 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
-    @ApiOperation({ title: 'Returns settings.' })
-    @ApiOkResponse({ description: 'Succesfully returns setting.' })
-    @ApiNotFoundResponse({ description: 'No settings were found.' })
+    @ApiOperation({ title: 'Returns Settings for Jiskefet-UI.' })
+    @ApiOkResponse({ description: 'Succesfully returned the Settings.' })
+    @ApiNotFoundResponse({ description: 'No Settings were found.' })
     async getSettings(): Promise<ResponseObject<Setting>> {
         try {
             const setting = await this.settingService.getSettings();

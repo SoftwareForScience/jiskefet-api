@@ -13,7 +13,6 @@ import {
     ApiBearerAuth,
     ApiOperation,
     ApiOkResponse,
-    ApiResponse,
     ApiConflictResponse,
     ApiCreatedResponse,
     ApiNotFoundResponse
@@ -49,7 +48,7 @@ export class RunController {
     @Post()
     @ApiOperation({ title: 'Creates a Run.' })
     @ApiCreatedResponse({ description: 'Succesfully created a Run.', type: Run })
-    @ApiConflictResponse({ description: 'There already exist a Run with this Run number.' })
+    @ApiConflictResponse({ description: 'A Run already exists with given Run number.' })
     async create(@Body() request: CreateRunDto): Promise<ResponseObject<Run>> {
         try {
             const infoLog = new CreateInfologDto();

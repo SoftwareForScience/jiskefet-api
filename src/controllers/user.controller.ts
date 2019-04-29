@@ -55,9 +55,9 @@ export class UserController {
      * @param userId number
      */
     @Get(':id')
-    @ApiOperation({ title: 'Retrieves a specific User.' })
-    @ApiOkResponse({ description: 'Successfully retrieved the User for the given ID.' })
-    @ApiNotFoundResponse({ description: 'The User with the given ID does not exist.' })
+    @ApiOperation({ title: 'Retrieves a specific user.' })
+    @ApiOkResponse({ description: 'Successfully retrieved the user with the given ID.' })
+    @ApiNotFoundResponse({ description: 'Unable to find the User with the given ID' })
     async findById(@Param('id') userId: number): Promise<ResponseObject<User>> {
         try {
             const findUserById = await this.userService.findUserById(userId);
@@ -72,9 +72,9 @@ export class UserController {
      * @param userId number
      */
     @Get(':id/tokens')
-    @ApiOperation({ title: 'Returns all generated Tokens for a specific User.' })
-    @ApiOkResponse({ description: 'Succesfully returned Tokens.' })
-    @ApiNotFoundResponse({ description: 'There are no Tokens for this User ID.' })
+    @ApiOperation({ title: 'Returns all generated Tokens from a specific User.' })
+    @ApiOkResponse({ description: 'Succesfully returned all Tokens.' })
+    @ApiNotFoundResponse({ description: 'Unable to find Tokens with given User ID' })
     async findTokensByExternalUserId(@Param('id') userId: number):
         Promise<ResponseObject<SubSystemPermission>> {
         try {
@@ -127,7 +127,7 @@ export class UserController {
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns all Logs for a specific User.' })
     @ApiOkResponse({ description: 'Succesfully returened Logs.' })
-    @ApiNotFoundResponse({ description: 'This User has no Logs.' })
+    @ApiNotFoundResponse({ description: 'No Logs found for this User.' })
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto
     ): Promise<ResponseObject<Log>> {

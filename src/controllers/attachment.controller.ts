@@ -37,7 +37,7 @@ export class AttachmentController {
     @Post()
     @UsePipes(ValidationPipe)
     @ApiOperation({ title: 'Creates a Attachment.' })
-    @ApiOkResponse({ description: 'Succesfully created a Attachment.' })
+    @ApiOkResponse({ description: 'Succesfully created an Attachment.' })
     async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
         try {
             const attachment = await this.attachmentservice.create(createAttachmentDto);
@@ -57,7 +57,7 @@ export class AttachmentController {
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns Attachments that belong to a specific Log.' })
     @ApiOkResponse({ description: 'Succesfully returned the Attachments.' })
-    @ApiNotFoundResponse({ description: 'This Log has not Attachments.' })
+    @ApiNotFoundResponse({ description: 'No Attachments found for this Log.' })
     async findById(@Param('id') logId: number): Promise<ResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);
 
