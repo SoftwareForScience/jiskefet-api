@@ -122,10 +122,6 @@ describe('RunService', () => {
             patchRunDto = {
                 O2EndTime: new Date(),
                 TrgEndTime: new Date(),
-                bytesReadOut: 1234567890,
-                bytesTimeframeBuilder: 9876543210,
-                nSubtimeframes: 1234,
-                nTimeframes: 123,
                 runQuality: 'Unknown'
             };
 
@@ -133,10 +129,6 @@ describe('RunService', () => {
             expect(updatedRun.runNumber).toBe(latestRun.runNumber);
             expect(updatedRun.O2EndTime).toBe(patchRunDto.O2EndTime);
             expect(updatedRun.TrgEndTime).toBe(patchRunDto.TrgEndTime);
-            expect(updatedRun.bytesReadOut).toBe(patchRunDto.bytesReadOut);
-            expect(updatedRun.bytesTimeframeBuilder).toBe(patchRunDto.bytesTimeframeBuilder);
-            expect(updatedRun.nSubtimeframes).toBe(patchRunDto.nSubtimeframes);
-            expect(updatedRun.nTimeframes).toBe(patchRunDto.nTimeframes);
             expect(updatedRun.runQuality).toBe(patchRunDto.runQuality);
         });
     });

@@ -127,10 +127,6 @@ describe('RunController', () => {
             const patchRunDto: PatchRunDto = {
                 O2EndTime: new Date(),
                 TrgEndTime: new Date(),
-                bytesReadOut: 1234567890,
-                bytesTimeframeBuilder: 9876543210,
-                nSubtimeframes: 1234,
-                nTimeframes: 123,
                 runQuality: 'Unknown'
             };
 
