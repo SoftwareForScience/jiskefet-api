@@ -9,12 +9,8 @@
 export class GetOverviewDto {
 
     subsystemName: string;
-
     logs: number;
-
     userId: number;
-
     lastLog: string;
-
     logId: number;
 }

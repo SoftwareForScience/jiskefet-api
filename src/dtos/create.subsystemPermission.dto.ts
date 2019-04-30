@@ -56,8 +56,4 @@ export class CreateSubSystemPermissionDto {
     })
     @IsString()
     subSystemTokenDescription: string;
-
-    constructor(data: CreateSubSystemPermissionDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }

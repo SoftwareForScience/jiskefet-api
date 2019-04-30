@@ -7,7 +7,7 @@
  */
 
 import { Entity } from 'typeorm';
-import { IsDateString, IsEnum, IsInt } from 'class-validator';
+import { IsDateString, IsEnum } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { RunQuality } from '../enums/run.runquality.enum';
 
@@ -28,38 +28,10 @@ export class PatchRunDto {
     O2EndTime: Date;
 
     @ApiModelProperty({
-        example: ['Good'],
+        example: 'Good',
         description: 'The quality of the run.',
         enum: ['Good', 'Bad', 'Unknown'],
     })
     @IsEnum(RunQuality, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runQuality: string; // maybe change to ['Good' | 'Bad' | 'Unknown'] so values are enforced.
-
-    // @ApiModelProperty({
-    //     example: 2,
-    //     description: 'Number of timeframes',
-    // })
-    // @IsInt()
-    // readonly nTimeframes: number;
-
-    // @ApiModelProperty({
-    //     example: 4,
-    //     description: 'Number of subtimeframes',
-    // })
-    // @IsInt()
-    // readonly nSubtimeframes: number;
-
-    // @ApiModelProperty({
-    //     example: 5,
-    //     description: 'Amount of bytes read out',
-    // })
-    // @IsInt()
-    // readonly bytesReadOut: number;
-
-    // @ApiModelProperty({
-    //     example: 12,
-    //     description: 'What builder was used.',
-    // })
-    // @IsInt()
-    // readonly bytesTimeframeBuilder: number;
 }

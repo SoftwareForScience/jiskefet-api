@@ -13,7 +13,8 @@ import {
     ApiOkResponse,
     ApiCreatedResponse,
     ApiConflictResponse,
-    ApiNotFoundResponse
+    ApiNotFoundResponse,
+    ApiResponse
 } from '@nestjs/swagger';
 import { Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
 import { LogService } from '../services/log.service';
@@ -99,7 +100,10 @@ export class LogController {
      */
     @Patch(':id/runs')
     @ApiOperation({ title: 'Links a Run to a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully linked a Run to a Log.' })
+    @ApiResponse({
+        status: 204,
+        description: 'Succesfully linked a Run to a Log.'
+    })
     @ApiConflictResponse({ description: 'The Run is already linked to the Log.' })
     @ApiNotFoundResponse({ description: 'The Run or Log does not exist.' })
     async linkRunToLog(@Param('id') logId: number, @Body() request: LinkRunToLogDto): Promise<ResponseObject<void>> {

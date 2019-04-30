@@ -15,7 +15,8 @@ import {
     ApiOkResponse,
     ApiConflictResponse,
     ApiCreatedResponse,
-    ApiNotFoundResponse
+    ApiNotFoundResponse,
+    ApiResponse
 } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
@@ -106,7 +107,10 @@ export class RunController {
      */
     @Patch(':id/logs')
     @ApiOperation({ title: 'Links a Log to a specific Run.' })
-    @ApiOkResponse({ description: 'The Log is successfully linked to the Run.' })
+    @ApiResponse({
+        status: 204,
+        description: 'The Log is successfully linked to the Run.'
+    })
     @ApiConflictResponse({ description: 'The Log is already linked to the Run.' })
     @ApiNotFoundResponse({ description: 'The Log or Run does not exist.' })
     async linkLogToRun(@Param('id')
