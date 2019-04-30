@@ -45,14 +45,15 @@ export class LogService {
                 attachment.creationTime = logEntity.creationTime;
             }
         }
-        if (createLogDto.runs) {
-            for (const runNumber of createLogDto.runs) {
-                const run = await this.runRepository.findOne(runNumber);
-                if (!run) {
-                    throw new HttpException(`Run with run number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
-                }
-                await logEntity.runs.push(run);
+
+        if (createLogDto.run) {
+            const run = await this.runRepository.findOne(createLogDto.run);
+            if (!run) {
+                throw new HttpException(
+                    `Run with run number ${createLogDto.run} does not exist.`, HttpStatus.NOT_FOUND
+                );
             }
+            await logEntity.runs.push(run);
         }
         return await this.logRepository.save(logEntity);
     }

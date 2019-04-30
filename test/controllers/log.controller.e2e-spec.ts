@@ -39,7 +39,7 @@ describe('LogController', () => {
             origin: 'human',
             title: 'test log',
             body: 'text of test log',
-            runs: [1],
+            run: 1,
             user: 1
         };
 
@@ -62,7 +62,8 @@ describe('LogController', () => {
         });
 
         it('should return status 404 and JSON Content-Type', () => {
-            logToPost.runs = [-1];
+            // non existing run
+            logToPost.run = -1;
             return request(app.getHttpServer())
                 .post(`/logs`)
                 .set('Authorization', `Bearer ${jwt}`)
