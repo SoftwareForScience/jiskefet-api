@@ -59,7 +59,7 @@ describe('LogService', () => {
         subtype: 'run',
         origin: 'human',
         user: 1,
-        runs: null
+        run: null
     };
 
     beforeAll(async () => {
