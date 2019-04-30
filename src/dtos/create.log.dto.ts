@@ -64,8 +64,4 @@ export class CreateLogDto {
     })
     @IsInt()
     user: number;
-
-    constructor(data: CreateLogDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }

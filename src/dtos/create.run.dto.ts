@@ -41,35 +41,13 @@ export class CreateRunDto {
     @IsDateString()
     TrgStartTime: Date;
 
-    // @ApiModelProperty({
-    //     example: new Date(),
-    //     description: 'Current Date'
-    // })
-    // @IsDateString()
-    // O2EndTime: Date;
-
-    // @ApiModelProperty({
-    //     example: new Date(),
-    //     description: 'Current Date'
-    // })
-    // @IsDateString()
-    // TrgEndTime: Date;
-
     @ApiModelProperty({
-        example: ['COSMICS'],
+        example: 'COSMICS',
         description: 'What kind of run.',
         enum: ['PHYSICS' , 'COSMICS' , 'TECHNICAL'],
     })
     @IsEnum(RunType, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runType: string;
-
-    // @ApiModelProperty({
-    //     example: ['Good'],
-    //     description: 'The quality of the run.',
-    //     enum: ['Good' , 'Bad' , 'Unknown'],
-    // })
-    // @IsEnum(RunQuality, { each: true, message: 'Each value in subtype must be a valid enum value' })
-    // readonly runQuality: string;
 
     @ApiModelProperty({
         example: 'Sl4e12ofb83no92ns',
@@ -98,36 +76,4 @@ export class CreateRunDto {
     })
     @IsInt()
     readonly nEpns: number;
-
-    // @ApiModelProperty({
-    //     example: 2,
-    //     description: 'Number of timeframes',
-    // })
-    // @IsInt()
-    // readonly nTimeframes: number;
-
-    // @ApiModelProperty({
-    //     example: 4,
-    //     description: 'Number of subtimeframes',
-    // })
-    // @IsInt()
-    // readonly nSubtimeframes: number;
-
-    // @ApiModelProperty({
-    //     example: 5,
-    //     description: 'Amount of bytes read out',
-    // })
-    // @IsInt()
-    // readonly bytesReadOut: number;
-
-    // @ApiModelProperty({
-    //     example: 12,
-    //     description: 'What builder was used.',
-    // })
-    // @IsInt()
-    // readonly bytesTimeframeBuilder: number;
-
-    constructor(data: CreateRunDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }
