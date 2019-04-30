@@ -18,7 +18,7 @@ export const PORT = process.env.PORT ? process.env.PORT : 3000;
 export const USE_API_BASE_PATH = process.env.USE_API_BASE_PATH;
 export const USE_CERN_SSO = process.env.USE_CERN_SSO;
 
-// Database credentials
+// Database settings
 export const TYPEORM_CONNECTION = process.env.TYPEORM_CONNECTION ? process.env.TYPEORM_CONNECTION : 'mysql';
 export const TYPEORM_HOST = process.env.TYPEORM_HOST;
 export const TYPEORM_USERNAME = process.env.TYPEORM_USERNAME;
@@ -40,6 +40,7 @@ export let JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 export let JWT_EXPIRE_TIME = process.env.JWT_EXPIRE_TIME;
 export let SUB_SYSTEM_TOKEN_EXPIRES_IN = process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN;
 
+// Set default values for Travis CI
 if (process.env.NODE_ENV === 'test') {
     JWT_SECRET_KEY = 'hunter2LooksLikeStarsToMe';
     JWT_EXPIRE_TIME = '1h';
@@ -49,16 +50,16 @@ if (process.env.NODE_ENV === 'test') {
 // InfoLogger setting
 export const USE_INFO_LOGGER = process.env.USE_INFO_LOGGER ? process.env.USE_INFO_LOGGER : 'false';
 
-// Test database credentials used when running `$ npm test`
-// Variable is used for travis CI
-const TRAVIS_TEST_DATABASE = TYPEORM_DATABASE ? 'test_' + TYPEORM_DATABASE : 'test_jiskefet';
+// Test database settings used when running `$ npm test`
+// Since Travis CI does not have a .env file, a new variable is created to set the name.
+const TEST_DATABASE_NAME = TYPEORM_DATABASE ? 'test_' + TYPEORM_DATABASE : 'test_jiskefet';
 
 export const TEST_DB_CONNECTION = process.env.TEST_DB_CONNECTION ? process.env.TEST_DB_CONNECTION : 'mysql';
 export const TEST_DB_HOST = process.env.TEST_DB_HOST ? process.env.TEST_DB_HOST : '127.0.0.1';
 export const TEST_DB_USERNAME = process.env.TEST_DB_USERNAME ? process.env.TEST_DB_USERNAME : 'root';
 export const TEST_DB_PASSWORD = process.env.TEST_DB_PASSWORD;
 export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE ?
-    process.env.TEST_DB_DATABASE : TRAVIS_TEST_DATABASE;
+    process.env.TEST_DB_DATABASE : TEST_DATABASE_NAME;
 export const TEST_DB_PORT = process.env.TEST_DB_PORT ? process.env.TEST_DB_PORT : 3306;
 export const TEST_DB_SYNCHRONIZE = process.env.TEST_DB_SYNCHRONIZE ? process.env.TEST_DB_SYNCHRONIZE : 'true';
 export const TEST_DB_LOGGING = process.env.TEST_DB_LOGGING ? process.env.TEST_DB_LOGGING : 'true';
