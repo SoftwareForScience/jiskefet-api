@@ -25,11 +25,15 @@ import {
 } from '../../src/constants';
 import { QueryRunDto } from '../../src/dtos/query.run.dto';
 import { QueryLogDto } from '../../src/dtos/query.log.dto';
+import { FlpRole } from '../../src/entities/flp_role.entity';
+import { FlpSerivce } from '../../src/services/flp.service';
 
 describe('LogService', () => {
     let logService: LogService;
     let runService: RunService;
+    let flpService: FlpSerivce;
     let log: Log;
+    let testingModule: TestingModule;
 
     // define databaseOptions since this test does not provide the AppModule
     const databaseOptions: TypeOrmModuleOptions = {
@@ -61,21 +65,27 @@ describe('LogService', () => {
     beforeAll(async () => {
         // maybe add a switch to support an in memory db like sqljs,
         // so that tests can be run in a CI pipeline like Travis
-        const module: TestingModule = await Test.createTestingModule({
+        testingModule = await Test.createTestingModule({
             providers: [
                 RunService,
-                LogService
+                LogService,
+                FlpSerivce
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log])
+                TypeOrmModule.forFeature([Run, Log, FlpRole])
             ]
         })
-        .compile();
+            .compile();
 
-        runService = await module.get<RunService>(RunService);
-        logService = await module.get<LogService>(LogService);
+        runService = await testingModule.get<RunService>(RunService);
+        logService = await testingModule.get<LogService>(LogService);
+        flpService = await testingModule.get<FlpSerivce>(FlpSerivce);
     });
+
+    afterAll(async () => {
+        testingModule.close();
+    })
 
     describe('initialize', () => {
         it('logService should be defined', async () => {

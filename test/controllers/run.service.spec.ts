@@ -28,13 +28,17 @@ import { RunType } from '../../src/enums/run.runtype.enum';
 import { QueryRunDto } from '../../src/dtos/query.run.dto';
 import { QueryLogDto } from '../../src/dtos/query.log.dto';
 import { PatchRunDto } from '../../src/dtos/patch.run.dto';
+import { FlpRole } from '../../src/entities/flp_role.entity';
+import { FlpSerivce } from '../../src/services/flp.service';
 
 describe('RunService', () => {
     let runService: RunService;
     let logService: LogService;
+    let flpService: FlpSerivce;
     let run: Run;
     let latestRun: Run;
     let patchRunDto: PatchRunDto;
+    let testingModule: TestingModule;
 
     // define databaseOptions since this test does not provide the AppModule
     const databaseOptions: TypeOrmModuleOptions = {
@@ -70,21 +74,27 @@ describe('RunService', () => {
     beforeAll(async () => {
         // maybe add a switch to support an in memory db like sqljs,
         // so that tests can be run in a CI pipeline like Travis
-        const module: TestingModule = await Test.createTestingModule({
+        testingModule = await Test.createTestingModule({
             providers: [
                 RunService,
-                LogService
+                LogService,
+                FlpSerivce
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log])
+                TypeOrmModule.forFeature([Run, Log, FlpRole])
             ]
         })
             .compile();
 
-        runService = await module.get<RunService>(RunService);
-        logService = await module.get<LogService>(LogService);
+        runService = await testingModule.get<RunService>(RunService);
+        logService = await testingModule.get<LogService>(LogService);
+        flpService = await testingModule.get<FlpSerivce>(FlpSerivce);
     });
+
+    afterAll(async () => {
+        testingModule.close();
+    })
 
     describe('initialize', () => {
         it('expects logService to be defined', async () => {
@@ -122,10 +132,6 @@ describe('RunService', () => {
             patchRunDto = {
                 O2EndTime: new Date(),
                 TrgEndTime: new Date(),
-                bytesReadOut: 1234567890,
-                bytesTimeframeBuilder: 9876543210,
-                nSubtimeframes: 1234,
-                nTimeframes: 123,
                 runQuality: 'Unknown'
             };
 
@@ -133,10 +139,6 @@ describe('RunService', () => {
             expect(updatedRun.runNumber).toBe(latestRun.runNumber);
             expect(updatedRun.O2EndTime).toBe(patchRunDto.O2EndTime);
             expect(updatedRun.TrgEndTime).toBe(patchRunDto.TrgEndTime);
-            expect(updatedRun.bytesReadOut).toBe(patchRunDto.bytesReadOut);
-            expect(updatedRun.bytesTimeframeBuilder).toBe(patchRunDto.bytesTimeframeBuilder);
-            expect(updatedRun.nSubtimeframes).toBe(patchRunDto.nSubtimeframes);
-            expect(updatedRun.nTimeframes).toBe(patchRunDto.nTimeframes);
             expect(updatedRun.runQuality).toBe(patchRunDto.runQuality);
         });
     });

@@ -1,12 +1,15 @@
 language: node_js
+addons:
+  mariadb: '10.1'
 node_js:
   - 'stable'
+before_install:
+  - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
 install:
   - npm install
 script:
   - tslint -c tslint.json 'src/**/*.ts'
-# Disabled testing steps until we know how to test with authorization in the mix.
-  # - npm test
+  - npm test
 after_success: 
   - codecov
 notifications:   
