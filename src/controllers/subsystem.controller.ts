@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Get, Controller, Param, UseGuards, UseFilters } from '@nestjs/common';
 import { SubSystemService } from '../services/subsystem.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -30,6 +30,7 @@ export class SubSystemController {
     @Get()
     @ApiOperation({ title: 'Returns all Subsystems.' })
     @ApiOkResponse({ description: 'Succesfully returned Subsystems.' })
+    @ApiNotFoundResponse({ description: 'No Subsystems found.' })
     async findAll(): Promise<ResponseObject<SubSystem>> {
         try {
             const getSubsystems = await this.subSystemService.findAll();
@@ -45,7 +46,8 @@ export class SubSystemController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Subsystem.' })
-    @ApiOkResponse({ description: 'Succesfully returned a specific Subsystem.' })
+    @ApiOkResponse({ description: 'Succesfully returned a Subsystem with given ID.' })
+    @ApiNotFoundResponse({ description: 'There is no Subsystem with the given ID.' })
     async findById(@Param('id') subSystemId: number): Promise<ResponseObject<SubSystem>> {
         try {
             const getSubsystemById = await this.subSystemService.findSubSystemById(subSystemId);
