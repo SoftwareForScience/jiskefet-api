@@ -29,7 +29,7 @@ export class FlpRole {
     )
     @JoinColumn({ name: 'fk_run_number' })
     @ApiModelProperty({
-        type: Run
+        type: 'object'
     })
     run: Run;
 

@@ -91,10 +91,11 @@ export class UserController {
     @Post(':id/tokens')
     @ApiOperation({ title: 'Creates a Token and links it to a Subsytem.' })
     @ApiOkResponse({ description: 'Succesfully created a Token.' })
-    async generateTokenForSubsystem(@Body() request: CreateSubSystemPermissionDto):
+    async generateTokenForSubsystem(@Param('id') userId: number, @Body() request: CreateSubSystemPermissionDto):
         Promise<ResponseObject<CreateSubSystemPermissionDto>> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
+        request.user = userId;
 
         try {
             // save it to db
