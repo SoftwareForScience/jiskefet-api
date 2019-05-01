@@ -6,7 +6,6 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -15,17 +14,18 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { ResponseObject } from './interfaces/response_object.interface';
+import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER } from './constants';
 
 /**
  * Check the .env against the array of variables.
- * if one of the variables is missing, the program will exit.
+ * if one of the variables is missing or does not pass the check, the program will exit.
  */
+//#region
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
     let keys: string[] = [
         'PORT',
-        'USE_API_PREFIX',
+        'USE_API_BASE_PATH',
         'USE_CERN_SSO',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
@@ -54,7 +54,7 @@ function preCheck(): void {
         '',
         `regex:${Regex.PORT_NUMBER}`,
         `regex:${Regex.BOOLEAN}`,
-        `regex:${Regex.BOOLEAN}`,
+        'string:true, false, all, query, error, schema, warn, info, log',
         '',
         '',
         '',
@@ -67,7 +67,7 @@ function preCheck(): void {
     // extra check if the AUTH_REDIRECT_URI contains callback
     envUtil.checkEnv(['AUTH_REDIRECT_URI'], ['endsWith: callback']);
 
-    if (process.env.USE_CERN_SSO === 'true') {
+    if (USE_CERN_SSO === 'true') {
         envUtil.checkEnv(['CERN_REGISTERED_URI'], [`regex:${Regex.IP_OR_URL_OR_LOCALHOST}`]);
     }
 
@@ -97,6 +97,7 @@ function preCheck(): void {
         envUtil.checkEnv(keys, values);
     }
 }
+//#endregion
 
 preCheck();
 
@@ -114,18 +115,21 @@ async function bootstrap(): Promise<void> {
         .addTag('runs')
         .addBearerAuth();
 
-    if (process.env.USE_API_PREFIX === 'true') {
+    if (USE_API_BASE_PATH === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
-        options.setDescription('Running with /api prefix');
+        options.setDescription('Running with /api base path');
     } else {
-        options.setDescription('Running without /api prefix');
+        options.setDescription('Running without /api base path');
     }
 
-    const document = SwaggerModule.createDocument(app, options.build());
+    const swaggerInfo = options.build();
+    (global as any).apiVersion = swaggerInfo.info.version;
+
+    const document = SwaggerModule.createDocument(app, swaggerInfo);
     SwaggerModule.setup('doc', app, document);
 
-    if (process.env.USE_INFO_LOGGER === 'true') {
+    if (USE_INFO_LOGGER === 'true') {
         app.useLogger(app.get(InfoLogService));
 
         // Periodically save InfoLogs that failed to be persisted to the db.
@@ -134,6 +138,6 @@ async function bootstrap(): Promise<void> {
         });
     }
 
-    await app.listen(process.env.PORT ? process.env.PORT : 3000);
+    await app.listen(PORT);
 }
 bootstrap();

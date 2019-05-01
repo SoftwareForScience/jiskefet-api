@@ -6,7 +6,7 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable, OneToMany, PrimaryColumn } from 'typeorm';
 import { Log } from './log.entity';
 import { EpnRoleSession } from './epn_role_session.entity';
 import { FlpRole } from './flp_role.entity';
@@ -15,6 +15,7 @@ import { DetectorQualityHistory } from './detector_quality_history.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { RunEorHistory } from './run_eor_history.entity';
 import { Tag } from './tag.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('run')
 export class Run {
@@ -22,72 +23,124 @@ export class Run {
     @PrimaryColumn({
         name: 'run_number'
     })
+    @ApiModelProperty()
     runNumber: number;
 
     @Column({
-        name: 'time_o2_start',
+        name: 'o2_start_time',
         precision: 0,
     })
-    timeO2Start: Date;
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time',
+    })
+    O2StartTime: Date;
 
     @Column({
-        name: 'time_trg_start',
+        name: 'trg_start_time',
         precision: 0,
     })
-    timeTrgStart: Date;
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time',
+    })
+    TrgStartTime: Date;
 
     @Column({
-        name: 'time_trg_end',
+        name: 'trg_end_time',
         precision: 0,
+        nullable: true,
     })
-    timeTrgEnd: Date;
+    @ApiModelProperty({
+        required: false,
+        type: 'string',
+        format: 'date-time'
+    })
+    TrgEndTime: Date;
 
     @Column({
-        name: 'time_o2_end',
+        name: 'o2_end_time',
         precision: 0,
+        nullable: true,
     })
-    timeO2End: Date;
+    @ApiModelProperty({
+        required: false,
+        type: 'string',
+        format: 'date-time'
+    })
+    O2EndTime: Date;
 
     @Column({
         name: 'activity_id',
         type: 'char',
         length: 64
     })
+    @ApiModelProperty()
     activityId: string;
 
     @Column({
         name: 'run_type',
         type: 'enum',
-        enum: ['test'],
+        enum: [
+            'PHYSICS',
+            'COSMICS',
+            'TECHNICAL'
+        ],
     })
-    runType: ['test'];
+    @ApiModelProperty()
+    runType: ['PHYSICS' | 'COSMICS' | 'TECHNICAL'];
 
     @Column({
         name: 'run_quality',
         type: 'enum',
-        enum: ['test'],
+        enum: [
+            'Good',
+            'Bad',
+            'Unknown'
+        ],
+        nullable: true,
     })
-    runQuality: ['test'];
+    @ApiModelProperty({ required: false})
+    runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
+    @ApiModelProperty()
     nDetectors: number;
 
     @Column({ name: 'n_flps' })
+    @ApiModelProperty()
     nFlps: number;
 
     @Column({ name: 'n_epns' })
+    @ApiModelProperty()
     nEpns: number;
 
-    @Column({ name: 'n_timeframes' })
+    @Column({
+        name: 'n_timeframes',
+        nullable: true,
+    })
+    @ApiModelProperty({ required: false})
     nTimeframes: number;
 
-    @Column({ name: 'n_subtimeframes' })
+    @Column({
+        name: 'n_subtimeframes',
+        nullable: true,
+    })
+    @ApiModelProperty({ required: false})
     nSubtimeframes: number;
 
-    @Column({ name: 'bytes_read_out' })
+    @Column({
+        name: 'bytes_read_out',
+        nullable: true,
+    })
+    @ApiModelProperty({ required: false })
     bytesReadOut: number;
 
-    @Column({ name: 'bytes_timeframe_builder' })
+    @Column({
+        name: 'bytes_timeframe_builder',
+        nullable: true,
+    })
+    @ApiModelProperty({ required: false })
     bytesTimeframeBuilder: number;
 
     @ManyToMany(type => Tag)
@@ -105,12 +158,21 @@ export class Run {
     tags: Tag[];
 
     @ManyToMany(type => Log, log => log.runs)
+    @ApiModelProperty({
+        type: Log,
+        isArray: true,
+        minProperties: 1
+    })
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
     epnRoleSessions: EpnRoleSession[];
 
     @OneToMany(type => FlpRole, flpRole => flpRole.run)
+    @ApiModelProperty({
+        type: FlpRole,
+        isArray: true
+    })
     flpRoles: FlpRole[];
 
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)

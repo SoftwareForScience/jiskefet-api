@@ -66,6 +66,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The lower bound of the timeO2Start filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -74,6 +76,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The upper bound of the timeO2Start filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -82,6 +86,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The lower bound of the timeTrgStart filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -90,6 +96,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The upper bound of the timeTrgStart filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -98,6 +106,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The lower bound of the timeTrgEnd filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -106,6 +116,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The upper bound of the timeTrgEnd filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -114,6 +126,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The lower bound of the timeO2End filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -122,6 +136,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The upper bound of the timeO2End filter range.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsDateString()
@@ -130,6 +146,8 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The id of the activity.',
         required: false,
+        type: 'string',
+        format: 'date-time'
     })
     @IsOptional()
     @IsNumberString()
@@ -137,6 +155,7 @@ export class QueryRunDto {
 
     @ApiModelProperty({
         description: 'The type of the run.',
+        enum: _.values(RunType),
         required: false,
     })
     @IsOptional()
@@ -150,78 +169,4 @@ export class QueryRunDto {
     @IsOptional()
     @IsEnum(RunQuality, { each: true, message: 'Run quality must be a valid enum type.' })
     runQuality?: RunQuality;
-
-    // --- Not yet determined if these filters are needed. ---
-
-    // @ApiModelProperty({
-    //     description: 'The number of detectors',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // nDetectors?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of FLPs.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // nFlps?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of EPNs.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // nEpns?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of timeframes.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // nTimeframes?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of sub-timeframes.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // nSubtimeframes?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of bytes read out.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // bytesReadOut?: number;
-
-    // @ApiModelProperty({
-    //     description: 'The number of timeframe builder bytes.',
-    //     required: false,
-    // })
-    // @IsOptional()
-    // @IsNumberString()
-    // bytesTimeframeBuilder?: number;
-
-    // tags: Tag[];
-
-    // logs: Log[];
-
-    // epnRoleSessions: EpnRoleSession[];
-
-    // flpRoles: FlpRole[];
-
-    // detectorsInRun: DetectorsInRun[];
-
-    // detectorQualityHistories: DetectorQualityHistory[];
-
-    // runQualityHistories: RunQualityHistory[];
-
-    // runEorHistories: RunEorHistory[];
 }

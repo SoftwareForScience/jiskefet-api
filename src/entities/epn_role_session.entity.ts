@@ -8,6 +8,7 @@
 
 import { Column, Entity, PrimaryGeneratedColumn, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Run } from './run.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('epn_role_session')
 export class EpnRoleSession {
@@ -48,11 +49,19 @@ export class EpnRoleSession {
         name: 'session_start',
         precision: 0,
     })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
+    })
     sessionStart: Date;
 
     @Column({
         name: 'session_end',
         precision: 0,
+    })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
     })
     sessionEnd: Date;
 }

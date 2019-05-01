@@ -21,11 +21,13 @@ import { Attachment } from './attachment.entity';
 import { User } from './user.entity';
 import { Run } from './run.entity';
 import { ThreadDto } from '../dtos/thread.dto';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('log')
 export class Log {
 
     @PrimaryGeneratedColumn({ name: 'log_id' })
+    @ApiModelProperty()
     logId: number;
 
     @Column({
@@ -49,24 +51,32 @@ export class Log {
         type: 'enum',
         enum: ['human', 'process'],
     })
+    @ApiModelProperty()
     origin: 'human' | 'process';
 
     @Column({
         name: 'creation_time',
         precision: 0,
     })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time'
+    })
     creationTime: Date;
 
     @Column()
+    @ApiModelProperty()
     title: string;
 
     @Column({ type: 'longtext' })
-    text: string;
+    @ApiModelProperty()
+    body: string;
 
     @Column({
         name: 'subsystem_fk_subsystem_id',
         nullable: true,
     })
+    @ApiModelProperty({ required: false })
     subsystemFkSubsystemId: number;
 
     @Column({
@@ -74,18 +84,21 @@ export class Log {
         precision: 0,
         nullable: true,
     })
+    @ApiModelProperty({ required: false })
     announcementValidUntil: Date;
 
     @Column({
         name: 'comment_fk_parent_log_id',
         nullable: true
     })
+    @ApiModelProperty({ required: false })
     commentFkParentLogId: number;
 
     @Column({
         name: 'comment_fk_root_log_id',
         nullable: true
     })
+    @ApiModelProperty({ required: false })
     commentFkRootLogId: number;
 
     @ManyToMany(type => Tag)
@@ -117,6 +130,11 @@ export class Log {
             referencedColumnName: 'runNumber'
         }
     })
+    @ApiModelProperty({
+        type: Run,
+        // isArray: true,
+    //     minProperties: 1
+    })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log, {
@@ -137,7 +155,7 @@ export class Log {
         thread.commentFkParentLogId = this.commentFkParentLogId;
         thread.commentFkRootLogId = this.commentFkRootLogId;
         thread.creationTime = this.creationTime;
-        thread.text = this.text;
+        thread.text = this.body;
         thread.title = this.title;
         thread.user = this.user;
         return thread;

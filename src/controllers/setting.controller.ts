@@ -6,14 +6,16 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { Get, Controller, UseFilters } from '@nestjs/common';
 import { SettingService } from '../services/setting.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem } from '../helpers/response.helper';
+import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { Setting } from '../interfaces/setting.interface';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 @ApiUseTags('setting')
+@UseFilters(new HttpExceptionFilter())
 @Controller()
 export class SettingController {
 
@@ -22,8 +24,15 @@ export class SettingController {
     ) { }
 
     @Get('/setting')
+    @ApiOperation({ title: 'Returns Settings for Jiskefet-UI.' })
+    @ApiOkResponse({ description: 'Succesfully returned the Settings.' })
+    @ApiNotFoundResponse({ description: 'No Settings were found.' })
     async getSettings(): Promise<ResponseObject<Setting>> {
-        const setting = await this.settingService.getSettings();
-        return createResponseItem(setting);
+        try {
+            const setting = await this.settingService.getSettings();
+            return createResponseItem(setting);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
     }
 }

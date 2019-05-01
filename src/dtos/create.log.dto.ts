@@ -44,7 +44,7 @@ export class CreateLogDto {
         description: 'describes the log in depth',
     })
     @IsString()
-    text: string;
+    body: string;
 
     @ApiModelProperty({
         example: [],
@@ -53,10 +53,10 @@ export class CreateLogDto {
     attachments?: Attachment[];
 
     @ApiModelProperty({
-        example: [1],
-        description: 'Attached run numbers of this log',
+        example: 1,
+        description: 'Attached run number of this log',
     })
-    runs: number[];
+    run: number;
 
     @ApiModelProperty({
         example: '1',
@@ -64,8 +64,4 @@ export class CreateLogDto {
     })
     @IsInt()
     user: number;
-
-    constructor(data: CreateLogDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }

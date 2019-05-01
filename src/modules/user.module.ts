@@ -20,10 +20,11 @@ import { AuthUtility } from '../utility/auth.utility';
 import { GithubAuthService } from '../services/github.auth.service';
 import { CernAuthService } from '../services/cern.auth.service';
 import { AuthService } from '../abstracts/auth.service.abstract';
+import { USE_CERN_SSO } from '../constants';
 
 const authServiceProvider = {
     provide: AuthService,
-    useClass: process.env.USE_CERN_SSO === 'true'
+    useClass: USE_CERN_SSO === 'true'
         ? CernAuthService
         : GithubAuthService,
 };

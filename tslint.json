@@ -5,7 +5,7 @@
     ],
     "linterOptions": {
         "exclude": [
-            "src/migration/*.ts", "ormconfig.json"
+            "src/migration/*.ts", "ormconfig.json", "src/global.d.ts"
         ]
     },
     "rules": {

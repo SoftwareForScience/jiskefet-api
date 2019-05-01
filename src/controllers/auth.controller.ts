@@ -12,10 +12,10 @@ import {
     Controller,
     Query,
     UnprocessableEntityException,
-    HttpException,
-    HttpStatus,
     BadRequestException,
-    UnauthorizedException
+    UnauthorizedException,
+    NotFoundException,
+    UseFilters
 } from '@nestjs/common';
 import {
     ApiImplicitQuery,
@@ -32,13 +32,15 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { AuthService } from '../abstracts/auth.service.abstract';
 import { BCryptService } from '../services/bcrypt.service';
 import { ResponseObject } from '../interfaces/response_object.interface';
-import { createResponseItem } from '../helpers/response.helper';
-import { User } from '../entities/user.entity';
+import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
+import { JWT_SECRET_KEY } from '../constants';
+import { HttpExceptionFilter } from '../filters/httpexception.filter';
 
 /**
  * Controller for authentication related endpoints.
  */
 @ApiUseTags('authentication')
+@UseFilters(new HttpExceptionFilter())
 @Controller()
 export class AuthController {
     constructor(
@@ -83,7 +85,7 @@ export class AuthController {
             const infoLog = new CreateInfologDto();
             infoLog.message = error.message;
             this.loggerService.logWarnInfoLog(infoLog);
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            return createErrorResponse(error);
         }
     }
 
@@ -120,7 +122,7 @@ export class AuthController {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'No JWT could be found in headers.';
             this.loggerService.logErrorInfoLog(infoLog);
-            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            return createErrorResponse(error);
         }
     }
 
@@ -137,17 +139,28 @@ export class AuthController {
         status: 401,
         description: 'Hashed secret was not accepted'
     })
-    @ApiImplicitQuery({ name: 'hashedSecret', required: true })
+    @ApiImplicitQuery({ name: 'hashedSecret', required: false })
     async testToken(@Query() query?: any): Promise<ResponseObject<string>> {
-        if (query.hashedSecret === undefined) {
-            throw new BadRequestException('The required query parameter \'hashedSecret\' is missing.');
-        }
-        const secretsMatch = await this.bcryptService.checkToken(process.env.JWT_SECRET_KEY, query.hashedSecret);
-        if (secretsMatch) {
-            const jwt = await this.authService.sign({ string: 'testTokenString' });
-            return createResponseItem(jwt);
-        } else {
-            throw new UnauthorizedException('The hashed secret given does not match the secret in the environment.');
+        let jwt: string;
+        switch (process.env.NODE_ENV) {
+            case 'dev':
+                // Allow creation of JWT's to use for dev purposes (only available in dev mode)
+                jwt = await this.authService.sign({ name: 'localTestToken' });
+                return createResponseItem(jwt);
+            case 'test':
+                if (query.hashedSecret === undefined) {
+                    throw new BadRequestException('The required query parameter \'hashedSecret\' is missing.');
+                }
+                const secretsMatch = await this.bcryptService.checkToken(JWT_SECRET_KEY, query.hashedSecret);
+                if (secretsMatch) {
+                    jwt = await this.authService.sign({ string: 'testTokenString' });
+                    return createResponseItem(jwt);
+                } else {
+                    throw new UnauthorizedException(
+                        'The hashed secret given does not match the secret in the environment.');
+                }
+            default:
+            throw new NotFoundException();
         }
     }
 }

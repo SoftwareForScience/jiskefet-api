@@ -17,6 +17,7 @@ import { BCryptService } from '../services/bcrypt.service';
 import { JwtService } from '@nestjs/jwt';
 import { OptionsWithUrl } from 'request-promise';
 import * as RequestPromise from 'request-promise';
+import { SUB_SYSTEM_TOKEN_EXPIRES_IN } from '../constants';
 
 /**
  * Handles authorization via OAuth 2.
@@ -57,7 +58,7 @@ export abstract class AuthService implements Authentication {
      */
     public async signSubSystem(payload: JwtPayload): Promise<string> {
         const token: JwtPayload = payload;
-        return await this.jwtService.sign(token, { expiresIn: process.env.SUB_SYSTEM_TOKEN_EXPIRES_IN });
+        return await this.jwtService.sign(token, { expiresIn: SUB_SYSTEM_TOKEN_EXPIRES_IN });
     }
 
     /**

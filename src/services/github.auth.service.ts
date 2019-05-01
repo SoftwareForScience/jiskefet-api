@@ -14,6 +14,7 @@ import { SubSystemPermissionService } from './subsystem_permission.service';
 import { BCryptService } from './bcrypt.service';
 import { OptionsWithUrl } from 'request-promise';
 import { AuthService } from '../abstracts/auth.service.abstract';
+import { CLIENT_ID, CLIENT_SECRET } from '../constants';
 
 /**
  * Handles authorization via Github OAuth2.
@@ -29,8 +30,8 @@ export class GithubAuthService extends AuthService {
     ) {
         super(userService, subSystemPermissionService, bcryptService, jwtService);
         // set oAuth credentials
-        this.oAuth2Config.client.id = process.env.CLIENT_ID;
-        this.oAuth2Config.client.secret = process.env.CLIENT_SECRET;
+        this.oAuth2Config.client.id = CLIENT_ID;
+        this.oAuth2Config.client.secret = CLIENT_SECRET;
 
         // set resource host
         this.oAuth2Config.auth.tokenHost = 'https://github.com';

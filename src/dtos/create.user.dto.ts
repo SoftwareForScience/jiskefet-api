@@ -16,8 +16,4 @@ export class CreateUserDto {
      * The user ID from the database of the OAuth provider (e.g. GitHub, Google etc.).
      */
     externalUserId: number;
-
-    constructor(data: CreateUserDto | {} = {}) {
-        Object.assign(this, data);
-    }
 }
