@@ -35,20 +35,20 @@ export class ThreadService {
      */
     async replyToRun(createThreadDto: CreateCommentDto): Promise<ThreadDto> {
         const logEntity = plainToClass(Log, createThreadDto);
-        logEntity.commentFkRootLogId = createThreadDto.runId;
+        logEntity.commentFkRootLogId = createThreadDto.rootId;
         logEntity.commentFkParentLogId = createThreadDto.parentId;
         logEntity.creationTime = new Date();
         logEntity.subtype = 'comment';
         logEntity.origin = 'human';
         logEntity.runs = [];
 
-        const threadTopic = await this.logRepository.findOne(createThreadDto.runId);
+        const threadTopic = await this.logRepository.findOne(createThreadDto.rootId);
         if (!threadTopic) {
             throw new HttpException('There is no log with the given id.', 404);
         }
 
-        if (createThreadDto.runId) {
-            const run = await this.runRepository.findOne(createThreadDto.runId);
+        if (createThreadDto.rootId) {
+            const run = await this.runRepository.findOne(createThreadDto.rootId);
             if (!run) {
                 throw new HttpException('There is no run with the given id.', 404);
             }

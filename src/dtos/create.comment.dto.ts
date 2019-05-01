@@ -13,10 +13,10 @@ import { User } from 'entities/user.entity';
 
 export class CreateCommentDto {
     @ApiModelProperty({
-        description: 'Id of the run\'s log id'
+        description: 'The id of a log'
     })
     @IsInt()
-    runId: number;
+    rootId: number;
 
     @ApiModelProperty({
         description: 'Log id of Parent comment'
