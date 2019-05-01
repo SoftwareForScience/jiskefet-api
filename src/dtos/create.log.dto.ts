@@ -55,12 +55,16 @@ export class CreateLogDto {
     @ApiModelProperty({
         example: 1,
         description: 'Attached run number of this log',
+        type: 'integer',
+        format: 'int64',
     })
     run: number;
 
     @ApiModelProperty({
-        example: '1',
+        example: 1,
         description: 'Author of log',
+        type: 'integer',
+        format: 'int64',
     })
     @IsInt()
     user: number;

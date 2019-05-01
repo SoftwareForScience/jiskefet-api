@@ -8,7 +8,7 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsOptional, IsNumberString } from 'class-validator';
+import { IsOptional, IsNumber } from 'class-validator';
 
 /**
  * Represents the query parameters given when executing a GET on /logs.
@@ -19,8 +19,10 @@ export class QueryOverviewDto {
     @ApiModelProperty({
         description: 'In which time range the logs of eachsubsystem should be posted',
         required: false,
+        type: 'integer',
+        format: 'int64',
     })
     @IsOptional()
-    @IsNumberString()
-    timeRange?: string;
+    @IsNumber()
+    timeRange?: number;
 }

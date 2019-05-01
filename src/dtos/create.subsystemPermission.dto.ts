@@ -16,6 +16,10 @@ import { SubSystem } from '../entities/sub_system.entity';
 
 export class CreateSubSystemPermissionDto {
 
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     user: number;
 
     @ApiModelProperty({

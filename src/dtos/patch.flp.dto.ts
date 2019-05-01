@@ -15,6 +15,8 @@ export class PatchFlpDto {
     @ApiModelProperty({
         example: 50,
         description: 'Number of subtimeframes processed in this FLP. Updated regularly.',
+        type: 'integer',
+        format: 'int64',
     })
     @IsNumber()
     nSubTimeframes: number;
@@ -24,6 +26,8 @@ export class PatchFlpDto {
         description:
             'data volume out from the readout \'equipment\' component in bytes. Can reach PetaBytes.' +
             'Updated regularly.',
+        type: 'integer',
+        format: 'int64',
     })
     @IsNumber()
     equipmentBytes: number;
@@ -31,7 +35,10 @@ export class PatchFlpDto {
     @ApiModelProperty({
         example: 50,
         description:
-            'data volume out from the readout \'recording\' component in bytes. Can reach PetaBytes. Updated regularly.'
+            'data volume out from the readout \'recording\' component in bytes.' +
+            'Can reach PetaBytes. Updated regularly.',
+        type: 'integer',
+        format: 'int64',
     })
     @IsNumber()
     recordingBytes: number;
@@ -39,7 +46,9 @@ export class PatchFlpDto {
     @ApiModelProperty({
         example: 50,
         description:
-            'data volume out from the readout \'fmq\' component in bytes. Can reach PetaBytes. Updated regularly.'
+            'data volume out from the readout \'fmq\' component in bytes. Can reach PetaBytes. Updated regularly.',
+        type: 'integer',
+        format: 'int64',
     })
     @IsNumber()
     fairMQBytes: number;
