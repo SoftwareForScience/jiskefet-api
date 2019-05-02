@@ -123,7 +123,8 @@ export class QueryLogDto {
     @ApiModelProperty({
         description: 'The author of the log..',
         required: false,
-        type: 'number'
+        type: 'integer',
+        format: 'int64',
     })
     user?: User;
 }

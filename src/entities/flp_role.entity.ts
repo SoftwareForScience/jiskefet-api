@@ -29,7 +29,8 @@ export class FlpRole {
     )
     @JoinColumn({ name: 'fk_run_number' })
     @ApiModelProperty({
-        type: 'object'
+        type: 'integer',
+        format: 'int64'
     })
     run: Run;
 
@@ -42,11 +43,19 @@ export class FlpRole {
         name: 'n_sub_timeframes',
         nullable: true
     })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     nSubTimeframes: number;
 
     @Column({
         name: 'equipment_bytes',
         nullable: true
+    })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
     })
     equipmentBytes: number;
 
@@ -54,11 +63,19 @@ export class FlpRole {
         name: 'recording_bytes',
         nullable: true
     })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     recordingBytes: number;
 
     @Column({
         name: 'fair_mq_bytes',
         nullable: true
+    })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
     })
     fairMQBytes: number;
 
