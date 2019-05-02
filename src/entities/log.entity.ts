@@ -139,6 +139,11 @@ export class Log {
     @OneToMany(type => Attachment, attachment => attachment.log, {
         cascade: ['insert']
     })
+    @ApiModelProperty({
+        type: Attachment,
+        required: false,
+        isArray: true,
+    })
     attachments: Attachment[];
 
     constructor(data: Log | {} = {}) {

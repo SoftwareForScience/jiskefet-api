@@ -58,7 +58,7 @@ export class CreateAttachmentDto {
     fileData: string;
 
     @ApiModelProperty({
-        example: 1,
+        example: 2,
         description: 'The id of the corresponding Log',
     })
     logId: number;

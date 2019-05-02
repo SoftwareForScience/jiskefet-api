@@ -17,6 +17,7 @@ import { createResponseItem, createResponseItems, createErrorResponse } from '..
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { Log } from '../entities/log.entity';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -34,7 +35,7 @@ export class AttachmentController {
      * Post a new Attachment. /attachments
      * @param createAttachmentDto Data held in DTO from request body.
      */
-    @Post()
+    @Post(':id/logs')
     @UsePipes(ValidationPipe)
     @ApiOperation({ title: 'Creates a Attachment.' })
     @ApiOkResponse({ description: 'Succesfully created an Attachment.' })

@@ -11,8 +11,7 @@ import {
     ApiBearerAuth,
     ApiOperation,
     ApiOkResponse,
-    ApiNotFoundResponse,
-    ApiConflictResponse
+    ApiNotFoundResponse
 } from '@nestjs/swagger';
 import { Get, Controller, Param, Post, Body, UseGuards, Query, UseFilters } from '@nestjs/common';
 import * as uuid from 'uuid/v4';
