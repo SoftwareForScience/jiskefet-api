@@ -7,17 +7,13 @@
  */
 
 import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Post, Controller, Body, Get, Param, UsePipes, ValidationPipe, UseGuards, UseFilters } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, UseFilters } from '@nestjs/common';
 import { AttachmentService } from '../services/attachment.service';
-import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { InfoLogService } from '../services/infolog.service';
-import { CreateInfologDto } from '../dtos/create.infolog.dto';
-import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
+import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
-import { Log } from '../entities/log.entity';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -27,29 +23,8 @@ import { Log } from '../entities/log.entity';
 export class AttachmentController {
 
     constructor(
-        private readonly attachmentservice: AttachmentService,
-        private readonly loggerService: InfoLogService
+        private readonly attachmentservice: AttachmentService
     ) { }
-
-    // /**
-    //  * Post a new Attachment. /attachments
-    //  * @param createAttachmentDto Data held in DTO from request body.
-    //  */
-    // @Post(':id/logs')
-    // @UsePipes(ValidationPipe)
-    // @ApiOperation({ title: 'Creates a Attachment.' })
-    // @ApiOkResponse({ description: 'Succesfully created an Attachment.' })
-    // async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
-    //     try {
-    //         const attachment = await this.attachmentservice.create(createAttachmentDto);
-    //         return createResponseItem(attachment);
-    //     } catch (error) {
-    //         const infoLog = new CreateInfologDto();
-    //         infoLog.message = 'Attachment is not correctly added.';
-    //         this.loggerService.logWarnInfoLog(infoLog);
-    //         return createErrorResponse(error);
-    //     }
-    // }
 
     /**
      * Find all Attachments that belong to a certain log item. /logs/id

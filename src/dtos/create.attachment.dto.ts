@@ -7,18 +7,23 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsBase64, IsByteLength, IsInt } from 'class-validator';
+import { IsString, IsBase64, IsByteLength } from 'class-validator';
 
 export class CreateAttachmentDto {
 
+    @ApiModelProperty({
+        type: 'string',
+        format: 'date-time',
+    })
     creationTime: Date;
 
     @ApiModelProperty({
         example: 'This is a very important file.',
         description: 'What is the name of the file?',
+        required: false,
     })
     @IsString()
-    title: string;
+    title?: string;
 
     @ApiModelProperty({
         example: 'VeryImportantDocument.txt',
@@ -34,13 +39,6 @@ export class CreateAttachmentDto {
     fileMime: string;
 
     @ApiModelProperty({
-        example: 'content-type: text/plain',
-        description: 'Content type header containing file mime',
-    })
-    @IsString()
-    contentType: string;
-
-    @ApiModelProperty({
         example: 'VmVyeSBpbXBvcnRhbnQK',
         description: 'The base64 encoded file data.',
     })
@@ -50,9 +48,9 @@ export class CreateAttachmentDto {
     })
     fileData: string;
 
-    @ApiModelProperty({
-        example: 2,
-        description: 'The id of the corresponding Log',
-    })
-    logId: number;
+    // @ApiModelProperty({
+    //     example: 2,
+    //     description: 'The id of the corresponding Log',
+    // })
+    // logId: number;
 }

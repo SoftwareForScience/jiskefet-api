@@ -32,14 +32,14 @@ export class AttachmentService {
      * Handler for saving a Attachment entity in db.
      * @param createAttachmentDto class that carries the request data for a Attachment.
      */
-    async create(createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
+    async create(logId: number, createAttachmentDto: CreateAttachmentDto): Promise<Attachment> {
         createAttachmentDto.creationTime = new Date();
         const AttachmentEntity = plainToClass(Attachment, createAttachmentDto);
-        if (createAttachmentDto.logId) {
-            const log = await this.logRepository.findOne(createAttachmentDto.logId);
+        if (logId) {
+            const log = await this.logRepository.findOne(logId);
             if (!log) {
                 throw new HttpException(
-                    `Log for logId ${createAttachmentDto.logId} doesn't exist.`, HttpStatus.NOT_FOUND
+                    `Log for logId ${logId} doesn't exist.`, HttpStatus.NOT_FOUND
                 );
             }
             AttachmentEntity.log = log;

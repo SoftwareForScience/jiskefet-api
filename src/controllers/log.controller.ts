@@ -74,10 +74,12 @@ export class LogController {
     @Post(':id/attachments')
     @UsePipes(ValidationPipe)
     @ApiOperation({ title: 'Creates a Attachment for a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully created an Attachment.' })
-    async createAttachment(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
+    @ApiCreatedResponse({ description: 'Succesfully created an Attachment.', type: Attachment })
+    async createAttachment(
+        @Param('id') logId: number,
+        @Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
         try {
-            const attachment = await this.attachmentService.create(createAttachmentDto);
+            const attachment = await this.attachmentService.create(logId, createAttachmentDto);
             return createResponseItem(attachment);
         } catch (error) {
             const infoLog = new CreateInfologDto();
