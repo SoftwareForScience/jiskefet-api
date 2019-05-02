@@ -44,26 +44,12 @@ export class Attachment {
     @Column({ name: 'file_name' })
     fileName: string;
 
-    @Column({ name: 'file_size' })
-    fileSize: number;
-
     @Column({ name: 'file_mime' })
     fileMime: string;
-
-    @Column({ name: 'content_type'})
-    contentType: string;
 
     @Column({
         name: 'file_data',
         type: 'longblob'
     })
     fileData: string;
-
-    @Column({
-        name: 'file_md5',
-        type: 'char',
-        length: 16,
-        nullable: true
-    })
-    fileMD5: string;
 }

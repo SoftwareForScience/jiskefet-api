@@ -31,25 +31,25 @@ export class AttachmentController {
         private readonly loggerService: InfoLogService
     ) { }
 
-    /**
-     * Post a new Attachment. /attachments
-     * @param createAttachmentDto Data held in DTO from request body.
-     */
-    @Post(':id/logs')
-    @UsePipes(ValidationPipe)
-    @ApiOperation({ title: 'Creates a Attachment.' })
-    @ApiOkResponse({ description: 'Succesfully created an Attachment.' })
-    async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
-        try {
-            const attachment = await this.attachmentservice.create(createAttachmentDto);
-            return createResponseItem(attachment);
-        } catch (error) {
-            const infoLog = new CreateInfologDto();
-            infoLog.message = 'Attachment is not correctly added.';
-            this.loggerService.logWarnInfoLog(infoLog);
-            return createErrorResponse(error);
-        }
-    }
+    // /**
+    //  * Post a new Attachment. /attachments
+    //  * @param createAttachmentDto Data held in DTO from request body.
+    //  */
+    // @Post(':id/logs')
+    // @UsePipes(ValidationPipe)
+    // @ApiOperation({ title: 'Creates a Attachment.' })
+    // @ApiOkResponse({ description: 'Succesfully created an Attachment.' })
+    // async create(@Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
+    //     try {
+    //         const attachment = await this.attachmentservice.create(createAttachmentDto);
+    //         return createResponseItem(attachment);
+    //     } catch (error) {
+    //         const infoLog = new CreateInfologDto();
+    //         infoLog.message = 'Attachment is not correctly added.';
+    //         this.loggerService.logWarnInfoLog(infoLog);
+    //         return createErrorResponse(error);
+    //     }
+    // }
 
     /**
      * Find all Attachments that belong to a certain log item. /logs/id

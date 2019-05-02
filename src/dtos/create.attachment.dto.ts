@@ -27,13 +27,6 @@ export class CreateAttachmentDto {
     fileName: string;
 
     @ApiModelProperty({
-        example: 42,
-        description: 'File size in bytes.'
-    })
-    @IsInt()
-    fileSize: number;
-
-    @ApiModelProperty({
         example: 'text/plain',
         description: 'What kind of file is it?',
     })
