@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create.user.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
@@ -28,7 +28,7 @@ export class UserService {
      */
     async saveUser(createUserDto: CreateUserDto): Promise<User> {
         const userEntity: User = plainToClass(User, createUserDto);
-        // Todo: change this
+        // TODO: change this
         userEntity.samsId = 123;
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
         if (!foundUser) {
@@ -52,8 +52,11 @@ export class UserService {
      * @param userId The users id
      */
     async findUserById(userId: number): Promise<User> {
-        return await this.repository.createQueryBuilder()
-            .where('user_id = :user_id', { user_id: userId })
-            .getOne();
+        const user = await this.repository.findOne({ userId });
+        if (!user) {
+            throw new HttpException(
+                `Unable to find Tokens with given User ID ${userId}`, HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 }
