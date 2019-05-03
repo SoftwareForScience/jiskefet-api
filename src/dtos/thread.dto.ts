@@ -38,7 +38,7 @@ export class ThreadDto {
     @ApiModelProperty({
         description: 'Content of the comment'
     })
-    text: string;
+    body: string;
 
     @ApiModelProperty({
         description: 'user'

@@ -155,7 +155,7 @@ export class Log {
         thread.commentFkParentLogId = this.commentFkParentLogId;
         thread.commentFkRootLogId = this.commentFkRootLogId;
         thread.creationTime = this.creationTime;
-        thread.text = this.body;
+        thread.body = this.body;
         thread.title = this.title;
         thread.user = this.user;
         return thread;
