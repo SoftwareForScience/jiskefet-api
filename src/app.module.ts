@@ -64,6 +64,9 @@ import {
 import { FlpModule } from './modules/flp.module';
 import { FlpController } from './controllers/flp.controller';
 import { FlpSerivce } from './services/flp.service';
+import { TagModule } from './modules/tag.module';
+import { TagController } from './controllers/tag.controller';
+import { TagService } from './services/tag.service';
 
 let databaseOptions;
 // Use a different database for running tests.
@@ -108,6 +111,7 @@ const authServiceProvider = {
     RunModule,
     LogModule,
     FlpModule,
+    TagModule,
     AttachmentModule,
     SubSystemModule,
     UserModule,
@@ -122,6 +126,7 @@ const authServiceProvider = {
     RunController,
     LogController,
     FlpController,
+    TagController,
     AttachmentController,
     SubSystemController,
     UserController,
@@ -134,6 +139,7 @@ const authServiceProvider = {
     RunService,
     LogService,
     FlpSerivce,
+    TagService,
     AttachmentService,
     SubSystemService,
     UserService,
