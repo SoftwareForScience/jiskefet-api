@@ -8,7 +8,7 @@
 
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { Log } from '../entities/log.entity';
 import { ThreadDto } from '../dtos/thread.dto';
 import { CreateCommentDto } from '../dtos/create.comment.dto';
@@ -85,7 +85,8 @@ export class ThreadService {
         // Fetch all comments of root Log
         const comments = await this.logRepository.find({
             where: {
-                commentFkRootLogId: root.logId
+                commentFkRootLogId: root.logId,
+                logId: Not(root.logId)
             }
         });
         if (comments.length === 0) {
@@ -111,11 +112,6 @@ export class ThreadService {
                 const a = x.creationTime;
                 const b = y.creationTime;
                 return a > b ? 1 : b > a ? -1 : 0;
-            })
-            .sort((x, y) => {
-                const a = x.commentFkParentLogId;
-                const b = y.commentFkParentLogId;
-                return a > b ? 1 : b > a ? -1 : 0;
             });
 
         thread = this.addSubComment(comments, thread.logId, thread);
@@ -129,7 +125,8 @@ export class ThreadService {
                 const subComment = comments[a].toThreadDto();
                 subComment.comments = [];
                 thread.comments.push(subComment);
-                comments.splice(a);
+                comments.splice(a, 1);
+                a--;
                 this.addSubComment(comments, subComment.logId, subComment);
             }
         }
