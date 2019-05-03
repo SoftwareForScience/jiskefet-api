@@ -121,13 +121,13 @@ export class LogController {
 
     /**
      * Gets the full thread by the rootLogId.
-     * @param rootId Run's log id
+     * @param logId Run's log id
      */
-    @Get(':id/thread')
-    async findRunLogId(@Param('id') rootId: number): Promise<ResponseObject<ThreadDto>> {
+    @Get(':id/threads')
+    async findRunLogId(@Param('id') logId: number): Promise<ResponseObject<ThreadDto>> {
         try {
-            const getThreadByRootId = await this.threadService.findThreadById(rootId);
-            return createResponseItem(getThreadByRootId);
+            const getThreadById = await this.threadService.findThreadById(logId);
+            return createResponseItem(getThreadById);
         } catch (error) {
             return createErrorResponse(error);
         }
@@ -140,7 +140,7 @@ export class LogController {
      * - RootId refers to the root Log (subType is run)
      * - ParentId refers to the direct parent Log (subtype can be 'comment' or 'run')
      */
-    @Post(':id/thread')
+    @Post('/threads')
     async addComment(@Body() createCommentDto: CreateCommentDto): Promise<ResponseObject<Log>> {
         try {
             const commentCreated = await this.threadService.addCommentToThread(createCommentDto);

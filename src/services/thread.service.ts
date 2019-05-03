@@ -61,23 +61,26 @@ export class ThreadService {
 
     /**
      * Find a thread by run id with it's comments
-     * @param rootId number
+     * @param logId number
      */
-    async findThreadById(rootId: number): Promise<ThreadDto> {
+    async findThreadById(logId: number): Promise<ThreadDto> {
+        // Fetch the Log by given logId
+        const log = await this.logRepository.findOne(logId);
+        // Fetch the root Log *cant do this if log === root*
         const root = await this.logRepository.findOne({
             where: {
                 subtype: 'run',
-                logId: rootId
+                logId: log.commentFkRootLogId
             }
         });
 
         if (!root) {
-            throw new HttpException('Couldn\'t find the specifed root with the given id.', 404);
+            throw new HttpException('Couldn\'t find the root log of the given logId.', 404);
         }
-
+        // Fetch all comments of root Log
         const comments = await this.logRepository.find({
             where: {
-                commentFkRootLogId: rootId
+                commentFkRootLogId: root.logId
             }
         });
         if (comments.length === 0) {

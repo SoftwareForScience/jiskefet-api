@@ -55,7 +55,10 @@ export class LogService {
             }
             await logEntity.runs.push(run);
         }
-        return await this.logRepository.save(logEntity);
+        const log = await this.logRepository.save(logEntity);
+        log.commentFkParentLogId = log.logId;
+        log.commentFkRootLogId = log.logId;
+        return this.logRepository.save(log);
     }
 
     /**
