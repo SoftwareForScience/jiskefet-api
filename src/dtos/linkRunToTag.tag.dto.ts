@@ -6,13 +6,11 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 /**
  * The body required for runs to be linked to tags.
  */
-@Entity('runs')
 export class LinkRunToTagDto {
     @ApiModelProperty({
         example: 1,

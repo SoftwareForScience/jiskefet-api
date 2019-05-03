@@ -24,9 +24,9 @@ import { Tag } from '../entities/tag.entity';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { TagService } from '../services/tag.service';
-import { async } from 'rxjs/internal/scheduler/async';
 import { QueryTagDto } from '../dtos/query.tag.dto';
 import { LinkRunToTagDto } from '../dtos/linkRunToTag.tag.dto';
+import { LinkLogToTagDto } from '../dtos/linkLogToTag.tag.dto';
 
 @ApiUseTags('tags')
 @ApiBearerAuth()
@@ -90,7 +90,7 @@ export class TagController {
         }
     }
 
-    @Patch('id/runs')
+    @Patch(':id/runs')
     @ApiOperation({ title: 'Links a Run to a specific Tag.' })
     @ApiResponse({
         status: 204,
@@ -98,10 +98,27 @@ export class TagController {
     })
     @ApiConflictResponse({ description: 'The Run is already linked to the Tag.' })
     @ApiNotFoundResponse({ description: 'The Run or Tag does not exist.' })
-    async linkRunToTag(@Param('id') tagId: number, @Body() request: LinkRunToTagDto): Promise<ResponseObject<void>> {
+    async runToTag(@Param('id') tagId: number, @Body() request: LinkRunToTagDto): Promise<ResponseObject<void>> {
         try {
             const runToTag = await this.tagService.linkRunToTag(tagId, request);
             return createResponseItem(runToTag);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+    }
+
+    @Patch(':id/logs')
+    @ApiOperation({ title: 'Links a Run to a specific Tag.' })
+    @ApiResponse({
+        status: 204,
+        description: 'Succesfully linked a Run to a Tag.'
+    })
+    @ApiConflictResponse({ description: 'The Run is already linked to the Tag.' })
+    @ApiNotFoundResponse({ description: 'The Run or Tag does not exist.' })
+    async logToTag(@Param('id') tagId: number, @Body() request: LinkLogToTagDto): Promise<ResponseObject<void>> {
+        try {
+            const logToTag = await this.tagService.linkLogToTag(tagId, request);
+            return createResponseItem(logToTag);
         } catch (error) {
             return createErrorResponse(error);
         }

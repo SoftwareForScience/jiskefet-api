@@ -143,18 +143,6 @@ export class Run {
     @ApiModelProperty({ required: false })
     bytesTimeframeBuilder: number;
 
-    @ManyToMany(type => Tag)
-    @JoinTable({
-        name: 'tags_in_run',
-        joinColumn: {
-            name: 'fk_run_id',
-            referencedColumnName: 'runNumber'
-        },
-        inverseJoinColumn: {
-            name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
-        }
-    })
     tags: Tag[];
 
     @ManyToMany(type => Log, log => log.runs)

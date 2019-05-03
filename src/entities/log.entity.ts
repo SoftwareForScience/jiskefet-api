@@ -100,18 +100,6 @@ export class Log {
     @ApiModelProperty({ required: false })
     commentFkRootLogId: number;
 
-    @ManyToMany(type => Tag)
-    @JoinTable({
-        name: 'tags_in_log',
-        joinColumn: {
-            name: 'fk_log_id',
-            referencedColumnName: 'logId'
-        },
-        inverseJoinColumn: {
-            name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
-        }
-    })
     tags: Tag[];
 
     @ManyToMany(

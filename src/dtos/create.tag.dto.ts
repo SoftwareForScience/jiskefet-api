@@ -5,11 +5,10 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
-import { Entity } from 'typeorm';
-import { IsNumber, IsString } from 'class-validator';
+
+import { IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-@Entity('tag')
 export class CreateTagDto {
 
     @ApiModelProperty({
