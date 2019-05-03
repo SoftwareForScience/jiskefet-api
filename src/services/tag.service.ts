@@ -76,7 +76,7 @@ export class TagService {
         console.log('Tags in Runs test: ');
         console.log(tag.runs);
         if (!tag.runs) {
-            tag.runs = [];
+            tag.runs = [] as Run[];
             console.log('Tags in Runs after the IF');
             console.log(tag.runs);
         }
@@ -97,6 +97,9 @@ export class TagService {
         if (!log) {
             throw new HttpException(
                 `Run with run number ${linkLogToTagDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
+        }
+        if (!tag.logs) {
+            tag.logs = [] as Log[];
         }
         tag.logs = [...tag.logs, log];
         await this.tagRepository.save(tag);
