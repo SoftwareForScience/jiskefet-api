@@ -7,7 +7,7 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsBase64, IsByteLength } from 'class-validator';
+import { IsString, IsBase64, IsByteLength, IsDateString, IsEmpty, IsOptional } from 'class-validator';
 
 export class CreateAttachmentDto {
 
@@ -23,6 +23,7 @@ export class CreateAttachmentDto {
         required: false,
     })
     @IsString()
+    @IsOptional()
     title?: string;
 
     @ApiModelProperty({
