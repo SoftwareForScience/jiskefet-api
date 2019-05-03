@@ -66,13 +66,18 @@ export class ThreadService {
     async findThreadById(logId: number): Promise<ThreadDto> {
         // Fetch the Log by given logId
         const log = await this.logRepository.findOne(logId);
-        // Fetch the root Log *cant do this if log === root*
-        const root = await this.logRepository.findOne({
-            where: {
-                subtype: 'run',
-                logId: log.commentFkRootLogId
-            }
-        });
+        // Fetch the root Log
+        let root: Log;
+        if (logId === log.commentFkRootLogId) {
+            root = log;
+        } else {
+            root = await this.logRepository.findOne({
+                where: {
+                    subtype: 'run',
+                    logId: log.commentFkRootLogId
+                }
+            });
+        }
 
         if (!root) {
             throw new HttpException('Couldn\'t find the root log of the given logId.', 404);
@@ -124,6 +129,7 @@ export class ThreadService {
                 const subComment = comments[a].toThreadDto();
                 subComment.comments = [];
                 thread.comments.push(subComment);
+                comments.splice(a);
                 this.addSubComment(comments, subComment.logId, subComment);
             }
         }
