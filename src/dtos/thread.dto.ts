@@ -9,10 +9,12 @@ import { User } from '../entities/user.entity';
  * copied verbatim in the file "LICENSE"
  */
 export class ThreadDto {
+
     @ApiModelProperty({
         description: 'The id of the thread/log'
     })
     logId: number;
+
     @ApiModelProperty({
         description: 'The id of the run\'s log id'
     })

@@ -13,29 +13,34 @@ import { User } from 'entities/user.entity';
 
 export class CreateCommentDto {
     @ApiModelProperty({
+        example: 1,
         description: 'The id of a log'
     })
     @IsInt()
     rootId: number;
 
     @ApiModelProperty({
+        example: 1,
         description: 'Log id of Parent comment'
     })
     parentId: number;
 
     @ApiModelProperty({
+        example: 'First Comment on a Log',
         description: 'Title of the comment'
     })
     @IsString()
     title: string;
 
     @ApiModelProperty({
+        example: 'Body for the first comment',
         description: 'Content of the comment'
     })
     @IsString()
-    text: string;
+    body: string;
 
     @ApiModelProperty({
+        example: 1,
         description: 'The user\'s id'
     })
     @IsInt()
