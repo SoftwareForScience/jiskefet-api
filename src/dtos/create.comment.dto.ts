@@ -1,7 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { Log } from 'entities/log.entity';
-import { IsString, IsInt } from 'class-validator';
-import { User } from 'entities/user.entity';
+import { IsString, IsInt, IsEnum } from 'class-validator';
+import { Attachment } from 'entities/attachment.entity';
+import { SubType } from '../enums/log.subtype.enum';
+import { Origin } from '../enums/log.origin.enum';
 
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
@@ -12,6 +13,24 @@ import { User } from 'entities/user.entity';
  */
 
 export class CreateCommentDto {
+
+    @ApiModelProperty({
+        example: 'comment',
+        description: 'What kind of log is it?',
+        enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
+    })
+    // each:true makes sure in the case more than one subtype is chosen they are all validated
+    @IsEnum(SubType, { each: true, message: 'Each value in subtype must be a valid enum value' })
+    subtype: string;
+
+    @ApiModelProperty({
+        example: 'human',
+        description: 'Where did the log come from?',
+        enum: ['human', 'process']
+    })
+    @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
+    origin: string;
+
     @ApiModelProperty({
         example: 1,
         description: 'The id of a log'
@@ -23,6 +42,7 @@ export class CreateCommentDto {
         example: 1,
         description: 'Log id of Parent comment'
     })
+    @IsInt()
     parentId: number;
 
     @ApiModelProperty({
@@ -45,6 +65,12 @@ export class CreateCommentDto {
     })
     @IsInt()
     user: number;
+
+    @ApiModelProperty({
+        example: [],
+        description: 'Attachments of this log',
+    })
+    attachments?: Attachment[];
 
     constructor(data: CreateCommentDto | {} = {}) {
         Object.assign(this, data);

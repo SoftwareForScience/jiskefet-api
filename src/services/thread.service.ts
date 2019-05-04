@@ -84,10 +84,13 @@ export class ThreadService {
         }
         // Fetch all comments of root Log
         const comments = await this.logRepository.find({
-            where: {
+            where: [{
                 commentFkRootLogId: root.logId,
                 logId: Not(root.logId)
-            }
+            }, {
+                commentFkRootLogId: root.logId,
+                logId: Not(log.logId)
+            }]
         });
         if (comments.length === 0) {
             throw new HttpException('This root doens\'t cointain any comments.', 404);
