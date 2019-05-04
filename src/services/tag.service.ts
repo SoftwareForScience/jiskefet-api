@@ -49,59 +49,27 @@ export class TagService {
         return query;
     }
 
-    async findTagById(id: number): Promise<Tag> {
-        const tagById = await this.tagRepository
-            .createQueryBuilder('tag')
-            .where('tag_id = :id', { id })
-            .getOne()
-            .then((res: Tag) => Promise.resolve(res))
-            .catch((err: string) => Promise.reject(err));
+    async findTagById(tagId: number): Promise<Tag> {
+        const tagById = await this.tagRepository.findOne({ tagId });
+        if (!tagById) {
+            throw new HttpException(`Unable to find a Tag with the given Tag ID: ${tagId}`, HttpStatus.NOT_FOUND);
+        }
         return tagById;
     }
 
     async linkRunToTag(tagId: number, linkRunToTagDto: LinkRunToTagDto): Promise<void> {
-        const tag = await this.findTagById(tagId);
-        console.log('Tag Objec');
-        console.log(tag);
-        if (!tag) {
-            throw new HttpException(`Tag with tag number ${tagId} does not exist.`, HttpStatus.NOT_FOUND);
-        }
-        const run = await this.runRepository.findOne(linkRunToTagDto.runNumber);
-        console.log('Run Object');
-        console.log(run);
-        if (!run) {
-            throw new HttpException(
-                `Run with run number ${linkRunToTagDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
-        }
-        console.log('Tags in Runs test: ');
-        console.log(tag.runs);
-        if (!tag.runs) {
-            tag.runs = [] as Run[];
-            console.log('Tags in Runs after the IF');
-            console.log(tag.runs);
-        }
-        // tag.runs.push(run);
-        tag.runs = [...tag.runs, run];
-        console.log('Tags in Runs after iteration and assignment');
-        console.log(tag.runs);
-        await this.tagRepository.save(tag);
+        await this.tagRepository
+            .createQueryBuilder()
+            .relation(Tag, 'runs')
+            .of(tagId)
+            .add(linkRunToTagDto.runNumber);
     }
 
     async linkLogToTag(tagId: number, linkLogToTagDto: LinkLogToTagDto): Promise<void> {
-        const tag = await this.findTagById(tagId);
-        console.log(tag);
-        if (!tag) {
-            throw new HttpException(`Tag with tag number ${tagId} does not exist.`, HttpStatus.NOT_FOUND);
-        }
-        const log = await this.logRepository.findOne(linkLogToTagDto.logId);
-        if (!log) {
-            throw new HttpException(
-                `Run with run number ${linkLogToTagDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
-        }
-        if (!tag.logs) {
-            tag.logs = [] as Log[];
-        }
-        tag.logs = [...tag.logs, log];
-        await this.tagRepository.save(tag);
+        await this.tagRepository
+            .createQueryBuilder()
+            .relation(Tag, 'logs')
+            .of(tagId)
+            .add(linkLogToTagDto.logId);
     }
 }
