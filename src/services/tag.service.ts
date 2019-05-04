@@ -14,31 +14,31 @@ import { CreateTagDto } from '../dtos/create.tag.dto';
 import { plainToClass } from 'class-transformer';
 import { QueryTagDto } from '../dtos/query.tag.dto';
 import { LinkRunToTagDto } from '../dtos/linkRunToTag.tag.dto';
-import { Run } from '../entities/run.entity';
 import { LinkLogToTagDto } from '../dtos/linkLogToTag.tag.dto';
-import { Log } from '../entities/log.entity';
 
 @Injectable()
 export class TagService {
     private readonly tagRepository: Repository<Tag>;
-    private readonly runRepository: Repository<Run>;
-    private readonly logRepository: Repository<Log>;
 
     constructor(
-        @InjectRepository(Tag) tagRepository: Repository<Tag>,
-        @InjectRepository(Run) runRepository: Repository<Run>,
-        @InjectRepository(Log) logRepository: Repository<Log>
+        @InjectRepository(Tag) tagRepository: Repository<Tag>
     ) {
         this.tagRepository = tagRepository;
-        this.runRepository = runRepository;
-        this.logRepository = logRepository;
     }
 
+    /**
+     * Creates a Tag.
+     * @param createTagDto CreateTagDto for creating Tags.
+     */
     async create(createTagDto: CreateTagDto): Promise<Tag> {
         const tagEntity = plainToClass(Tag, createTagDto);
         return await this.tagRepository.save(tagEntity);
     }
 
+    /**
+     * Returns all Tags.
+     * @param queryTagDto QueryTagDto for quering Tags.
+     */
     async findAll(queryTagDto?: QueryTagDto): Promise<Tag[]> {
         const query = await this.tagRepository.createQueryBuilder('tag')
             .select('tag', 'tag')
@@ -49,6 +49,10 @@ export class TagService {
         return query;
     }
 
+    /**
+     * Returns a Tag with given ID.
+     * @param tagId is id of a Tag.
+     */
     async findTagById(tagId: number): Promise<Tag> {
         const tagById = await this.tagRepository.findOne({ tagId });
         if (!tagById) {
@@ -57,6 +61,10 @@ export class TagService {
         return tagById;
     }
 
+    /**
+     * Returns a Tag with all the Runs that contains Tag with given ID.
+     * @param tagId is id of a Tag.
+     */
     async findRunsByTagId(tagId: number): Promise<Tag> {
         const query = await this.tagRepository
             .createQueryBuilder('tag')
@@ -68,6 +76,10 @@ export class TagService {
         return query;
     }
 
+    /**
+     * Returns a Tag with all the Logs that contains Tag with given ID.
+     * @param tagId is id of a Tag.
+     */
     async findLogsByTagId(tagId: number): Promise<Tag> {
         const query = await this.tagRepository
             .createQueryBuilder('tag')
@@ -79,19 +91,44 @@ export class TagService {
         return query;
     }
 
+    /**
+     * Links a Run to a Tag with given ID.
+     * @param tagId is id of a Tag.
+     * @param linkRunToTagDto LinkRunToTagDto for linking a Run to a Tag.
+     */
     async linkRunToTag(tagId: number, linkRunToTagDto: LinkRunToTagDto): Promise<void> {
-        await this.tagRepository
+        const runToTag = await this.tagRepository
             .createQueryBuilder()
             .relation(Tag, 'runs')
             .of(tagId)
             .add(linkRunToTagDto.runNumber);
+        return runToTag;
     }
 
+    /**
+     * Links a Log to a Tag with given ID.
+     * @param tagId is id of a Tag.
+     * @param linkLogToTagDto LinkLogToTagDto for linking a Log to a Tag.
+     */
     async linkLogToTag(tagId: number, linkLogToTagDto: LinkLogToTagDto): Promise<void> {
-        await this.tagRepository
+        const logToTag = await this.tagRepository
             .createQueryBuilder()
             .relation(Tag, 'logs')
             .of(tagId)
             .add(linkLogToTagDto.logId);
+        return logToTag;
+    }
+
+    /**
+     * Deletes a Tag with given ID.
+     * @param tagId is id of a Tag.
+     */
+    async deleteTag(tagId: number): Promise<void> {
+        await this.tagRepository
+            .createQueryBuilder()
+            .delete()
+            .from(Tag)
+            .where('tag_id = :tagId', { tagId })
+            .execute();
     }
 }
