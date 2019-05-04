@@ -100,6 +100,12 @@ export class Log {
     @ApiModelProperty({ required: false })
     commentFkRootLogId: number;
 
+    @ManyToMany(type => Tag, tag => tag.logs)
+    @ApiModelProperty({
+        type: Tag,
+        isArray: true,
+        minProperties: 1
+    })
     tags: Tag[];
 
     @ManyToMany(

@@ -57,6 +57,28 @@ export class TagService {
         return tagById;
     }
 
+    async findRunsByTagId(tagId: number): Promise<Tag> {
+        const query = await this.tagRepository
+            .createQueryBuilder('tag')
+            .innerJoinAndSelect('tag.runs', 'runs')
+            .where('tag_id = :tagId', { tagId })
+            .getOne()
+            .then((res: Tag) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
+        return query;
+    }
+
+    async findLogsByTagId(tagId: number): Promise<Tag> {
+        const query = await this.tagRepository
+            .createQueryBuilder('tag')
+            .innerJoinAndSelect('tag.logs', 'logs')
+            .where('tag_id = :tagId', { tagId })
+            .getOne()
+            .then((res: Tag) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
+        return query;
+    }
+
     async linkRunToTag(tagId: number, linkRunToTagDto: LinkRunToTagDto): Promise<void> {
         await this.tagRepository
             .createQueryBuilder()

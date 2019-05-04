@@ -143,6 +143,12 @@ export class Run {
     @ApiModelProperty({ required: false })
     bytesTimeframeBuilder: number;
 
+    @ManyToMany(type => Tag, tag => tag.runs)
+    @ApiModelProperty({
+        type: Tag,
+        isArray: true,
+        minProperties: 1
+    })
     tags: Tag[];
 
     @ManyToMany(type => Log, log => log.runs)

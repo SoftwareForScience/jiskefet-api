@@ -27,6 +27,8 @@ import { TagService } from '../services/tag.service';
 import { QueryTagDto } from '../dtos/query.tag.dto';
 import { LinkRunToTagDto } from '../dtos/linkRunToTag.tag.dto';
 import { LinkLogToTagDto } from '../dtos/linkLogToTag.tag.dto';
+import { Log } from '../entities/log.entity';
+import { Run } from '../entities/run.entity';
 
 @ApiUseTags('tags')
 @ApiBearerAuth()
@@ -85,6 +87,32 @@ export class TagController {
         try {
             const getTagById = await this.tagService.findTagById(id);
             return createResponseItem(getTagById);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+    }
+
+    @Get(':id/runs')
+    @ApiOperation({ title: 'Returns all Runs for a specific Tag.' })
+    @ApiOkResponse({ description: 'Succesfully returned Runs.' })
+    @ApiNotFoundResponse({ description: 'No Runs found for this Tag.' })
+    async findRunsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
+        try {
+            const runsByTagId = await this.tagService.findRunsByTagId(tagId);
+            return createResponseItem(runsByTagId);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+    }
+
+    @Get(':id/logs')
+    @ApiOperation({ title: 'Returns all Logs for a specific Tag.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
+    @ApiNotFoundResponse({ description: 'No Logs found for this Tag.' })
+    async findLogsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
+        try {
+            const logsByTagId = await this.tagService.findLogsByTagId(tagId);
+            return createResponseItem(logsByTagId);
         } catch (error) {
             return createErrorResponse(error);
         }
