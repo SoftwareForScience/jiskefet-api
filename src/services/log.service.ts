@@ -133,7 +133,6 @@ export class LogService {
      */
     async linkRunToLog(logId: number, linkRunToLogDto: LinkRunToLogDto): Promise<void> {
         const log = await this.findLogById(logId);
-        console.log(log);
         if (!log) {
             throw new HttpException(`Log with log number ${logId} does not exist.`, HttpStatus.NOT_FOUND);
         }
