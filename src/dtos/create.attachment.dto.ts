@@ -28,7 +28,9 @@ export class CreateAttachmentDto {
 
     @ApiModelProperty({
         example: 42,
-        description: 'File size in bytes.'
+        description: 'File size in bytes.',
+        type: 'integer',
+        format: 'int64'
     })
     @IsInt()
     fileSize: number;
@@ -60,6 +62,8 @@ export class CreateAttachmentDto {
     @ApiModelProperty({
         example: 1,
         description: 'The id of the corresponding Log',
+        type: 'integer',
+        format: 'int64',
     })
     logId: number;
 }

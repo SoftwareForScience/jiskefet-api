@@ -14,6 +14,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
 export class Attachment {
 
     @PrimaryGeneratedColumn({ name: 'file_id' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     fileId: number;
 
     @ManyToOne(

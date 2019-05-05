@@ -15,11 +15,16 @@ import { SubSystemPermission } from './sub_system_permission.entity';
 import { RunQualityHistory } from './run_quality_history.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany } from 'typeorm';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('user')
 export class User {
 
     @PrimaryGeneratedColumn({ name: 'user_id' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     userId: number;
 
     @Column({
@@ -27,11 +32,19 @@ export class User {
         type: 'int',
         unique: true
     })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     externalUserId: number;
 
     @Column({
         name: 'sams_id',
         type: 'int'
+    })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
     })
     samsId: number;
 

@@ -8,11 +8,16 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { SubSystemPermission } from './sub_system_permission.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('sub_system')
 export class SubSystem {
 
     @PrimaryGeneratedColumn({ name: 'subsystem_id' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     subsystemId: number;
 
     @Column({ name: 'subsystem_name' })
