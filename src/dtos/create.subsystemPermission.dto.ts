@@ -20,7 +20,7 @@ export class CreateSubSystemPermissionDto {
         type: 'integer',
         format: 'int64',
     })
-    user?: number;
+    user: number;
 
     @ApiModelProperty({
         example: 8,

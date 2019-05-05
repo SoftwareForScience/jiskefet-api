@@ -6,30 +6,29 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { plainToClass } from 'class-transformer';
 import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission.dto';
-import { User } from '../entities/user.entity';
 
 @Injectable()
 export class SubSystemPermissionService {
 
-    private readonly subSystemPermissionRepository: Repository<SubSystemPermission>;
+    private readonly repository: Repository<SubSystemPermission>;
 
     constructor(
         @InjectRepository(SubSystemPermission) repository: Repository<SubSystemPermission>,
     ) {
-        this.subSystemPermissionRepository = repository;
+        this.repository = repository;
     }
 
     /**
      * Handler for getting SubSystem permissions from db.
      */
     async findAll(): Promise<SubSystemPermission[]> {
-        return await this.subSystemPermissionRepository.find();
+        return await this.repository.find();
     }
 
     /**
@@ -37,7 +36,7 @@ export class SubSystemPermissionService {
      * @param subSystemPermissionId number
      */
     async findSubSystemsPermissionsById(subSystemPermissionId: number): Promise<SubSystemPermission> {
-        return await this.subSystemPermissionRepository.createQueryBuilder()
+        return await this.repository.createQueryBuilder()
             .where('sub_system_permission_id = :subSystemPermissionId', { subSystemPermissionId })
             .getOne();
     }
@@ -47,14 +46,10 @@ export class SubSystemPermissionService {
      * @param userId number
      */
     async findTokensByExternalUserId(userId: number): Promise<SubSystemPermission[]> {
-        const result = await this.subSystemPermissionRepository.createQueryBuilder()
-            .select([
-                'sub_system_permission_id',
-                'sub_system_token_description'
-            ])
-            .where('fk_user_id = :userId ', { userId })
-            .execute();
-
+        const result = await this.repository.query(
+            `SELECT sub_system_permission_id, sub_system_token_description
+            FROM sub_system_permission WHERE fk_user_id = ${userId};`
+        );
         const overview = new Array() as SubSystemPermission[];
         for (const r of result) {
             const subSystemPermission = {} as SubSystemPermission;
@@ -70,7 +65,7 @@ export class SubSystemPermissionService {
      * @param token string
      */
     async findOneByToken(token: string): Promise<SubSystemPermission> {
-        return this.subSystemPermissionRepository.createQueryBuilder()
+        return this.repository.createQueryBuilder()
             .where('sub_system_token = :token', { token })
             .getOne();
     }
@@ -82,6 +77,6 @@ export class SubSystemPermissionService {
     async saveTokenForSubSystemPermission(
         subSystemPermissionDto: CreateSubSystemPermissionDto): Promise<SubSystemPermission> {
         const newSubSystemPermission: SubSystemPermission = plainToClass(SubSystemPermission, subSystemPermissionDto);
-        return this.subSystemPermissionRepository.save(newSubSystemPermission);
+        return this.repository.save(newSubSystemPermission);
     }
 }

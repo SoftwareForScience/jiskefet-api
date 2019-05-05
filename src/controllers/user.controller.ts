@@ -78,8 +78,7 @@ export class UserController {
     async findTokensByExternalUserId(@Param('id') userId: number):
         Promise<ResponseObject<SubSystemPermission>> {
         try {
-            const user = await this.userService.findUserById(userId);
-            const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(user.userId);
+            const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
             return createResponseItems(tokenByExternalId);
         } catch (error) {
             return createErrorResponse(error);
@@ -94,10 +93,9 @@ export class UserController {
     @ApiOkResponse({ description: 'Succesfully created a Token.' })
     async generateTokenForSubsystem(@Param('id') userId: number, @Body() request: CreateSubSystemPermissionDto):
         Promise<ResponseObject<CreateSubSystemPermissionDto>> {
-        const user = await this.userService.findUserById(userId);
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
-        request.user = user.userId;
+        request.user = userId;
 
         try {
             // save it to db
