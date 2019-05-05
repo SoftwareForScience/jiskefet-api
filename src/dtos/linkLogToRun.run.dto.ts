@@ -15,8 +15,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
 @Entity('logs')
 export class LinkLogToRunDto {
     @ApiModelProperty({
-        example: '1',
+        example: 1,
         description: 'The id of the log to link to the run.',
+        type: 'integer',
+        format: 'int64',
     })
     logId: number;
 }

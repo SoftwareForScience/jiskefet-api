@@ -17,7 +17,7 @@ export class Tag {
     @PrimaryGeneratedColumn({ name: 'tag_id' })
     @ApiModelProperty({
         type: 'integer',
-        format: 'int64'
+        format: 'int64',
     })
     tagId: number;
 

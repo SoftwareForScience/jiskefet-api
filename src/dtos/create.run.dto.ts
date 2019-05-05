@@ -18,7 +18,9 @@ export class CreateRunDto {
 
     @ApiModelProperty({
         example: 1,
-        description: 'The id of the run'
+        description: 'The id of the run',
+        type: 'integer',
+        format: 'int64',
     })
     @IsNumber()
     runNumber: number;
@@ -27,7 +29,7 @@ export class CreateRunDto {
         example: new Date(),
         description: 'Current Date',
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsDateString()
     O2StartTime: Date;
@@ -36,7 +38,7 @@ export class CreateRunDto {
         example: new Date(),
         description: 'Current Date',
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsDateString()
     TrgStartTime: Date;
@@ -59,6 +61,8 @@ export class CreateRunDto {
     @ApiModelProperty({
         example: 16,
         description: 'Number of detectors during run.',
+        type: 'integer',
+        format: 'int64',
     })
     @IsInt()
     readonly nDetectors: number;
@@ -66,6 +70,8 @@ export class CreateRunDto {
     @ApiModelProperty({
         example: 7,
         description: 'Number of FLPs that computed data',
+        type: 'integer',
+        format: 'int64',
     })
     @IsInt()
     readonly nFlps: number;
@@ -73,6 +79,8 @@ export class CreateRunDto {
     @ApiModelProperty({
         example: 8,
         description: 'Number of EPNs that stored data',
+        type: 'integer',
+        format: 'int64',
     })
     @IsInt()
     readonly nEpns: number;

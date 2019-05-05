@@ -37,12 +37,24 @@ export class EpnRoleSession {
     epnHostname: string;
 
     @Column({ name: 'n_subtimeframes' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     nSubtimeframes: number;
 
     @Column({ name: 'bytes_in' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     bytesIn: number;
 
     @Column({ name: 'bytes_out' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     bytesOut: number;
 
     @Column({

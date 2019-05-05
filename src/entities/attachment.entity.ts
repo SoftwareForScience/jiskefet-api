@@ -14,6 +14,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
 export class Attachment {
 
     @PrimaryGeneratedColumn({ name: 'file_id' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     fileId: number;
 
     @ManyToOne(
@@ -26,6 +30,7 @@ export class Attachment {
         }
     )
     @JoinColumn({ name: 'fk_log_id' })
+    @ApiModelProperty()
     log: Log;
 
     @Column({
@@ -39,31 +44,21 @@ export class Attachment {
     creationTime: Date;
 
     @Column({ nullable: true })
+    @ApiModelProperty()
     title: string;
 
     @Column({ name: 'file_name' })
+    @ApiModelProperty()
     fileName: string;
 
-    @Column({ name: 'file_size' })
-    fileSize: number;
-
     @Column({ name: 'file_mime' })
+    @ApiModelProperty()
     fileMime: string;
-
-    @Column({ name: 'content_type'})
-    contentType: string;
 
     @Column({
         name: 'file_data',
         type: 'longblob'
     })
+    @ApiModelProperty()
     fileData: string;
-
-    @Column({
-        name: 'file_md5',
-        type: 'char',
-        length: 16,
-        nullable: true
-    })
-    fileMD5: string;
 }
