@@ -7,7 +7,7 @@
  */
 
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsBase64, IsByteLength, IsDateString, IsEmpty, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsBase64, IsByteLength, IsOptional } from 'class-validator';
 
 export class CreateAttachmentDto {
 
@@ -33,15 +33,6 @@ export class CreateAttachmentDto {
     fileName: string;
 
     @ApiModelProperty({
-        example: 42,
-        description: 'File size in bytes.',
-        type: 'integer',
-        format: 'int64'
-    })
-    @IsInt()
-    fileSize: number;
-
-    @ApiModelProperty({
         example: 'text/plain',
         description: 'What kind of file is it?',
     })
@@ -57,12 +48,4 @@ export class CreateAttachmentDto {
         message: 'File data cannot be larger than 5MB', // Limits the base64 string to 5MB
     })
     fileData: string;
-
-    @ApiModelProperty({
-        example: 1,
-        description: 'The id of the corresponding Log',
-        type: 'integer',
-        format: 'int64',
-    })
-    logId: number;
 }
