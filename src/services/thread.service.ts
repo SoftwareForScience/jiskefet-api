@@ -92,7 +92,7 @@ export class ThreadService {
                 logId: Not(log.logId)
             }]
         });
-        if (comments.length === 0) {
+        if (comments.length === 0 && log.subtype === 'comment') {
             throw new HttpException('This root doens\'t cointain any comments.', 404);
         }
 
