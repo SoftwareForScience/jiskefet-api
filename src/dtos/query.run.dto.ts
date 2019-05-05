@@ -8,7 +8,7 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsInt, IsNumberString, IsDateString } from 'class-validator';
+import { IsEnum, IsOptional, IsDateString, IsNumber, IsString } from 'class-validator';
 import * as _ from 'lodash';
 import { RunType } from '../enums/run.runtype.enum';
 import { RunQuality } from '../enums/run.runquality.enum';
@@ -41,33 +41,39 @@ export class QueryRunDto {
 
     @ApiModelProperty({
         description: 'The maximum amount of logs in each result.',
-        default: '25',
+        default: 25,
         required: false,
+        type: 'integer',
+        format: 'int64',
     })
-    @IsNumberString()
-    pageSize: string = '25';
+    @IsNumber()
+    pageSize: number = 25;
 
     @ApiModelProperty({
         description: 'The current page, i.e. the offset in the result set based on pageSize.',
-        default: '1',
+        default: 1,
         required: false,
+        type: 'integer',
+        format: 'int64',
     })
-    @IsNumberString()
-    pageNumber: string = '1';
+    @IsNumber()
+    pageNumber: number = 1;
 
     @ApiModelProperty({
         description: 'The id of the log.',
         required: false,
+        type: 'integer',
+        format: 'int64',
     })
-    @IsNumberString()
+    @IsNumber()
     @IsOptional()
-    runNumber?: string;
+    runNumber?: number;
 
     @ApiModelProperty({
         description: 'The lower bound of the timeO2Start filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -77,7 +83,7 @@ export class QueryRunDto {
         description: 'The upper bound of the timeO2Start filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -87,7 +93,7 @@ export class QueryRunDto {
         description: 'The lower bound of the timeTrgStart filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -97,7 +103,7 @@ export class QueryRunDto {
         description: 'The upper bound of the timeTrgStart filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -107,7 +113,7 @@ export class QueryRunDto {
         description: 'The lower bound of the timeTrgEnd filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -117,7 +123,7 @@ export class QueryRunDto {
         description: 'The upper bound of the timeTrgEnd filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -127,7 +133,7 @@ export class QueryRunDto {
         description: 'The lower bound of the timeO2End filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -137,7 +143,7 @@ export class QueryRunDto {
         description: 'The upper bound of the timeO2End filter range.',
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     @IsOptional()
     @IsDateString()
@@ -146,11 +152,9 @@ export class QueryRunDto {
     @ApiModelProperty({
         description: 'The id of the activity.',
         required: false,
-        type: 'string',
-        format: 'date-time'
     })
     @IsOptional()
-    @IsNumberString()
+    @IsString()
     activityId?: string;
 
     @ApiModelProperty({

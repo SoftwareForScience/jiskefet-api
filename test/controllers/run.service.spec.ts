@@ -56,8 +56,8 @@ describe('RunService', () => {
     };
     const runNumber = Math.floor(+new Date() / 1000);
     const queryRunDto: QueryRunDto = {
-        pageNumber: '1',
-        pageSize: '25'
+        pageNumber: 1,
+        pageSize: 25
     };
     const queryLogDto: QueryLogDto = {};
     const runDto: CreateRunDto = {
@@ -94,7 +94,7 @@ describe('RunService', () => {
 
     afterAll(async () => {
         testingModule.close();
-    })
+    });
 
     describe('initialize', () => {
         it('expects logService to be defined', async () => {

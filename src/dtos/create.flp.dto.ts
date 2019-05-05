@@ -29,6 +29,8 @@ export class CreateFlpDto {
     @ApiModelProperty({
         example: 1,
         description: 'Attached run numbers of this log',
+        type: 'integer',
+        format: 'int64',
     })
     run: number;
 }

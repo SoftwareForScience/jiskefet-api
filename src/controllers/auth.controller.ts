@@ -68,7 +68,7 @@ export class AuthController {
         status: 401,
         description: 'User is unauthorized due to an invalid Authorization Grant.'
     })
-    @ApiImplicitQuery({ name: 'grant', required: true })
+    @ApiImplicitQuery({ name: 'grant', required: true, type: 'string' })
     async auth(@Query() query?: any): Promise<{ token: string }> {
         try {
             if (!query.grant) {
@@ -139,7 +139,7 @@ export class AuthController {
         status: 401,
         description: 'Hashed secret was not accepted'
     })
-    @ApiImplicitQuery({ name: 'hashedSecret', required: false })
+    @ApiImplicitQuery({ name: 'hashedSecret', required: false, type: 'string' })
     async testToken(@Query() query?: any): Promise<ResponseObject<string>> {
         let jwt: string;
         switch (process.env.NODE_ENV) {

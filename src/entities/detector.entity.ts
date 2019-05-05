@@ -9,11 +9,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { DetectorsInRun } from './detectors_in_run.entity';
 import { DetectorQualityHistory } from './detector_quality_history.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('detector')
 export class Detector {
 
     @PrimaryGeneratedColumn({ name: 'detector_id' })
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     detectorId: number;
 
     @Column({ name: 'detector_name' })

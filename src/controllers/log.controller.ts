@@ -16,7 +16,9 @@ import {
     ApiNotFoundResponse,
     ApiResponse
 } from '@nestjs/swagger';
-import { Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
+import {
+    Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters, UsePipes, ValidationPipe
+} from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,6 +33,9 @@ import { ThreadDto } from '../dtos/thread.dto';
 import { CreateCommentDto } from '../dtos/create.comment.dto';
 import { ThreadService } from '../services/thread.service';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
+import { Attachment } from '../entities/attachment.entity';
+import { AttachmentService } from '../services/attachment.service';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -42,7 +47,8 @@ export class LogController {
     constructor(
         private readonly logService: LogService,
         private readonly loggerService: InfoLogService,
-        private readonly threadService: ThreadService
+        private readonly threadService: ThreadService,
+        private readonly attachmentService: AttachmentService
     ) { }
 
     /**
@@ -60,6 +66,28 @@ export class LogController {
         } catch (error) {
             const infoLog = new CreateInfologDto();
             infoLog.message = 'Log is not properly created or saved in the database.';
+            this.loggerService.logWarnInfoLog(infoLog);
+            return createErrorResponse(error);
+        }
+    }
+
+    /**
+     * Post a new Attachment. /attachments
+     * @param createAttachmentDto Data held in DTO from request body.
+     */
+    @Post(':id/attachments')
+    @UsePipes(ValidationPipe)
+    @ApiOperation({ title: 'Creates a Attachment for a specific Log.' })
+    @ApiCreatedResponse({ description: 'Succesfully created an Attachment.', type: Attachment })
+    async createAttachment(
+        @Param('id') logId: number,
+        @Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
+        try {
+            const attachment = await this.attachmentService.create(logId, createAttachmentDto);
+            return createResponseItem(attachment);
+        } catch (error) {
+            const infoLog = new CreateInfologDto();
+            infoLog.message = 'Attachment is not correctly added.';
             this.loggerService.logWarnInfoLog(infoLog);
             return createErrorResponse(error);
         }

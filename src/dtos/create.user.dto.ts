@@ -6,6 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
+import { ApiModelProperty } from '@nestjs/swagger';
+
 /**
  * User to create based on the authentication via OAuth 2.
  * The app only saves the external (OAuth provider) ID and no additional information
@@ -15,5 +17,9 @@ export class CreateUserDto {
     /**
      * The user ID from the database of the OAuth provider (e.g. GitHub, Google etc.).
      */
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     externalUserId: number;
 }
