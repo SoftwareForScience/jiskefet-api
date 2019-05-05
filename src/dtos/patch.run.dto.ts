@@ -15,14 +15,18 @@ import { RunQuality } from '../enums/run.runquality.enum';
 export class PatchRunDto {
     @ApiModelProperty({
         example: new Date(),
-        description: 'Current Date at end of run'
+        description: 'Current Date at end of run',
+        type: 'string',
+        format: 'date-time',
     })
     @IsDateString()
     TrgEndTime: Date;
 
     @ApiModelProperty({
         example: new Date(),
-        description: 'Current Date at end of run'
+        description: 'Current Date at end of run',
+        type: 'string',
+        format: 'date-time',
     })
     @IsDateString()
     O2EndTime: Date;
