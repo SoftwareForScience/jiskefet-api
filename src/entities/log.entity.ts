@@ -27,7 +27,10 @@ import { ApiModelProperty } from '@nestjs/swagger';
 export class Log {
 
     @PrimaryGeneratedColumn({ name: 'log_id' })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     logId: number;
 
     @Column({
@@ -76,7 +79,11 @@ export class Log {
         name: 'subsystem_fk_subsystem_id',
         nullable: true,
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     subsystemFkSubsystemId: number;
 
     @Column({
@@ -84,34 +91,40 @@ export class Log {
         precision: 0,
         nullable: true,
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'string',
+        format: 'date-time',
+    })
     announcementValidUntil: Date;
 
     @Column({
         name: 'comment_fk_parent_log_id',
         nullable: true
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     commentFkParentLogId: number;
 
     @Column({
         name: 'comment_fk_root_log_id',
         nullable: true
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     commentFkRootLogId: number;
 
-    @ManyToMany(type => Tag)
-    @JoinTable({
-        name: 'tags_in_log',
-        joinColumn: {
-            name: 'fk_log_id',
-            referencedColumnName: 'logId'
-        },
-        inverseJoinColumn: {
-            name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
-        }
+    @ManyToMany(type => Tag, tag => tag.logs)
+    @ApiModelProperty({
+        type: Tag,
+        isArray: true,
+        minProperties: 1
     })
     tags: Tag[];
 
@@ -131,14 +144,18 @@ export class Log {
         }
     })
     @ApiModelProperty({
-        type: Run,
-        // isArray: true,
-    //     minProperties: 1
+        type: 'integer',
+        format: 'int64',
     })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log, {
         cascade: ['insert']
+    })
+    @ApiModelProperty({
+        type: Attachment,
+        required: false,
+        isArray: true,
     })
     attachments: Attachment[];
 

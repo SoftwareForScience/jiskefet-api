@@ -6,19 +6,15 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Entity } from 'typeorm';
+import { IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-/**
- * The body required for runs to be linked to logs.
- */
-@Entity('runs')
-export class LinkRunToLogDto {
+export class CreateTagDto {
+
     @ApiModelProperty({
-        example: 1,
-        description: 'The id of the run to link to the log.',
-        type: 'integer',
-        format: 'int64',
+        example: '#ALICE',
+        description: 'The text of the tag'
     })
-    runNumber: number;
+    @IsString()
+    tagText: string;
 }

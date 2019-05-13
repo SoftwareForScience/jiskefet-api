@@ -73,7 +73,6 @@ export class CernAuthService extends AuthService {
 
             return accessTokenObject.token.access_token;
         } catch (exception) {
-            console.log(exception);
             throw new Error('The OAuth server did something unexpected, is OAuth properly setup?');
         }
     }

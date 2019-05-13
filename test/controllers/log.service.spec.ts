@@ -49,8 +49,8 @@ describe('LogService', () => {
         migrationsRun: true
     };
     const queryRunDto: QueryRunDto = {
-        pageNumber: '1',
-        pageSize: '25'
+        pageNumber: 1,
+        pageSize: 25
     };
     const queryLogDto: QueryLogDto = {};
     const logDto: CreateLogDto = {
@@ -85,7 +85,7 @@ describe('LogService', () => {
 
     afterAll(async () => {
         testingModule.close();
-    })
+    });
 
     describe('initialize', () => {
         it('logService should be defined', async () => {

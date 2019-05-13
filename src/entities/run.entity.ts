@@ -23,7 +23,10 @@ export class Run {
     @PrimaryColumn({
         name: 'run_number'
     })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     runNumber: number;
 
     @Column({
@@ -104,62 +107,82 @@ export class Run {
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     nDetectors: number;
 
     @Column({ name: 'n_flps' })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     nFlps: number;
 
     @Column({ name: 'n_epns' })
-    @ApiModelProperty()
+    @ApiModelProperty({
+        type: 'integer',
+        format: 'int64',
+    })
     nEpns: number;
 
     @Column({
         name: 'n_timeframes',
         nullable: true,
     })
-    @ApiModelProperty({ required: false})
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     nTimeframes: number;
 
     @Column({
         name: 'n_subtimeframes',
         nullable: true,
     })
-    @ApiModelProperty({ required: false})
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     nSubtimeframes: number;
 
     @Column({
         name: 'bytes_read_out',
         nullable: true,
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     bytesReadOut: number;
 
     @Column({
         name: 'bytes_timeframe_builder',
         nullable: true,
     })
-    @ApiModelProperty({ required: false })
+    @ApiModelProperty({
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
     bytesTimeframeBuilder: number;
 
-    @ManyToMany(type => Tag)
-    @JoinTable({
-        name: 'tags_in_run',
-        joinColumn: {
-            name: 'fk_run_id',
-            referencedColumnName: 'runNumber'
-        },
-        inverseJoinColumn: {
-            name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
-        }
+    @ManyToMany(type => Tag, tag => tag.runs)
+    @ApiModelProperty({
+        type: Tag,
+        isArray: true,
+        minProperties: 1
     })
     tags: Tag[];
 
     @ManyToMany(type => Log, log => log.runs)
     @ApiModelProperty({
-        type: Log,
+        type: 'integer',
+        format: 'int64',
         isArray: true,
         minProperties: 1
     })
