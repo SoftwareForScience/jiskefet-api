@@ -1,6 +1,3 @@
-import { ApiModelProperty } from '@nestjs/swagger';
-import { User } from '../entities/user.entity';
-
 /*
  * Copyright (C) 2018 Amsterdam University of Applied Sciences (AUAS)
  *
@@ -8,6 +5,10 @@ import { User } from '../entities/user.entity';
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
+
+import { ApiModelProperty } from '@nestjs/swagger';
+import { User } from '../entities/user.entity';
+
 export class ThreadDto {
 
     @ApiModelProperty({

@@ -43,7 +43,6 @@ import { AuthService } from './abstracts/auth.service.abstract';
 import { SettingService } from './services/setting.service';
 import { SettingController } from './controllers/setting.controller';
 import { SettingModule } from './modules/setting.module';
-import { ThreadService } from './services/thread.service';
 import {
   TEST_DB_CONNECTION,
   TEST_DB_HOST,
@@ -145,8 +144,7 @@ const authServiceProvider = {
     OverviewService,
     InfoLogService,
     TimeUtility,
-    SettingService,
-    ThreadService
+    SettingService
   ],
 })
 export class AppModule { }

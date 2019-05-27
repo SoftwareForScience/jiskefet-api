@@ -100,7 +100,7 @@ export class LogController {
         try {
             // check for threadId
             if (query.threadId) {
-                const getThread = await this.logService.find(undefined, query.threadId);
+                const getThread = await this.logService.find(query);
                 return createResponseItem(getThread, undefined, getThread.additionalInformation);
             } else {
                 const getLogs = await this.logService.find(query);

@@ -6,8 +6,8 @@
  * copied verbatim in the file 'LICENSE'
  */
 
-import { Log } from 'entities/log.entity';
-import { ThreadDto } from 'dtos/thread.dto';
+import { Log } from '../entities/log.entity';
+import { ThreadDto } from '../dtos/thread.dto';
 
 export class ThreadUtility {
     /**
@@ -19,7 +19,7 @@ export class ThreadUtility {
         let thread = new ThreadDto();
         thread = rootLog.toThreadDto();
         thread.comments = [];
-
+        // pre-sort the comments to make the building of thread structure faster.
         comments
             .sort((x, y) => {
                 const a = x.creationTime;

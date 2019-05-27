@@ -16,11 +16,11 @@ import { Run } from '../entities/run.entity';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { OrderDirection } from '../enums/orderDirection.enum';
-import * as _ from 'lodash';
 import { AdditionalOptions } from '../interfaces/response_object.interface';
-import { SubType } from 'enums/log.subtype.enum';
-import { ThreadDto } from 'dtos/thread.dto';
-import { ThreadUtility } from 'utility/thread.utility';
+import { SubType } from '../enums/log.subtype.enum';
+import { ThreadDto } from '../dtos/thread.dto';
+import { ThreadUtility } from '../utility/thread.utility';
+import * as _ from 'lodash';
 
 @Injectable()
 export class LogService {
@@ -34,6 +34,7 @@ export class LogService {
     ) {
         this.logRepository = logRepository;
         this.runRepository = runRepository;
+        this.threadUtility = new ThreadUtility();
     }
 
     /**
@@ -45,9 +46,9 @@ export class LogService {
         logEntity.creationTime = new Date();
         // check subtype
         if (logEntity.subtype === SubType.run) {
-            this.createRunLog(logEntity, createLogDto.run);
+            return this.createRunLog(logEntity, createLogDto.run);
         } else if (logEntity.subtype === SubType.comment) {
-            this.createCommentLog(logEntity, createLogDto.parentId);
+            return this.createCommentLog(logEntity, createLogDto.parentId);
         } else {
             throw new HttpException('This subtype of log is not implemented yet.', HttpStatus.NOT_IMPLEMENTED);
         }
@@ -57,11 +58,11 @@ export class LogService {
      * Returns all Logs from the db that match the queryfilters.
      * @param queryLogDto queryfilters.
      */
-    async find(queryLogDto?: QueryLogDto, logId?: number):
+    async find(queryLogDto?: QueryLogDto):
         Promise<{ logs: Log[] | ThreadDto, additionalInformation: AdditionalOptions }> {
-        // check to return thread or just logs
-        if (logId) {
-            return await this.findThread(logId);
+        // check to return thread or any logs
+        if (queryLogDto.threadId) {
+            return await this.findThread(queryLogDto.threadId);
         } else {
             return await this.findAllLogs(queryLogDto);
         }
@@ -171,7 +172,7 @@ export class LogService {
         log.origin = 'human';
 
         if (parentId) {
-            // set the parentId and rootId to add to thread
+            // set the parentId and rootId in order to add to thread
             const parent = await this.logRepository.findOne(parentId);
             const root = await this.logRepository.findOne(parent.commentFkRootLogId);
             log.commentFkParentLogId = parentId;
@@ -242,40 +243,34 @@ export class LogService {
     }
 
     /**
-     * Find a thread that contains the log with @param logId given.
+     * Find a thread that contains the log with given @param logId.
      */
     private async findThread(logId: number):
         Promise<{ logs: ThreadDto, additionalInformation: AdditionalOptions }> {
         // Fetch the Log by given logId
         const log = await this.logRepository.findOne(logId);
-        // Fetch the root Log
+
         let root: Log;
         if (logId === log.commentFkRootLogId) {
+            // The log given is a root of a thread.
             root = log;
         } else {
-            root = await this.logRepository.findOne({
-                where: {
-                    subtype: 'run',
-                    logId: log.commentFkRootLogId
-                }
-            });
+            // Fetch the root Log
+            root = await this.logRepository.findOne(log.commentFkRootLogId);
         }
 
-        if (!root) {
-            throw new HttpException('Couldn\'t find the root log of the given logId.', 404);
-        }
         // Fetch all comments of root Log
         const comments = await this.logRepository.find({
             where: [{
                 commentFkRootLogId: root.logId,
                 logId: Not(root.logId)
-            }, {
-                commentFkRootLogId: root.logId,
-                logId: Not(log.logId)
             }]
         });
+
+        const amountOfComments = comments.length;
+
         if (comments.length === 0) {
-            throw new HttpException('This root doens\'t cointain any comments.', 404);
+            throw new HttpException('This log doens\'t have any comments.', 404);
         }
 
         const thread = await this.threadUtility.createThreadStructure(root, comments);
@@ -283,7 +278,7 @@ export class LogService {
         return {
             logs: thread,
             additionalInformation: {
-                count: comments.length
+                count: amountOfComments + 1
             }
         };
     }
