@@ -29,9 +29,6 @@ import { CreateInfologDto } from '../dtos/create.infolog.dto';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItem, createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { Log } from '../entities/log.entity';
-import { ThreadDto } from '../dtos/thread.dto';
-import { CreateCommentDto } from '../dtos/create.comment.dto';
-import { ThreadService } from '../services/thread.service';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
@@ -47,7 +44,6 @@ export class LogController {
     constructor(
         private readonly logService: LogService,
         private readonly loggerService: InfoLogService,
-        private readonly threadService: ThreadService,
         private readonly attachmentService: AttachmentService
     ) { }
 
@@ -94,7 +90,7 @@ export class LogController {
     }
 
     /**
-     * Get all logs. /logs
+     * Get all logs or a thread.
      */
     @Get()
     @ApiOperation({ title: 'Returns all Logs.' })
@@ -102,8 +98,14 @@ export class LogController {
     @ApiNotFoundResponse({ description: 'There are no Logs.' })
     async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
-            const getLogs = await this.logService.findAll(query);
-            return createResponseItems(getLogs.logs, undefined, getLogs.additionalInformation);
+            // check for threadId
+            if (query.threadId) {
+                const getThread = await this.logService.find(undefined, query.threadId);
+                return createResponseItem(getThread, undefined, getThread.additionalInformation);
+            } else {
+                const getLogs = await this.logService.find(query);
+                return createResponseItems(getLogs.logs as Log[], undefined, getLogs.additionalInformation);
+            }
         } catch (error) {
             return createErrorResponse(error);
         }
@@ -147,35 +149,4 @@ export class LogController {
         }
     }
 
-    /**
-     * Gets the full thread by the rootLogId.
-     * @param logId Run's log id
-     */
-    @Get(':id/threads')
-    async findRunLogId(@Param('id') logId: number): Promise<ResponseObject<ThreadDto>> {
-        try {
-            const getThreadById = await this.threadService.findThreadById(logId);
-            return createResponseItem(getThreadById);
-        } catch (error) {
-            return createErrorResponse(error);
-        }
-
-    }
-
-    /**
-     * Create a comment
-     * @param createCommentDto Data holder for comment
-     * - RootId refers to the root Log (subType is run)
-     * - ParentId refers to the direct parent Log (subtype can be 'comment' or 'run')
-     */
-    @Post('/threads')
-    async addComment(@Body() createCommentDto: CreateCommentDto): Promise<ResponseObject<Log>> {
-        try {
-            const commentCreated = await this.threadService.addCommentToThread(createCommentDto);
-            return createResponseItem(commentCreated);
-        } catch (error) {
-            return createErrorResponse(error);
-        }
-
-    }
 }

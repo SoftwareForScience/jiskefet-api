@@ -33,6 +33,20 @@ export class CreateLogDto {
     origin: string;
 
     @ApiModelProperty({
+        example: 1,
+        description: 'The id of a log'
+    })
+    @IsInt()
+    rootId?: number;
+
+    @ApiModelProperty({
+        example: 1,
+        description: 'Log id of Parent comment'
+    })
+    @IsInt()
+    parentId?: number;
+
+    @ApiModelProperty({
         example: 'log for run 12',
         description: 'describes the log in short',
     })
@@ -58,7 +72,7 @@ export class CreateLogDto {
         type: 'integer',
         format: 'int64',
     })
-    run: number;
+    run?: number;
 
     @ApiModelProperty({
         example: 1,
