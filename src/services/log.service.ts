@@ -49,7 +49,7 @@ export class LogService {
             return this.createRunLog(logEntity, createLogDto.run);
         } else if (logEntity.subtype === SubType.comment) {
             return this.createCommentLog(logEntity, createLogDto.parentId);
-        } else {
+        } else if (logEntity.subtype) {
             throw new HttpException('This subtype of log is not implemented yet.', HttpStatus.NOT_IMPLEMENTED);
         }
     }
