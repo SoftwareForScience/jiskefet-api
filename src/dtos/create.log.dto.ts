@@ -13,7 +13,6 @@ import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { Attachment } from '../entities/attachment.entity';
 
-@Entity('logs')
 export class CreateLogDto {
     @ApiModelProperty({
         example: 'run',
