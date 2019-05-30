@@ -27,6 +27,7 @@ function preCheck(): void {
         'PORT',
         'USE_API_BASE_PATH',
         'USE_CERN_SSO',
+        'FILE_UPLOAD_LIMIT',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
         'TYPEORM_USERNAME',
@@ -47,6 +48,7 @@ function preCheck(): void {
         `regex:${Regex.PORT_NUMBER}`,
         `regex:${Regex.BOOLEAN}`,
         `regex:${Regex.BOOLEAN}`,
+        'typeof:isNumber',
         'string:mysql, postgres, mariadb, mssql, mongodb',
         `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
         '',
@@ -105,8 +107,8 @@ async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     // Increases the packet limit to 15MB instead of the default 100kb
-    app.use(bodyParser.json({ limit: 15000000 }));
-    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
+    // app.use(bodyParser.json({ limit: 5000000 }));
+    // app.use(bodyParser.urlencoded({ limit: 5000000, extended: true }));
 
     const options = new DocumentBuilder()
         .setTitle('Jiskefet')

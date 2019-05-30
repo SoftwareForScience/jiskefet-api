@@ -77,6 +77,18 @@ export class EnvironmentUtility {
                             errorMsg.push(`${[keys[i]]} does not end with ${endingString}.`);
                         }
                         break;
+                    case 'typeof':
+                        const typetoCheck: string = values[i].replace('typeof:', '').replace(/\s/g, '');
+                        switch (typetoCheck) {
+                            case 'isNumber':
+                                if (isNaN(constants[keys[i]])) {
+                                    errorMsg.push(`${[keys[i]]} is not a number.`);
+                                }
+                                break;
+                            default:
+                                errorMsg.push(`${typetoCheck} type has not been implemented yet.`);
+                        }
+                        break;
                     default:
                 }
             }
