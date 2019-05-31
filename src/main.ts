@@ -16,6 +16,7 @@ import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
 import { ResponseObject } from './interfaces/response_object.interface';
+import { join } from 'path';
 
 /**
  * Check the .env against the array of variables.
@@ -103,6 +104,8 @@ preCheck();
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
+    app.setBaseViewsDir(join(__dirname,"views"));
+    app.setViewEngine('hbs');
     // Increases the packet limit to 15MB instead of the default 100kb
     app.use(bodyParser.json({ limit: 15000000 }));
     app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));

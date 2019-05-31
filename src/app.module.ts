@@ -5,7 +5,8 @@
  * GNU General Public Licence version 3 (GPL) version 3,
  * copied verbatim in the file "LICENSE"
  */
-
+import {CreatePdfService} from "./services/createpdf.service";
+import { CreatepdfController } from './controllers/createpdf.controller';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -104,7 +105,8 @@ const authServiceProvider = {
     UserController,
     AuthController,
     OverviewController,
-    SettingController
+    SettingController,
+    CreatepdfController
   ],
   providers: [
     AppService,
@@ -120,7 +122,8 @@ const authServiceProvider = {
     OverviewService,
     InfoLogService,
     TimeUtility,
-    SettingService
+    SettingService,
+    CreatePdfService
   ],
 })
 export class AppModule { }
