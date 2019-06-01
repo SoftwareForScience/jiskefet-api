@@ -8,7 +8,7 @@
 
 import { Entity } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, IsInt } from 'class-validator';
+import { IsEnum, IsString, IsInt, IsDateString } from 'class-validator';
 import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { Attachment } from '../entities/attachment.entity';
@@ -68,4 +68,13 @@ export class CreateLogDto {
     })
     @IsInt()
     user: number;
+
+    @ApiModelProperty({
+        example: new Date(),
+        description: 'Optional creation time of a log',
+        type: 'string',
+        format: 'date-time',
+    })
+    @IsDateString()
+    creationTime?: Date;
 }

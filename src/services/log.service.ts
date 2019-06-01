@@ -38,7 +38,9 @@ export class LogService {
      */
     async create(createLogDto: CreateLogDto): Promise<Log> {
         const logEntity = plainToClass(Log, createLogDto);
-        logEntity.creationTime = new Date();
+        if(logEntity.creationTime == null) {
+            logEntity.creationTime = new Date();
+        }
         logEntity.runs = [];
         if (logEntity.attachments) {
             for (const attachment of logEntity.attachments) {
