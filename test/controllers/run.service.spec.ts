@@ -118,8 +118,8 @@ describe('RunService', () => {
             const runId = latestRun.runNumber;
 
             // retrieve the latest log
-            const logs = await logService.findAll(queryLogDto);
-            const latestLog = logs.logs[logs.logs.length - 1];
+            const logs = await logService.find(queryLogDto);
+            const latestLog = logs.logs[(logs.logs as Log[]).length - 1];
             const logId: LinkLogToRunDto = {
                 logId: latestLog.logId,
             };

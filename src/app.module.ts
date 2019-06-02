@@ -119,7 +119,7 @@ const authServiceProvider = {
     SubSystemPermissionModule,
     OverviewModule,
     InfoLogModule,
-    SettingModule
+    SettingModule,
   ],
   controllers: [
     AppController,
@@ -132,7 +132,7 @@ const authServiceProvider = {
     UserController,
     AuthController,
     OverviewController,
-    SettingController
+    SettingController,
   ],
   providers: [
     AppService,

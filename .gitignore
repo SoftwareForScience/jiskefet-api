@@ -68,3 +68,4 @@ ormconfig.json
 environments/*.env
 src/migration/*.ts
 infolog-data
+.vscode/launch.json

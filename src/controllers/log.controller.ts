@@ -90,7 +90,7 @@ export class LogController {
     }
 
     /**
-     * Get all logs. /logs
+     * Get all logs or a thread.
      */
     @Get()
     @ApiOperation({ title: 'Returns all Logs.' })
@@ -98,8 +98,14 @@ export class LogController {
     @ApiNotFoundResponse({ description: 'There are no Logs.' })
     async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
-            const getLogs = await this.logService.findAll(query);
-            return createResponseItems(getLogs.logs, undefined, getLogs.additionalInformation);
+            // check for threadId
+            if (query.threadId) {
+                const getThread = await this.logService.find(query);
+                return createResponseItem(getThread, undefined, getThread.additionalInformation);
+            } else {
+                const getLogs = await this.logService.find(query);
+                return createResponseItems(getLogs.logs as Log[], undefined, getLogs.additionalInformation);
+            }
         } catch (error) {
             return createErrorResponse(error);
         }
@@ -142,4 +148,5 @@ export class LogController {
             return createErrorResponse(error);
         }
     }
+
 }

@@ -112,7 +112,8 @@ export abstract class AuthService implements Authentication {
         return RequestPromise(requestOptions).then((body) => {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
-                externalUserId: jsonBody.id
+                externalUserId: jsonBody.id,
+                name: jsonBody.name
             };
             return createUserDto;
         }).catch((error) => {
