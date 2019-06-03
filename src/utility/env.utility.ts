@@ -64,9 +64,9 @@ export class EnvironmentUtility {
                             }
                         }
                         break;
-                    case 'string':
+                    case 'matches':
                         let possibleValues: string[];
-                        possibleValues = values[i].replace('string:', '').replace(/\s/g, '').split(',');
+                        possibleValues = values[i].replace('matches:', '').replace(/\s/g, '').split(',');
                         if (possibleValues.indexOf(constants[keys[i]]) === -1) {
                             errorMsg.push(`${[keys[i]]} does not match the possible string(s): ${possibleValues}.`);
                         }
