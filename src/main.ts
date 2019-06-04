@@ -14,7 +14,7 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER, APPLICATION_TITLE } from './constants';
+import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER, APPLICATION_NAME } from './constants';
 
 /**
  * Check the .env against the array of variables.
@@ -28,7 +28,7 @@ function preCheck(): void {
         'USE_API_BASE_PATH',
         'USE_CERN_SSO',
         'FILE_UPLOAD_LIMIT',
-        'APPLICATION_TITLE',
+        'APPLICATION_NAME',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
         'TYPEORM_USERNAME',
@@ -113,7 +113,7 @@ async function bootstrap(): Promise<void> {
     // app.use(bodyParser.urlencoded({ limit: 5000000, extended: true }));
 
     const options = new DocumentBuilder()
-        .setTitle(APPLICATION_TITLE)
+        .setTitle(APPLICATION_NAME)
         .setVersion('0.1.0')
         .addTag('logs')
         .addTag('runs')

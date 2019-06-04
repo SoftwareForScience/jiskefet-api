@@ -18,7 +18,7 @@ export const PORT = process.env.PORT ? process.env.PORT : 3000;
 export const USE_API_BASE_PATH = process.env.USE_API_BASE_PATH;
 export const USE_CERN_SSO = process.env.USE_CERN_SSO;
 export const FILE_UPLOAD_LIMIT = process.env.FILE_UPLOAD_LIMIT ? +process.env.FILE_UPLOAD_LIMIT : 5;
-export const APPLICATION_TITLE = process.env.APPLICATION_TITLE ? process.env.APPLICATION_TITLE : 'Jiskefet';
+export const APPLICATION_NAME = process.env.APPLICATION_NAME ? process.env.APPLICATION_NAME : 'Jiskefet';
 
 // Database settings
 export const TYPEORM_CONNECTION = process.env.TYPEORM_CONNECTION ? process.env.TYPEORM_CONNECTION : 'mysql';
