@@ -72,6 +72,10 @@ export class AttachmentController {
     }
 
     @Post()
+    @ApiOperation({
+        title: 'Creates an attachment for a log with a file upload field through the Swagger UI.',
+        description: 'This endpoint is only available in dev modus'
+    })
     @ApiConsumes('multipart/form-data')
     @ApiImplicitFile({ name: 'file', required: false })
     @UseInterceptors(FileInterceptor('file', { limits: { fileSize: FILE_UPLOAD_LIMIT * 1024 * 1024 } }))
