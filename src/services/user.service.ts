@@ -31,9 +31,17 @@ export class UserService {
         // Todo: change this
         userEntity.samsId = 123;
         const foundUser = await this.findUserByExternalId(userEntity.externalUserId);
+
+        // Save the user if it does not exist yet
         if (!foundUser) {
             await this.repository.save(userEntity);
         }
+
+        // Sets the name of the user in the DB if not set already
+        if (!foundUser.name) {
+            await this.repository.update(foundUser.userId, {name: userEntity.name});
+        }
+
         return userEntity;
     }
 

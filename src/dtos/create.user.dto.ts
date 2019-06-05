@@ -22,4 +22,10 @@ export class CreateUserDto {
         format: 'int64',
     })
     externalUserId: number;
+
+    @ApiModelProperty({
+        type: 'string',
+        format: 'varchar(45)',
+    })
+    name: string;
 }
