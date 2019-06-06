@@ -74,6 +74,16 @@ export class QueryLogDto {
     logId?: number;
 
     @ApiModelProperty({
+        description: 'The id of the log in the wanted thread',
+        required: false,
+        type: 'integer',
+        format: 'int64',
+    })
+    @IsNumber()
+    @IsOptional()
+    threadId?: number;
+
+    @ApiModelProperty({
         description: 'Search for a term that exists in the title field of a log.',
         required: false,
     })

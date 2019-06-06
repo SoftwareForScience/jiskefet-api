@@ -10,7 +10,8 @@
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest --coverage",
     "showcoverage": "open ./coverage/lcov-report/index.html",
-    "typeorm": "npx ts-node node_modules/typeorm/cli.js"
+    "typeorm": "npx ts-node node_modules/typeorm/cli.js",
+    "debug": "nodemon --config nodemon-debug.json"
   },
   "dependencies": {
     "@nestjs/common": "^5.7.4",

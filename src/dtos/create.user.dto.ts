@@ -22,4 +22,12 @@ export class CreateUserDto {
         format: 'int64',
     })
     externalUserId: number;
+
+    /**
+     * The user's name  from the database of the OAuth provider (e.g. GitHub, CERN etc.).
+     */
+    @ApiModelProperty({
+        type: 'string'
+    })
+    name: string;
 }

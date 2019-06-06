@@ -110,8 +110,8 @@ describe('LogService', () => {
             const latestRun = runs.runs[runs.runs.length - 1];
 
             // retrieve the latest log
-            const logs = await logService.findAll(queryLogDto);
-            const latestLog = logs.logs[logs.logs.length - 1];
+            const logs = await logService.find(queryLogDto);
+            const latestLog = logs.logs[(logs.logs as Log[]).length - 1];
             const logId = latestLog.logId;
 
             const runId: LinkRunToLogDto = {
@@ -131,8 +131,8 @@ describe('LogService', () => {
         });
 
         it('should return multiple logs', async () => {
-            const logs = await logService.findAll(queryLogDto);
-            expect(logs.logs.length).toBeGreaterThanOrEqual(1);
+            const logs = await logService.find(queryLogDto);
+            expect((logs.logs as Log[]).length).toBeGreaterThanOrEqual(1);
         });
 
         it('should return the logs from the given user', async () => {

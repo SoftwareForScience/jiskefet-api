@@ -13,7 +13,6 @@ import { SubType } from '../enums/log.subtype.enum';
 import { Origin } from '../enums/log.origin.enum';
 import { Attachment } from '../entities/attachment.entity';
 
-@Entity('logs')
 export class CreateLogDto {
     @ApiModelProperty({
         example: 'run',
@@ -31,6 +30,20 @@ export class CreateLogDto {
     })
     @IsEnum(Origin, { each: true, message: 'Each value in origin must be a valid enum value' })
     origin: string;
+
+    @ApiModelProperty({
+        example: 1,
+        description: 'The id of a log'
+    })
+    @IsInt()
+    rootId?: number;
+
+    @ApiModelProperty({
+        example: 1,
+        description: 'Log id of Parent comment'
+    })
+    @IsInt()
+    parentId?: number;
 
     @ApiModelProperty({
         example: 'log for run 12',
@@ -58,7 +71,7 @@ export class CreateLogDto {
         type: 'integer',
         format: 'int64',
     })
-    run: number;
+    run?: number;
 
     @ApiModelProperty({
         example: 1,

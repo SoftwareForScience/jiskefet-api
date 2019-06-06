@@ -72,13 +72,13 @@ describe('LogController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return status 500 and JSON Content-Type', () => {
+        it('should return status 400 and JSON Content-Type', () => {
             logToPost = null;
             return request(app.getHttpServer())
                 .post(`/logs`)
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
-                .expect(500)
+                .expect(400)
                 .expect('Content-Type', /json/);
         });
     });
