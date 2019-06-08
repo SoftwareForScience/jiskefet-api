@@ -81,7 +81,8 @@ if (process.env.NODE_ENV === 'test') {
     entities: ['src/**/**.entity{.ts,.js}'],
     synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
     migrations: ['populate/*{.ts,.js}'],
-    migrationsRun: true
+    migrationsRun: true,
+    charset: "utf8mb4_unicode_ci"
   };
 } else {
   databaseOptions = {
@@ -94,7 +95,8 @@ if (process.env.NODE_ENV === 'test') {
     entities: ['src/**/**.entity{.ts,.js}'],
     logging: TYPEORM_LOGGING,
     synchronize: TYPEORM_SYNCHRONIZE === 'true' ? true : false,
-    migrations: ['src/migration/*{.ts,.js}']
+    migrations: ['src/migration/*{.ts,.js}'],
+    charset: "utf8mb4_unicode_ci"
     // what to do with the cli variable from ormconfig.json
   };
 }
