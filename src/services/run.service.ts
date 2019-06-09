@@ -220,4 +220,31 @@ export class RunService {
 
         return await this.runRepository.save(runToUpdate);
     }
+    /**
+     * This function gets params for
+     * RunConf template
+     * from database
+     * @param Id1 this is ID of the first run
+     * @param Id2 this is ID of the second run
+     */
+   async getRunConfParams(Id1: number, Id2: number): Promise<any> {
+
+    const curDate = new Date();
+    const firstResult = await this.findById(Id1);
+    const secondResult = await this.findById(Id2);
+    const params = {Run1 : firstResult.runNumber, O21 : firstResult.timeO2Start,
+        TargetStart1 : firstResult.timeTrgStart, TargetEnd1 : firstResult.timeTrgEnd, o2End1 : firstResult.timeO2End,
+        runType1 : firstResult.runType, RunQuality1 : firstResult.runQuality, NumbDetectors1 : firstResult.nDetectors,
+        numberFlips1 : firstResult.nFlps, timeFrame1 : firstResult.nTimeframes,
+        SubTimeFrame1 : firstResult.nSubtimeframes, Readout1 : firstResult.bytesReadOut,
+        Bytestimeframe1 : firstResult.bytesTimeframeBuilder, Run2 : secondResult.runNumber,
+        O22 : secondResult.timeO2Start, TargetStart2 : secondResult.timeTrgStart,
+        TargetEnd2 : secondResult.timeTrgEnd, o2End2 : secondResult.timeO2End, runType2 : secondResult.runType,
+        RunQuality2 : secondResult.runQuality, NumbDetectors2 : secondResult.nDetectors,
+        numberFlips2 : secondResult.nFlps, timeFrame2 : secondResult.nTimeframes,
+        SubTimeFrame2 : secondResult.nSubtimeframes, Readout2 : secondResult.bytesReadOut,
+        Bytestimeframe2 : secondResult.bytesTimeframeBuilder,
+        Data : curDate.toLocaleString('en-GB')};
+    return params;
+  }
 }

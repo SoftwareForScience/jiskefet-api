@@ -4,7 +4,7 @@ import { IsNumber } from 'class-validator';
 export class CreateRunConf {
     @ApiModelProperty({
         example: 5,
-        description: 'ID of the previos run'
+        description: 'ID of the previous run'
     })
     @IsNumber()
     id1: number;
