@@ -7,7 +7,7 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { USE_API_BASE_PATH } from './constants';
+import { USE_API_BASE_PATH, APPLICATION_NAME } from './constants';
 
 @Injectable()
 export class AppService {
@@ -18,7 +18,7 @@ export class AppService {
         return [
             `
             <h1 style="font-family: sans-serif; text-align: center; margin-top: 10rem;">
-                Welcome to the Jiskefet API
+                Welcome to the ${APPLICATION_NAME} API
                 <br>
                 <br>
                 <a href="${USE_API_BASE_PATH === 'true' ? '/api' : ''}/doc/">

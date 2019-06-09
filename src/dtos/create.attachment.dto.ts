@@ -8,6 +8,7 @@
 
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsString, IsBase64, IsByteLength, IsOptional } from 'class-validator';
+import { FILE_UPLOAD_LIMIT } from '../constants';
 
 export class CreateAttachmentDto {
 
@@ -44,8 +45,8 @@ export class CreateAttachmentDto {
         description: 'The base64 encoded file data.',
     })
     @IsBase64()
-    @IsByteLength(1, 5000000, {
-        message: 'File data cannot be larger than 5MB', // Limits the base64 string to 5MB
+    @IsByteLength(1, FILE_UPLOAD_LIMIT * 1024 * 1024, {
+        message: `File data cannot be larger than ${FILE_UPLOAD_LIMIT}MB`, // Limits the base64 string to 5MB
     })
     fileData: string;
 }

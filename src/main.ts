@@ -14,7 +14,7 @@ import { InfoLogService } from './services/infolog.service';
 import * as cron from 'node-cron';
 import { EnvironmentUtility } from './utility/env.utility';
 import { Regex } from './enums/env.enum';
-import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER } from './constants';
+import { PORT, USE_CERN_SSO, USE_API_BASE_PATH, USE_INFO_LOGGER, APPLICATION_NAME } from './constants';
 
 /**
  * Check the .env against the array of variables.
@@ -27,6 +27,8 @@ function preCheck(): void {
         'PORT',
         'USE_API_BASE_PATH',
         'USE_CERN_SSO',
+        'FILE_UPLOAD_LIMIT',
+        'APPLICATION_NAME',
         'TYPEORM_CONNECTION',
         'TYPEORM_HOST',
         'TYPEORM_USERNAME',
@@ -47,14 +49,16 @@ function preCheck(): void {
         `regex:${Regex.PORT_NUMBER}`,
         `regex:${Regex.BOOLEAN}`,
         `regex:${Regex.BOOLEAN}`,
-        'string:mysql, postgres, mariadb, mssql, mongodb',
+        'typeof:isNumber',
+        '',
+        'matches:mysql, postgres, mariadb, mssql, mongodb',
         `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
         '',
         '',
         '',
         `regex:${Regex.PORT_NUMBER}`,
         `regex:${Regex.BOOLEAN}`,
-        'string:true, false, all, query, error, schema, warn, info, log',
+        'matches:true, false, all, query, error, schema, warn, info, log',
         '',
         '',
         '',
@@ -105,11 +109,11 @@ async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     // Increases the packet limit to 15MB instead of the default 100kb
-    app.use(bodyParser.json({ limit: 15000000 }));
-    app.use(bodyParser.urlencoded({ limit: 15000000, extended: true }));
+    // app.use(bodyParser.json({ limit: 5000000 }));
+    // app.use(bodyParser.urlencoded({ limit: 5000000, extended: true }));
 
     const options = new DocumentBuilder()
-        .setTitle('Jiskefet')
+        .setTitle(APPLICATION_NAME)
         .setVersion('0.1.0')
         .addTag('logs')
         .addTag('runs')
@@ -118,9 +122,7 @@ async function bootstrap(): Promise<void> {
     if (USE_API_BASE_PATH === 'true') {
         // set /api as basePath for non local
         options.setBasePath('/api');
-        options.setDescription('Running with /api base path');
-    } else {
-        options.setDescription('Running without /api base path');
+        // options.setDescription('Running with /api base path');
     }
 
     const swaggerInfo = options.build();
