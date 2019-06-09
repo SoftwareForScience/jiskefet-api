@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Body, Render, Param, Query } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Render, Query } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateUserData } from '../dtos/createpdf.userdata.dto';
 import { CreateLogInfo } from '../dtos/createpdf.loginfo.dto';
@@ -11,8 +11,12 @@ import { RunService } from '../services/run.service';
 @ApiUseTags('createpdf')
 @Controller('createpdf')
 export class CreatepdfController {
-  constructor(public createPdfService: CreatePdfService, private logService: LogService,
-              private runService: RunService) {}
+
+  constructor(
+    private readonly createPdfService: CreatePdfService,
+    private readonly logService: LogService,
+    private readonly runService: RunService
+  ) { }
 
   /**
    * Get Log information in pdf by id. /createpdf/getlog?id=number
@@ -31,7 +35,7 @@ export class CreatepdfController {
       return res.end('No such ID!');
     }
     return this.createPdfService
-    .createPdf(params, `Log_${query.id}_${epochTime}.pdf`, '/templates/LogInfoTemplate.ejs', res);
+      .createPdf(params, `Log_${query.id}_${epochTime}.pdf`, '/templates/LogInfoTemplate.ejs', res);
   }
   /**
    * Get differense between two runs in pdf
@@ -51,7 +55,7 @@ export class CreatepdfController {
       return res.end('No such ID!');
     }
     return this.createPdfService
-    .createPdf(params, `Run_${query.id1}_and_${query.id2}_${epochTime}`, '/templates/RunTemplate.ejs', res);
+      .createPdf(params, `Run_${query.id1}_and_${query.id2}_${epochTime}`, '/templates/RunTemplate.ejs', res);
   }
   /**
    * Post bug report in pdf from html form
@@ -69,33 +73,35 @@ export class CreatepdfController {
     const occupationData = userData.occupation;
     const bugReportData = userData.bugReport;
 
-    const params = {firstname : fname, lastname : lname, occupation : occupationData, bugReport : bugReportData,
-      date : allDate};
+    const params = {
+      firstname: fname, lastname: lname, occupation: occupationData, bugReport: bugReportData,
+      date: allDate
+    };
     return this.createPdfService
-    .createPdf(params, `BugReport_${epochTime}.pdf`, '/templates/BugReportTemplate.ejs', res);
-   }
-   /**
-    * Get html form for bug report. /createpdf
-    */
-   @Get()
-   @Render('index')
-   showIndex(): string {
-   return 'Index';
-   }
-   /**
-    * Get html form for Log information. /createpdf/loginfo
-    */
-   @Get('loginfo')
-   @Render('logInfo')
-   LogInfo(): string {
-      return 'Log info';
-   }
-   /**
-    * Get html form for differense between two runs. /createpdf/runconf
-    */
-   @Get('runconf')
-   @Render('runinfo')
-   RunInfo(): string {
-      return 'Run info';
-   }
+      .createPdf(params, `BugReport_${epochTime}.pdf`, '/templates/BugReportTemplate.ejs', res);
+  }
+  /**
+   * Get html form for bug report. /createpdf
+   */
+  @Get()
+  @Render('index')
+  showIndex(): string {
+    return 'Index';
+  }
+  /**
+   * Get html form for Log information. /createpdf/loginfo
+   */
+  @Get('loginfo')
+  @Render('logInfo')
+  LogInfo(): string {
+    return 'Log info';
+  }
+  /**
+   * Get html form for differense between two runs. /createpdf/runconf
+   */
+  @Get('runconf')
+  @Render('runinfo')
+  RunInfo(): string {
+    return 'Run info';
+  }
 }
