@@ -64,9 +64,9 @@ export class EnvironmentUtility {
                             }
                         }
                         break;
-                    case 'string':
+                    case 'matches':
                         let possibleValues: string[];
-                        possibleValues = values[i].replace('string:', '').replace(/\s/g, '').split(',');
+                        possibleValues = values[i].replace('matches:', '').replace(/\s/g, '').split(',');
                         if (possibleValues.indexOf(constants[keys[i]]) === -1) {
                             errorMsg.push(`${[keys[i]]} does not match the possible string(s): ${possibleValues}.`);
                         }
@@ -75,6 +75,18 @@ export class EnvironmentUtility {
                         const endingString: string = values[i].replace('endsWith:', '').replace(/\s/g, '');
                         if (!constants[keys[i]].endsWith(endingString)) {
                             errorMsg.push(`${[keys[i]]} does not end with ${endingString}.`);
+                        }
+                        break;
+                    case 'typeof':
+                        const typetoCheck: string = values[i].replace('typeof:', '').replace(/\s/g, '');
+                        switch (typetoCheck) {
+                            case 'isNumber':
+                                if (isNaN(constants[keys[i]])) {
+                                    errorMsg.push(`${[keys[i]]} is not a number.`);
+                                }
+                                break;
+                            default:
+                                errorMsg.push(`${typetoCheck} type has not been implemented yet.`);
                         }
                         break;
                     default:

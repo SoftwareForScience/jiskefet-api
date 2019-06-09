@@ -6,14 +6,37 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { ApiUseTags, ApiBearerAuth, ApiOperation, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Controller, Get, Param, UseGuards, UseFilters } from '@nestjs/common';
+import {
+    ApiUseTags,
+    ApiBearerAuth,
+    ApiOperation,
+    ApiOkResponse,
+    ApiNotFoundResponse,
+    ApiConsumes,
+    ApiImplicitFile
+} from '@nestjs/swagger';
+import {
+    Controller,
+    Get,
+    Param,
+    UseGuards,
+    UseFilters,
+    Post,
+    Body,
+    UploadedFile,
+    UseInterceptors,
+    FileInterceptor,
+    NotFoundException
+} from '@nestjs/common';
 import { AttachmentService } from '../services/attachment.service';
 import { AuthGuard } from '@nestjs/passport';
-import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
+import { createResponseItems, createErrorResponse, createResponseItem } from '../helpers/response.helper';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { Attachment } from '../entities/attachment.entity';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
+import { FileDto } from '../dtos/file.dto';
+import { FILE_UPLOAD_LIMIT } from '../constants';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
@@ -45,6 +68,36 @@ export class AttachmentController {
             return createResponseItems(attachmentsById);
         } catch (error) {
             return createErrorResponse(error);
+        }
+    }
+
+    @Post()
+    @ApiOperation({
+        title: 'Creates an attachment for a log with a file upload field through the Swagger UI.',
+        description: 'This endpoint is only available in dev modus'
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiImplicitFile({ name: 'file', required: false })
+    @UseInterceptors(FileInterceptor('file', { limits: { fileSize: FILE_UPLOAD_LIMIT * 1024 * 1024 } }))
+    async uploadFile(
+        @Body() logId: number,
+        @UploadedFile() file?: FileDto): Promise<ResponseObject<Attachment>> {
+        switch (process.env.NODE_ENV) {
+            case 'dev':
+                try {
+                    const attachment: CreateAttachmentDto = {
+                        fileName: file.originalname,
+                        fileMime: file.mimetype,
+                        fileData: Buffer.from(file.buffer).toString('base64'),
+                        creationTime: new Date()
+                    };
+                    console.log(`file size is ${file.size}`);
+                    return await createResponseItem(this.attachmentservice.create(logId, attachment));
+                } catch (error) {
+                    return createErrorResponse(error);
+                }
+            default:
+                throw new NotFoundException();
         }
     }
 }
