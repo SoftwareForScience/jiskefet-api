@@ -232,6 +232,15 @@ export class RunService {
         const curDate = new Date();
         const firstResult = await this.findById(Id1);
         const secondResult = await this.findById(Id2);
+        if (!firstResult) {
+            throw new HttpException(
+                `Run with run number ${Id1} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        } else if (!secondResult) {
+            throw new HttpException(
+                `Run with run number ${Id2} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        }
         const params = {
             Run1: firstResult.runNumber, O21: firstResult.O2StartTime,
             TargetStart1: firstResult.TrgStartTime, TargetEnd1: firstResult.TrgEndTime, o2End1: firstResult.O2EndTime,

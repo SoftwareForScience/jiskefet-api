@@ -145,7 +145,11 @@ export class LogService {
     async getLogInfoParams(Id: number): Promise<any> {
 
         const result = await this.findLogById(Id);
-
+        if (!result) {
+            throw new HttpException(
+                `Log with log id ${Id} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        }
         const params = {
             user: result.user.userId, external: result.user.externalUserId, sams: result.user.samsId,
             logId: result.logId, subsytemID: result.subsystemFkSubsystemId, subtype: result.subtype,
