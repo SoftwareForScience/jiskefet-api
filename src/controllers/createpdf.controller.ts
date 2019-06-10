@@ -67,23 +67,23 @@ export class CreatepdfController {
     */
    @Get()
    @Render('index')
-   showIndex(): string {
-   return 'Index';
+   showIndex(): any {
+   return {};
    }
    /**
     * Get html form for Log information. /createpdf/loginfo
     */
    @Get('loginfo')
    @Render('logInfo')
-   LogInfo(): string {
-      return 'Log info';
+   LogInfo(): any {
+      return {};
    }
    /**
     * Get html form for differense between two runs. /createpdf/runconf
     */
    @Get('runconf')
    @Render('runinfo')
-   RunInfo(): string {
-      return 'Run info';
+   RunInfo(): any {
+      return {};
    }
 }
