@@ -1,14 +1,17 @@
-import { Controller, Get, Res, Post, Body, Render, Param, Query } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Render, Param, Query, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateUserData } from '../dtos/createpdf.userdata.dto';
 import { CreateLogInfo } from '../dtos/createpdf.loginfo.dto';
 import { CreateRunConf } from '../dtos/createpdf.runconf.dto';
 import { CreatePdfService } from '../services/createpdf.service';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { LogService } from '../services/log.service';
 import { RunService } from '../services/run.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiUseTags('createpdf')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('createpdf')
 export class CreatepdfController {
   constructor(public createPdfService: CreatePdfService, private logService: LogService,
