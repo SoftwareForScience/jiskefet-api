@@ -52,6 +52,7 @@ export class LogService {
         } else if (logEntity.subtype) {
             throw new HttpException('This subtype of log is not implemented yet.', HttpStatus.NOT_IMPLEMENTED);
         } else {
+            // there should be a better check
             throw new HttpException('Cannot create empty Log', HttpStatus.BAD_REQUEST);
         }
     }
