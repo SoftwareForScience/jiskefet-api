@@ -254,7 +254,7 @@ export class LogService {
 
         let root: Log;
         if (logId === log.commentFkRootLogId) {
-            // The log given is a root of a thread.
+            // The log given is the root of the thread.
             root = log;
         } else {
             // Fetch the root Log
@@ -275,10 +275,10 @@ export class LogService {
             throw new HttpException('This log doens\'t have any comments.', 404);
         }
 
-        const thread = await this.threadUtility.createThreadStructure(root, comments);
+        const threadStructured = await this.threadUtility.createThreadStructure(root, comments);
 
         return {
-            logs: thread,
+            logs: threadStructured,
             additionalInformation: {
                 count: amountOfComments + 1
             }
