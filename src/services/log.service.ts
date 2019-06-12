@@ -50,6 +50,7 @@ export class LogService {
         } else if (logEntity.subtype === SubType.comment) {
             return this.createCommentLog(logEntity, createLogDto.parentId);
         } else if (logEntity.subtype) {
+            // comment
             throw new HttpException('This subtype of log is not implemented yet.', HttpStatus.NOT_IMPLEMENTED);
         } else {
             throw new HttpException('Cannot create empty Log', HttpStatus.BAD_REQUEST);
