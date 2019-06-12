@@ -1,10 +1,10 @@
 language: node_js
 addons:
-  mariadb: '10.0'
+  mariadb: '10.1'
 node_js:
   - 'stable'
 before_install:
-  - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
+  - sudo mysql -e "CREATE DATABASE IF NOT EXISTS test_jiskefet;"
 install:
   - npm install
 script:
