@@ -4,8 +4,6 @@ addons:
 node_js:
   - 'stable'
 before_install:
-  - systemctl status mysql.service
-  - journalctl -xe
   - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
 install:
   - npm install
