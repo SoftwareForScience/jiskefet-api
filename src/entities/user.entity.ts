@@ -48,6 +48,16 @@ export class User {
     })
     samsId: number;
 
+    @Column({
+        name: 'name',
+        type: 'varchar'
+    })
+    @ApiModelProperty({
+        type: 'string',
+        format: 'varchar(45)',
+    })
+    name: string;
+
     @OneToMany(type => Log, log => log.user)
     logs: Log[];
 
