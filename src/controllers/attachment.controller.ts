@@ -91,8 +91,7 @@ export class AttachmentController {
                         fileData: Buffer.from(file.buffer).toString('base64'),
                         creationTime: new Date()
                     };
-                    console.log(`file size is ${file.size}`);
-                    return await createResponseItem(this.attachmentservice.create(logId, attachment));
+                    return createResponseItem(await this.attachmentservice.create(logId, attachment));
                 } catch (error) {
                     return createErrorResponse(error);
                 }
