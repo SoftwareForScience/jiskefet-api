@@ -73,7 +73,6 @@ export class LogController {
      * @param createAttachmentDto Data held in DTO from request body.
      */
     @Post(':id/attachments')
-    @UsePipes(ValidationPipe)
     @ApiOperation({ title: 'Creates a Attachment for a specific Log.' })
     @ApiCreatedResponse({ description: 'Succesfully created an Attachment.', type: Attachment })
     async createAttachment(
