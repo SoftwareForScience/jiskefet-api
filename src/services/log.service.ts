@@ -272,10 +272,6 @@ export class LogService {
 
         const amountOfComments = comments.length;
 
-        if (comments.length === 0) {
-            throw new HttpException('This log doens\'t have any comments.', 404);
-        }
-
         const threadStructured = await this.threadUtility.createThreadStructure(root, comments);
 
         return {
