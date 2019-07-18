@@ -33,6 +33,7 @@ import { HttpExceptionFilter } from '../filters/httpexception.filter';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 import { AttachmentService } from '../services/attachment.service';
+import { ThreadDto } from 'dtos/thread.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -100,7 +101,7 @@ export class LogController {
             // check for threadId
             if (query.threadId) {
                 const getThread = await this.logService.find(query);
-                return createResponseItem(getThread, undefined, getThread.additionalInformation);
+                return createResponseItem(getThread.logs as ThreadDto, undefined, getThread.additionalInformation);
             } else {
                 const getLogs = await this.logService.find(query);
                 return createResponseItems(getLogs.logs as Log[], undefined, getLogs.additionalInformation);
