@@ -97,6 +97,13 @@ describe('LogService', () => {
         });
     });
 
+    describe('getLogInfoParams', ()=> {
+        it('should return params with logId 1', async () => {
+            const result = await logService.getLogInfoParams(1);
+            expect(result.logId).toBe(1);
+        });
+    });
+
     describe('post()', () => {
 
         it('should create one log and return it', async () => {
