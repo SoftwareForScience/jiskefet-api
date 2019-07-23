@@ -21,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../common/auth.guard';
 import { QueryLogDto } from '../dtos/query.log.dto';
 import { LinkRunToLogDto } from '../dtos/linkRunToLog.log.dto';
 import { InfoLogService } from '../services/infolog.service';
@@ -37,7 +37,7 @@ import { ThreadDto } from 'dtos/thread.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('logs')
 export class LogController {

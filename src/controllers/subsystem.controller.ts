@@ -14,10 +14,11 @@ import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { SubSystem } from '../entities/sub_system.entity';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('subsystems')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('subsystems')
 export class SubSystemController {

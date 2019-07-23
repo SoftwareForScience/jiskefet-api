@@ -29,10 +29,11 @@ import { LinkRunToTagDto } from '../dtos/linkRunToTag.tag.dto';
 import { LinkLogToTagDto } from '../dtos/linkLogToTag.tag.dto';
 import { Log } from '../entities/log.entity';
 import { Run } from '../entities/run.entity';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('tags')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('tags')
 export class TagController {

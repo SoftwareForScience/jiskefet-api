@@ -15,10 +15,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { ResponseObject } from '../interfaces/response_object.interface';
 import { createResponseItems, createErrorResponse } from '../helpers/response.helper';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('overview')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('overview')
 export class OverviewController {

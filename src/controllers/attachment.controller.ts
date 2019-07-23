@@ -37,10 +37,11 @@ import { HttpExceptionFilter } from '../filters/httpexception.filter';
 import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { FileDto } from '../dtos/file.dto';
 import { FILE_UPLOAD_LIMIT } from '../constants';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('attachments')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('attachments')
 export class AttachmentController {
