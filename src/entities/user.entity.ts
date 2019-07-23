@@ -48,6 +48,10 @@ export class User {
     })
     samsId: number;
 
+    @Column()
+    @ApiModelProperty()
+    name: string;
+
     @OneToMany(type => Log, log => log.user)
     logs: Log[];
 
