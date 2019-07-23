@@ -108,31 +108,36 @@ export class AuthController {
     })
     async profile(@Headers() headers: any): Promise<ResponseObject<any>> {
         try {
-            const jwt = await this.authUtility.getJwtFromHeaders(headers);
+            let jwt = await this.authUtility.getJwtFromHeaders(headers);
+            if (jwt && jwt === 'TEST') {
+                if ((process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test')) {
+                    return createResponseItem({
+                        userData: {
+                            userId: 1
+                        },
+                        profileData: {
+                            name: 'Anonymous',
+                            username: 'Anonymous',
+                            id: 1,
+                            personid: 1,
+                            email: 'anonymous@cern.ch',
+                            first_name: 'Anony',
+                            last_name: 'Mous',
+                            identityclass: 'CERN Registered',
+                            federation: 'CERN',
+                            phone: null,
+                            mobile: null
+                        }
+                    });
+                }
+                jwt = null;
+            }
+
             if(!jwt) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'No JWT could be found in headers.';
                 this.loggerService.logWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
-            }
-            if (jwt === 'TEST' && (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test')) {
-                return createResponseItem({
-                    userData: {
-                        userId: 1
-                    },
-                    profileData: {
-                        name: 'Anonymous',
-                        username: 'Anonymous',
-                        id: 1,
-                        personid: 1,
-                        email: 'anonymous@cern.ch',
-                        first_name: 'Anony',
-                        last_name: 'Mous',
-                        identityclass: 'CERN Registered',
-                        federation: 'CERN',
-                        phone: null,
-                        mobile: null
-                    }});
             }
 
             const userProfile = await this.authService.getProfileInfo(jwt);
