@@ -110,7 +110,7 @@ export class AuthController {
         try {
             let jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (jwt && jwt === 'TEST') {
-                if ((process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test')) {
+                if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' && process.env.ALLOW_ANONYMOUS === 'true') {
                     return createResponseItem({
                         userData: {
                             userId: 1
