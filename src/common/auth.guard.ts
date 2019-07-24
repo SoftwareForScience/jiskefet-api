@@ -15,7 +15,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
     handleRequest(err, user, _info) {
         if (err || !user) {
-            if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' && process.env.ALLOW_ANONYMOUS === 'true') {
+            if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' && process.env.ALLOW_ANONYMOUS.toLowerCase() === 'true') {
                 user = true;
             } else {
                 throw err || new UnauthorizedException();
