@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'test') {
     entities: ['src/**/**.entity{.ts,.js}'],
     logging: TYPEORM_LOGGING,
     synchronize: TYPEORM_SYNCHRONIZE === 'true' ? true : false,
-    migrations: ['src/migration/*{.ts,.js}']
+    migrations: ['src/migration/*{.ts,.js}', 'src/populate/*{.ts,.js}']
     // what to do with the cli variable from ormconfig.json
   };
 }
