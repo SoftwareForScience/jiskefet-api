@@ -50,7 +50,7 @@ export class InitialCreateSchema1539095419272 implements MigrationInterface {
         await queryRunner.query("ALTER TABLE `runs_in_log` ADD CONSTRAINT `FK_be55c390ca8635a3b9dd9260c94` FOREIGN KEY (`fk_log_id`) REFERENCES `log`(`log_id`) ON DELETE CASCADE");
         await queryRunner.query("ALTER TABLE `runs_in_log` ADD CONSTRAINT `FK_2995c0c47c4a8759e48fed93d83` FOREIGN KEY (`fk_run_number`) REFERENCES `run`(`run_number`) ON DELETE CASCADE");
 
-        await queryRunner.query("INSERT INTO `user` (`user_id`, `external_id`, `sams_id`, `name`) VALUES (1,1,1,'Anonymous');");
+        await queryRunner.query("INSERT INTO `user` (`user_id`, `external_id`, `sams_id`, `name`) VALUES (1,1,1,'Anonymous')");
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
