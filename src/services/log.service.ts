@@ -138,6 +138,29 @@ export class LogService {
     }
 
     /**
+     * This function gets params for
+     * LogInfo template
+     * from database
+     * @param Id this is ID of log
+     */
+    async getLogInfoParams(Id: number): Promise<any> {
+
+        const result = await this.findLogById(Id);
+        if (!result) {
+            throw new HttpException(
+                `Log with log id ${Id} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        }
+        const params = {
+            user: result.user.userId, external: result.user.externalUserId, sams: result.user.samsId,
+            logId: result.logId, subsytemID: result.subsystemFkSubsystemId, subtype: result.subtype,
+            origin: result.origin, creationTime: result.creationTime,
+            title: result.title, text: result.body
+        };
+        return params;
+    }
+
+    /**
      * Create a Log with subtype 'run'
      * @param log the log to be created
      * @param runId the run to be linked to the log

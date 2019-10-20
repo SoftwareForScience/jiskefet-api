@@ -220,4 +220,42 @@ export class RunService {
 
         return await this.runRepository.save(runToUpdate);
     }
+    /**
+     * This function gets params for
+     * RunConf template
+     * from database
+     * @param Id1 this is ID of the first run
+     * @param Id2 this is ID of the second run
+     */
+    async getRunConfParams(Id1: number, Id2: number): Promise<any> {
+
+        const curDate = new Date();
+        const firstResult = await this.findById(Id1);
+        const secondResult = await this.findById(Id2);
+        if (!firstResult) {
+            throw new HttpException(
+                `Run with run number ${Id1} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        } else if (!secondResult) {
+            throw new HttpException(
+                `Run with run number ${Id2} does not exists.`, HttpStatus.NOT_FOUND
+            );
+        }
+        const params = {
+            Run1: firstResult.runNumber, O21: firstResult.O2StartTime,
+            TargetStart1: firstResult.TrgStartTime, TargetEnd1: firstResult.TrgEndTime, o2End1: firstResult.O2EndTime,
+            runType1: firstResult.runType, RunQuality1: firstResult.runQuality, NumbDetectors1: firstResult.nDetectors,
+            numberFlips1: firstResult.nFlps, timeFrame1: firstResult.nTimeframes,
+            SubTimeFrame1: firstResult.nSubtimeframes, Readout1: firstResult.bytesReadOut,
+            Bytestimeframe1: firstResult.bytesTimeframeBuilder, Run2: secondResult.runNumber,
+            O22: secondResult.O2StartTime, TargetStart2: secondResult.TrgStartTime,
+            TargetEnd2: secondResult.TrgEndTime, o2End2: secondResult.O2EndTime, runType2: secondResult.runType,
+            RunQuality2: secondResult.runQuality, NumbDetectors2: secondResult.nDetectors,
+            numberFlips2: secondResult.nFlps, timeFrame2: secondResult.nTimeframes,
+            SubTimeFrame2: secondResult.nSubtimeframes, Readout2: secondResult.bytesReadOut,
+            Bytestimeframe2: secondResult.bytesTimeframeBuilder,
+            Data: curDate.toLocaleString('en-GB')
+        };
+        return params;
+    }
 }
