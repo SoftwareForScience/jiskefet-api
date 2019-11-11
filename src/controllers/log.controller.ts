@@ -34,6 +34,7 @@ import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 import { AttachmentService } from '../services/attachment.service';
 import { ThreadDto } from 'dtos/thread.dto';
+import { KafkaService } from 'services/kafka.service';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -45,7 +46,8 @@ export class LogController {
     constructor(
         private readonly logService: LogService,
         private readonly loggerService: InfoLogService,
-        private readonly attachmentService: AttachmentService
+        private readonly attachmentService: AttachmentService,
+        private kafkaService: KafkaService
     ) { }
 
     /**
@@ -59,6 +61,7 @@ export class LogController {
     async create(@Body() request: CreateLogDto): Promise<ResponseObject<Log>> {
         try {
             const log = await this.logService.create(request);
+            const kafka = await this.kafkaService.createTopic();
             return createResponseItem(log);
         } catch (error) {
             const infoLog = new CreateInfologDto();
