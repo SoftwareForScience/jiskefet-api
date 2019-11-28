@@ -94,7 +94,7 @@ export class LogController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Logs.' })
-    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.' , type: Log}) 
     @ApiNotFoundResponse({ description: 'There are no Logs.' })
     async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
