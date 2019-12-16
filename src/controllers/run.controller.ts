@@ -30,10 +30,11 @@ import { createResponseItem, createResponseItems, createErrorResponse } from '..
 import { Run } from '../entities/run.entity';
 import { PatchRunDto } from '../dtos/patch.run.dto';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('runs')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('runs')
 export class RunController {

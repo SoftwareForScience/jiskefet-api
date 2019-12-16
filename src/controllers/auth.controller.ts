@@ -108,13 +108,38 @@ export class AuthController {
     })
     async profile(@Headers() headers: any): Promise<ResponseObject<any>> {
         try {
-            const jwt = await this.authUtility.getJwtFromHeaders(headers);
-            if (!jwt) {
+            let jwt = await this.authUtility.getJwtFromHeaders(headers);
+            if (jwt && jwt === 'TEST') {
+                if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' && process.env.ALLOW_ANONYMOUS.toLowerCase() === 'true') {
+                    return createResponseItem({
+                        userData: {
+                            userId: 1
+                        },
+                        profileData: {
+                            name: 'Anonymous',
+                            username: 'Anonymous',
+                            id: 1,
+                            personid: 1,
+                            email: 'anonymous@cern.ch',
+                            first_name: 'Anony',
+                            last_name: 'Mous',
+                            identityclass: 'CERN Registered',
+                            federation: 'CERN',
+                            phone: null,
+                            mobile: null
+                        }
+                    });
+                }
+                jwt = null;
+            }
+
+            if(!jwt) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'No JWT could be found in headers.';
                 this.loggerService.logWarnInfoLog(infoLog);
                 throw new BadRequestException('No JWT could be found in headers.');
             }
+
             const userProfile = await this.authService.getProfileInfo(jwt);
             const user = await this.userService.findUserByExternalId(userProfile.id);
             return createResponseItem({ userData: user, profileData: userProfile });

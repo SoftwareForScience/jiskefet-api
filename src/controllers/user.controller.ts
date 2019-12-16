@@ -32,10 +32,11 @@ import { createResponseItems, createResponseItem, createErrorResponse } from '..
 import { User } from '../entities/user.entity';
 import { Log } from '../entities/log.entity';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('users')
 export class UserController {

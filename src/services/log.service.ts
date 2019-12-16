@@ -52,6 +52,7 @@ export class LogService {
         } else if (logEntity.subtype) {
             throw new HttpException('This subtype of log is not implemented yet.', HttpStatus.NOT_IMPLEMENTED);
         } else {
+            // there should be a better check
             throw new HttpException('Cannot create empty Log', HttpStatus.BAD_REQUEST);
         }
     }
@@ -277,7 +278,7 @@ export class LogService {
 
         let root: Log;
         if (logId === log.commentFkRootLogId) {
-            // The log given is a root of a thread.
+            // The log given is the root of the thread.
             root = log;
         } else {
             // Fetch the root Log
@@ -294,14 +295,10 @@ export class LogService {
 
         const amountOfComments = comments.length;
 
-        if (comments.length === 0) {
-            throw new HttpException('This log doens\'t have any comments.', 404);
-        }
-
-        const thread = await this.threadUtility.createThreadStructure(root, comments);
+        const threadStructured = await this.threadUtility.createThreadStructure(root, comments);
 
         return {
-            logs: thread,
+            logs: threadStructured,
             additionalInformation: {
                 count: amountOfComments + 1
             }

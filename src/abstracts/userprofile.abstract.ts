@@ -8,4 +8,14 @@
 
 export abstract class UserProfile {
     id: number;
+    name: string;
+    username: string;
+    personid: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    identityclass: string;
+    federation: string;
+    phone: string;
+    mobile: string;
 }

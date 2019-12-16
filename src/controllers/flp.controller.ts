@@ -24,10 +24,11 @@ import { FlpSerivce } from '../services/flp.service';
 import { createResponseItem, createErrorResponse } from '../helpers/response.helper';
 import { PatchFlpDto } from '../dtos/patch.flp.dto';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
+import { JwtAuthGuard } from '../common/auth.guard';
 
 @ApiUseTags('flp')
 @ApiBearerAuth()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('flp')
 export class FlpController {
