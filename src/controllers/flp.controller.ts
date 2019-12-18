@@ -43,7 +43,7 @@ export class FlpController {
      */
     @Get(':name/runs/:id')
     @ApiOperation({ title: 'Returns a specific FLP based on RunId.' })
-    @ApiOkResponse({ description: 'Succesfully returned an FLP.' })
+    @ApiOkResponse({ description: 'Succesfully returned an FLP.', type: FlpRole })
     @ApiNotFoundResponse({ description: 'There is no FLP for the Run with this run number.' })
     async findById(@Param('id') runId: number, @Param('name') flpName: string): Promise<ResponseObject<FlpRole>> {
         try {
@@ -59,7 +59,7 @@ export class FlpController {
      */
     @Post()
     @ApiOperation({ title: 'Creates an FLP.' })
-    @ApiCreatedResponse({ description: 'Succesfully created an FLP.' })
+    @ApiCreatedResponse({ description: 'Succesfully created an FLP.', type: FlpRole })
     @ApiConflictResponse({ description: 'An FLP already exists with this Name and Hostname.' })
     async createFlp(@Body() request: CreateFlpDto): Promise<ResponseObject<FlpRole>> {
         try {
@@ -78,7 +78,7 @@ export class FlpController {
      */
     @Patch(':name/runs/:id')
     @ApiOperation({ title: 'Updates an FLP based on a RunId and FLPName.' })
-    @ApiOkResponse({ description: 'Succesfully updated an FLP.' })
+    @ApiOkResponse({ description: 'Succesfully updated an FLP.', type: FlpRole })
     @ApiNotFoundResponse({ description: 'The Run number or/and FLP name does not exist.' })
     async updateById(
         @Param('id') runId: number,

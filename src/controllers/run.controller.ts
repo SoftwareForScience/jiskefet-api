@@ -73,7 +73,7 @@ export class RunController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Runs.' })
-    @ApiOkResponse({ description: 'Succesfully returned Runs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Runs.', type: [Run] })
     @ApiNotFoundResponse({ description: 'There are no Runs found with given query params.' })
     async findAll(@Query() query?: QueryRunDto): Promise<ResponseObject<Run>> {
         try {
@@ -90,7 +90,7 @@ export class RunController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Run.' })
-    @ApiOkResponse({ description: 'Succesfully returned a specific Run.' })
+    @ApiOkResponse({ description: 'Succesfully returned a specific Run.', type: Run })
     @ApiNotFoundResponse({ description: 'There is no Run with the given Run number.' })
     async findById(@Param('id') id: number): Promise<ResponseObject<Run>> {
         try {
@@ -110,7 +110,8 @@ export class RunController {
     @ApiOperation({ title: 'Links a Log to a specific Run.' })
     @ApiResponse({
         status: 204,
-        description: 'The Log is successfully linked to the Run.'
+        description: 'The Log is successfully linked to the Run.',
+        type: Run,
     })
     @ApiConflictResponse({ description: 'The Log is already linked to the Run.' })
     @ApiNotFoundResponse({ description: 'The Log or Run does not exist.' })
@@ -130,7 +131,7 @@ export class RunController {
      */
     @Patch(':id')
     @ApiOperation({ title: 'Updates certain fields of a Run.' })
-    @ApiOkResponse({ description: 'Succesfully updated a Run.' })
+    @ApiOkResponse({ description: 'Succesfully updated a Run.', type: Run, })
     async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<Run>> {
         try {
             const patchRun = await this.runService.updateRun(runNumber, request);

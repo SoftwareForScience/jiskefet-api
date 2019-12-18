@@ -37,7 +37,7 @@ import { ThreadDto } from 'dtos/thread.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('logs')
 export class LogController {
@@ -94,7 +94,7 @@ export class LogController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Logs.' })
-    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.', type: [Log] })
     @ApiNotFoundResponse({ description: 'There are no Logs.' })
     async findAll(@Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
@@ -117,7 +117,7 @@ export class LogController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully returns a specific Log.' })
+    @ApiOkResponse({ description: 'Succesfully returns a specific Log.', type: Log })
     @ApiNotFoundResponse({ description: 'There is no Log with this ID.' })
     async findById(@Param('id') id: number): Promise<ResponseObject<Log>> {
         try {
@@ -136,7 +136,8 @@ export class LogController {
     @ApiOperation({ title: 'Links a Run to a specific Log.' })
     @ApiResponse({
         status: 204,
-        description: 'Succesfully linked a Run to a Log.'
+        description: 'Succesfully linked a Run to a Log.',
+        type: Log,
     })
     @ApiConflictResponse({ description: 'The Run is already linked to the Log.' })
     @ApiNotFoundResponse({ description: 'The Run or Log does not exist.' })

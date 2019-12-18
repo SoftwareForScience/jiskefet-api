@@ -21,8 +21,15 @@ export class SubSystem {
     subsystemId: number;
 
     @Column({ name: 'subsystem_name' })
+    @ApiModelProperty()
     subsystemName: string;
 
+    @ApiModelProperty(
+        {
+            type: 'integer',
+            isArray: true,
+        }
+    )
     @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subsystem)
     subSystemPermissions: SubSystemPermission[];
 }

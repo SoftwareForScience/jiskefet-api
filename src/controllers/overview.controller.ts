@@ -32,7 +32,7 @@ export class OverviewController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Overviews that belong to a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully returned the overview.' })
+    @ApiOkResponse({ description: 'Succesfully returned the overview.', type: [GetOverviewDto] })
     @ApiNotFoundResponse({ description: 'Unable to find an overview with given input' })
     async find(@Query() query?: QueryOverviewDto): Promise<ResponseObject<GetOverviewDto>> {
         try {
