@@ -110,7 +110,8 @@ export class AuthController {
         try {
             let jwt = await this.authUtility.getJwtFromHeaders(headers);
             if (jwt && jwt === 'TEST') {
-                if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' && process.env.ALLOW_ANONYMOUS.toLowerCase() === 'true') {
+                if (typeof(process.env.ALLOW_ANONYMOUS) !== 'undefined' &&
+                process.env.ALLOW_ANONYMOUS.toLowerCase() === 'true') {
                     return createResponseItem({
                         userData: {
                             userId: 1
@@ -133,7 +134,7 @@ export class AuthController {
                 jwt = null;
             }
 
-            if(!jwt) {
+            if (!jwt) {
                 const infoLog = new CreateInfologDto();
                 infoLog.message = 'No JWT could be found in headers.';
                 this.loggerService.logWarnInfoLog(infoLog);

@@ -113,7 +113,7 @@ export class Run {
         nullable: true,
     })
     @ApiModelProperty(
-        { 
+        {
             required: false,
             type: 'enum',
             enum: [

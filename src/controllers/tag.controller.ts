@@ -99,11 +99,11 @@ export class TagController {
      */
     @Get(':id/runs')
     @ApiOperation({ title: 'Returns all Runs for a specific Tag.' })
-    @ApiOkResponse({ description: 'Succesfully returned Runs.', type:[Run] })
+    @ApiOkResponse({ description: 'Succesfully returned Runs.', type: [Run] })
     @ApiNotFoundResponse({ description: 'No Runs found for this Tag.' })
     async findRunsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
         try {
-            const runsByTagId = await this.tagService.findRunsByTagId(tagId);
+            const runsByTagId = await this.tagService.findRunsByTagId (tagId);
             return createResponseItem(runsByTagId);
         } catch (error) {
             return createErrorResponse(error);
@@ -160,7 +160,7 @@ export class TagController {
     @ApiResponse({
         status: 204,
         description: 'Succesfully linked a Run to a Tag.',
-        type: Tag,        
+        type: Tag,
     })
     @ApiConflictResponse({ description: 'The Run is already linked to the Tag.' })
     @ApiNotFoundResponse({ description: 'The Run or Tag does not exist.' })

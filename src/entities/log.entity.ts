@@ -44,7 +44,6 @@ export class Log {
         }
     )
     subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
-    
     @ApiModelProperty(
         {
             type: User,

@@ -37,7 +37,7 @@ import { ThreadDto } from 'dtos/thread.dto';
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
-//@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @UseFilters(new HttpExceptionFilter())
 @Controller('logs')
 export class LogController {
