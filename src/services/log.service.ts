@@ -21,20 +21,23 @@ import { SubType } from '../enums/log.subtype.enum';
 import { ThreadDto } from '../dtos/thread.dto';
 import { ThreadUtility } from '../utility/thread.utility';
 import * as _ from 'lodash';
-import {Tag} from "../entities/tag.entity";
+import { Tag } from '../entities/tag.entity';
 
 @Injectable()
 export class LogService {
     private readonly logRepository: Repository<Log>;
     private readonly runRepository: Repository<Run>;
+    private readonly tagRepository: Repository<Tag>;
     private readonly threadUtility: ThreadUtility;
 
     constructor(
         @InjectRepository(Log) logRepository: Repository<Log>,
-        @InjectRepository(Run) runRepository: Repository<Run>
+        @InjectRepository(Run) runRepository: Repository<Run>,
+        @InjectRepository(Tag) tagRepository: Repository<Tag>,
     ) {
         this.logRepository = logRepository;
         this.runRepository = runRepository;
+        this.tagRepository = tagRepository;
         this.threadUtility = new ThreadUtility();
     }
 
@@ -161,15 +164,17 @@ export class LogService {
         return params;
     }
 
-    async findTagsByLogId(logId: number): Promise<Log> {
-        const query = await this.logRepository
-            .createQueryBuilder('log')
-            .innerJoinAndSelect('log.tags', 'tags')
+    /**
+     * Handler for getting tags for a specific log.
+     * @param logId unique identifier for a Log
+     */
+    async findTagsByLogId(logId: number): Promise<Tag[]> {
+        return await this.tagRepository.createQueryBuilder('tag')
+            .innerJoin('tag.logs', 'tags')
             .where('log_id = :logId', { logId })
-            .getOne()
-            .then((res: Log) => Promise.resolve(res))
+            .getMany()
+            .then((res: Tag[]) => Promise.resolve(res))
             .catch((err: string) => Promise.reject(err));
-        return query;
     }
 
     /**

@@ -150,14 +150,19 @@ export class LogController {
         }
     }
 
+    /**
+     * Find all Tags that belong to a certain log item. /logs/id
+     * @param logId unique identifier for a Log item.
+     */
     @Get(':id/tags')
-    @ApiOperation({ title: 'Returns all Tags for a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully returned Tags.' })
+    @ApiOperation({ title: 'Returns Tags that belong to a specific Log.' })
+    @ApiOkResponse({ description: 'Successfully returned the Tags.' })
     @ApiNotFoundResponse({ description: 'No Tags found for this Log.' })
-    async findTagsByLogId(@Param('id') logId: number): Promise<ResponseObject<Log>> {
+    async findTagsByLogId(@Param('id') logId: number): Promise<ResponseObject<Tag>> {
+        const tagsByLogId = await this.logService.findTagsByLogId(logId);
+
         try {
-            const tagsByLogId = await this.logService.findTagsByLogId(logId);
-            return createResponseItem(tagsByLogId);
+            return createResponseItems(tagsByLogId);
         } catch (error) {
             return createErrorResponse(error);
         }
