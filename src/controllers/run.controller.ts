@@ -131,7 +131,7 @@ export class RunController {
      */
     @Patch(':id')
     @ApiOperation({ title: 'Updates certain fields of a Run.' })
-    @ApiOkResponse({ description: 'Succesfully updated a Run.', type: Run, })
+    @ApiOkResponse({ description: 'Succesfully updated a Run.', type: Run })
     async updateRun(@Param('id') runNumber: number, @Body() request: PatchRunDto): Promise<ResponseObject<Run>> {
         try {
             const patchRun = await this.runService.updateRun(runNumber, request);
