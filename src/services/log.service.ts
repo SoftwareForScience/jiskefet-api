@@ -83,6 +83,7 @@ export class LogService {
         return await this.logRepository
             .createQueryBuilder('log')
             .leftJoinAndSelect('log.runs', 'runs')
+            .leftJoinAndSelect('log.tags', 'tags')
             .innerJoinAndSelect('log.user', 'user')
             .where('log_id = :id', { id })
             .getOne()
