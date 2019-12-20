@@ -21,6 +21,7 @@ import { SubType } from '../enums/log.subtype.enum';
 import { ThreadDto } from '../dtos/thread.dto';
 import { ThreadUtility } from '../utility/thread.utility';
 import * as _ from 'lodash';
+import {Tag} from "../entities/tag.entity";
 
 @Injectable()
 export class LogService {
@@ -158,6 +159,17 @@ export class LogService {
             title: result.title, text: result.body
         };
         return params;
+    }
+
+    async findTagsByLogId(logId: number): Promise<Log> {
+        const query = await this.logRepository
+            .createQueryBuilder('log')
+            .innerJoinAndSelect('log.tags', 'tags')
+            .where('log_id = :logId', { logId })
+            .getOne()
+            .then((res: Log) => Promise.resolve(res))
+            .catch((err: string) => Promise.reject(err));
+        return query;
     }
 
     /**

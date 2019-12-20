@@ -34,6 +34,7 @@ import { CreateAttachmentDto } from '../dtos/create.attachment.dto';
 import { Attachment } from '../entities/attachment.entity';
 import { AttachmentService } from '../services/attachment.service';
 import { ThreadDto } from 'dtos/thread.dto';
+import {Tag} from "../entities/tag.entity";
 
 @ApiUseTags('logs')
 @ApiBearerAuth()
@@ -144,6 +145,19 @@ export class LogController {
         try {
             const runToLog = await this.logService.linkRunToLog(logId, request);
             return createResponseItem(runToLog);
+        } catch (error) {
+            return createErrorResponse(error);
+        }
+    }
+
+    @Get(':id/tags')
+    @ApiOperation({ title: 'Returns all Tags for a specific Log.' })
+    @ApiOkResponse({ description: 'Succesfully returned Tags.' })
+    @ApiNotFoundResponse({ description: 'No Tags found for this Log.' })
+    async findTagsByLogId(@Param('id') logId: number): Promise<ResponseObject<Log>> {
+        try {
+            const tagsByLogId = await this.logService.findTagsByLogId(logId);
+            return createResponseItem(tagsByLogId);
         } catch (error) {
             return createErrorResponse(error);
         }
