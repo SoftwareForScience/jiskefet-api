@@ -30,7 +30,7 @@ export class SubSystemController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Subsystems.' })
-    @ApiOkResponse({ description: 'Succesfully returned Subsystems.' })
+    @ApiOkResponse({ description: 'Succesfully returned Subsystems.', type: [SubSystem] })
     @ApiNotFoundResponse({ description: 'No Subsystems found.' })
     async findAll(): Promise<ResponseObject<SubSystem>> {
         try {
@@ -47,7 +47,7 @@ export class SubSystemController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Subsystem.' })
-    @ApiOkResponse({ description: 'Succesfully returned a Subsystem with given ID.' })
+    @ApiOkResponse({ description: 'Succesfully returned a Subsystem with given ID.', type: SubSystem })
     @ApiNotFoundResponse({ description: 'There is no Subsystem with the given ID.' })
     async findById(@Param('id') subSystemId: number): Promise<ResponseObject<SubSystem>> {
         try {

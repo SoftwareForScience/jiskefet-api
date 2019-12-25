@@ -56,7 +56,7 @@ export class AttachmentController {
      */
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns Attachments that belong to a specific Log.' })
-    @ApiOkResponse({ description: 'Succesfully returned the Attachments.' })
+    @ApiOkResponse({ description: 'Succesfully returned the Attachments.', type: [Attachment] })
     @ApiNotFoundResponse({ description: 'No Attachments found for this Log.' })
     async findById(@Param('id') logId: number): Promise<ResponseObject<Attachment>> {
         const attachmentsById = await this.attachmentservice.findAttachmentsByLogId(logId);

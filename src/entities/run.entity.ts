@@ -90,7 +90,16 @@ export class Run {
             'TECHNICAL'
         ],
     })
-    @ApiModelProperty()
+    @ApiModelProperty(
+        {
+            type: 'enum',
+            enum: [
+                'PHYSICS',
+                'COSMICS',
+                'TECHNICAL'
+            ],
+        }
+    )
     runType: ['PHYSICS' | 'COSMICS' | 'TECHNICAL'];
 
     @Column({
@@ -103,7 +112,17 @@ export class Run {
         ],
         nullable: true,
     })
-    @ApiModelProperty({ required: false})
+    @ApiModelProperty(
+        {
+            required: false,
+            type: 'enum',
+            enum: [
+                'Good',
+                'Bad',
+                'Unknown'
+            ],
+        }
+    )
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
     @Column({ name: 'n_detectors' })
@@ -171,42 +190,63 @@ export class Run {
     })
     bytesTimeframeBuilder: number;
 
-    @ManyToMany(type => Tag, tag => tag.runs)
-    @ApiModelProperty({
-        type: Tag,
-        isArray: true,
-        minProperties: 1
-    })
-    tags: Tag[];
-
-    @ManyToMany(type => Log, log => log.runs)
     @ApiModelProperty({
         type: 'integer',
-        format: 'int64',
         isArray: true,
         minProperties: 1
     })
+    @ManyToMany(type => Tag, tag => tag.runs)
+    tags: Tag[];
+
+    @ApiModelProperty({
+        type: 'integer',
+        isArray: true,
+        minProperties: 1
+    })
+    @ManyToMany(type => Log, log => log.runs)
     logs: Log[];
 
     @OneToMany(type => EpnRoleSession, epnRoleSession => epnRoleSession.run)
+    @ApiModelProperty(
+        {
+            type: EpnRoleSession,
+            isArray: true,
+        }
+    )
     epnRoleSessions: EpnRoleSession[];
 
-    @OneToMany(type => FlpRole, flpRole => flpRole.run)
     @ApiModelProperty({
         type: FlpRole,
-        isArray: true
+        isArray: true,
     })
+    @OneToMany(type => FlpRole, flpRole => flpRole.run)
     flpRoles: FlpRole[];
 
+    @ApiModelProperty({
+        type: DetectorsInRun,
+        isArray: true,
+    })
     @OneToMany(type => DetectorsInRun, detectorsInRun => detectorsInRun.run)
     detectorsInRun: DetectorsInRun[];
 
+    @ApiModelProperty({
+        type: DetectorQualityHistory,
+        isArray: true,
+    })
     @OneToMany(type => DetectorQualityHistory, detectorQualityHistory => detectorQualityHistory.run)
     detectorQualityHistories: DetectorQualityHistory[];
 
+    @ApiModelProperty({
+        type: RunQualityHistory,
+        isArray: true,
+    })
     @OneToMany(type => RunQualityHistory, runQualityHistory => runQualityHistory.run)
     runQualityHistories: RunQualityHistory[];
 
+    @ApiModelProperty({
+        type: RunEorHistory,
+        isArray: true,
+    })
     @OneToMany(type => RunEorHistory, runEorHistory => runEorHistory.run)
     runEorHistories: RunEorHistory[];
 

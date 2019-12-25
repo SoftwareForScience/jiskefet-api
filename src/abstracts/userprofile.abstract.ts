@@ -12,8 +12,8 @@ export abstract class UserProfile {
     username: string;
     personid: number;
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     identityclass: string;
     federation: string;
     phone: string;

@@ -65,7 +65,7 @@ export class TagController {
      */
     @Get()
     @ApiOperation({ title: 'Returns all Tags.' })
-    @ApiOkResponse({ description: 'Successfully returned all Tags.' })
+    @ApiOkResponse({ description: 'Successfully returned all Tags.', type: [Tag] })
     @ApiNotFoundResponse({ description: 'There are no Tags.' })
     async findAll(@Query() query?: QueryTagDto): Promise<ResponseObject<Tag>> {
         try {
@@ -82,7 +82,7 @@ export class TagController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Returns a specific Tag.' })
-    @ApiOkResponse({ description: 'Successfully returned a specific Tag.' })
+    @ApiOkResponse({ description: 'Successfully returned a specific Tag.', type: Tag })
     @ApiNotFoundResponse({ description: 'There is no Tag with this.' })
     async findById(@Param('id') id: number): Promise<ResponseObject<Tag>> {
         try {
@@ -99,11 +99,11 @@ export class TagController {
      */
     @Get(':id/runs')
     @ApiOperation({ title: 'Returns all Runs for a specific Tag.' })
-    @ApiOkResponse({ description: 'Succesfully returned Runs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Runs.', type: [Run] })
     @ApiNotFoundResponse({ description: 'No Runs found for this Tag.' })
     async findRunsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
         try {
-            const runsByTagId = await this.tagService.findRunsByTagId(tagId);
+            const runsByTagId = await this.tagService.findRunsByTagId (tagId);
             return createResponseItem(runsByTagId);
         } catch (error) {
             return createErrorResponse(error);
@@ -116,7 +116,7 @@ export class TagController {
      */
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns all Logs for a specific Tag.' })
-    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.', type: [Log] })
     @ApiNotFoundResponse({ description: 'No Logs found for this Tag.' })
     async findLogsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
         try {
@@ -136,7 +136,8 @@ export class TagController {
     @ApiOperation({ title: 'Links a Run to a specific Tag.' })
     @ApiResponse({
         status: 204,
-        description: 'Succesfully linked a Run to a Tag.'
+        description: 'Succesfully linked a Run to a Tag.',
+        type: Tag,
     })
     @ApiConflictResponse({ description: 'The Run is already linked to the Tag.' })
     @ApiNotFoundResponse({ description: 'The Run or Tag does not exist.' })
@@ -158,7 +159,8 @@ export class TagController {
     @ApiOperation({ title: 'Links a Run to a specific Tag.' })
     @ApiResponse({
         status: 204,
-        description: 'Succesfully linked a Run to a Tag.'
+        description: 'Succesfully linked a Run to a Tag.',
+        type: Tag,
     })
     @ApiConflictResponse({ description: 'The Run is already linked to the Tag.' })
     @ApiNotFoundResponse({ description: 'The Run or Tag does not exist.' })
@@ -179,7 +181,8 @@ export class TagController {
     @ApiOperation({ title: 'Deletes a specific Tag.' })
     @ApiResponse({
         status: 204,
-        description: 'Succesfully deleted a Tag.'
+        description: 'Succesfully deleted a Tag.',
+        type: Tag,
     })
     @ApiNotFoundResponse({ description: 'The Tag with the given ID does not exist.' })
     async deleteTagById(@Param('id') tagId: number): Promise<ResponseObject<void>> {

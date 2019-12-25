@@ -18,13 +18,20 @@ import {
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
 import { SubSystemRole } from './sub_system_role.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('sub_system_permission')
 export class SubSystemPermission {
 
     @PrimaryGeneratedColumn({ name: 'sub_system_permission_id' })
+    @ApiModelProperty()
     subSystemPermissionId: number;
 
+    @ApiModelProperty(
+        {
+            type: User,
+        }
+    )
     @ManyToOne(
         type => User,
         user => user.subSystemPermissions,
@@ -38,6 +45,11 @@ export class SubSystemPermission {
     })
     user: User;
 
+    @ApiModelProperty(
+        {
+            type: SubSystem,
+        }
+    )
     @ManyToOne(
         type => SubSystem,
         subSystem => subSystem.subSystemPermissions,
@@ -51,30 +63,40 @@ export class SubSystemPermission {
     })
     subsystem: SubSystem;
 
+    @ApiModelProperty()
     @Column({
         name: 'sub_system_hash',
         type: 'varchar'
     })
     subSystemHash: string;
 
+    @ApiModelProperty()
     @Column({
         name: 'sub_system_token_description',
         type: 'varchar'
     })
     subSystemTokenDescription: string;
 
+    @ApiModelProperty()
     @Column({
         name: 'is_member',
         type: 'tinyint'
     })
     isMember: boolean;
 
+    @ApiModelProperty()
     @Column({
         name: 'edit_eor_reason',
         type: 'tinyint'
     })
     editEorReason: boolean;
 
+    @ApiModelProperty(
+        {
+            type: SubSystemRole,
+            isArray: true,
+        }
+    )
     @ManyToMany(type => SubSystemRole)
     @JoinTable({
         name: 'sub_system_permission_in_sub_system_role',

@@ -56,7 +56,7 @@ export class UserController {
      */
     @Get(':id')
     @ApiOperation({ title: 'Retrieves a specific user.' })
-    @ApiOkResponse({ description: 'Successfully retrieved the user with the given ID.' })
+    @ApiOkResponse({ description: 'Successfully retrieved the user with the given ID.', type: User })
     @ApiNotFoundResponse({ description: 'Unable to find the User with the given ID' })
     async findById(@Param('id') userId: number): Promise<ResponseObject<User>> {
         try {
@@ -73,7 +73,7 @@ export class UserController {
      */
     @Get(':id/tokens')
     @ApiOperation({ title: 'Returns all generated Tokens from a specific User.' })
-    @ApiOkResponse({ description: 'Succesfully returned all Tokens.' })
+    @ApiOkResponse({ description: 'Succesfully returned all Tokens.', type: [SubSystemPermission] })
     @ApiNotFoundResponse({ description: 'Unable to find Tokens with given User ID' })
     async findTokensByExternalUserId(@Param('id') userId: number):
         Promise<ResponseObject<SubSystemPermission>> {
@@ -127,7 +127,7 @@ export class UserController {
      */
     @Get(':id/logs')
     @ApiOperation({ title: 'Returns all Logs for a specific User.' })
-    @ApiOkResponse({ description: 'Succesfully returned Logs.' })
+    @ApiOkResponse({ description: 'Succesfully returned Logs.', type: [Log] })
     @ApiNotFoundResponse({ description: 'No Logs found for this User.' })
     async findLogsByUserId(
         @Param('id') userId: number, @Query() query?: QueryLogDto

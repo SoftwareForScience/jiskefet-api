@@ -37,8 +37,18 @@ export class Log {
         type: 'enum',
         enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
     })
+    @ApiModelProperty(
+        {
+            type: 'enum',
+            enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
+        }
+    )
     subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
-
+    @ApiModelProperty(
+        {
+            type: User,
+        }
+    )
     @ManyToOne(
         type => User,
         user => user.logs,
@@ -54,7 +64,12 @@ export class Log {
         type: 'enum',
         enum: ['human', 'process'],
     })
-    @ApiModelProperty()
+    @ApiModelProperty(
+        {
+            type: 'enum',
+            enum: ['human', 'process'],
+        }
+    )
     origin: 'human' | 'process';
 
     @Column({
@@ -120,14 +135,18 @@ export class Log {
     })
     commentFkRootLogId: number;
 
-    @ManyToMany(type => Tag, tag => tag.logs)
     @ApiModelProperty({
         type: Tag,
         isArray: true,
         minProperties: 1
     })
+    @ManyToMany(type => Tag, tag => tag.logs)
     tags: Tag[];
 
+    @ApiModelProperty({
+        type: Run,
+        isArray: true,
+    })
     @ManyToMany(
         type => Run,
         run => run.logs
@@ -142,10 +161,6 @@ export class Log {
             name: 'fk_run_number',
             referencedColumnName: 'runNumber'
         }
-    })
-    @ApiModelProperty({
-        type: 'integer',
-        format: 'int64',
     })
     runs: Run[];
 
