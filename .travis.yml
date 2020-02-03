@@ -21,6 +21,3 @@ jobs:
         - npm test
       after_success:
         - codecov
-
-notifications:
-  slack: jiskefet:cGYsslE19X0IqoUwQXwAR9tT
