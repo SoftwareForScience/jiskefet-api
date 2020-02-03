@@ -7,14 +7,16 @@
         ]
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "jest"
     ],
     "extends": [
         "eslint:recommended",
         "standard-with-typescript",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:jest/recommended"
     ],
     "rules": {
         "@typescript-eslint/indent": [
@@ -52,6 +54,16 @@
             "multiline-arguments"
         ],
         "indent": "off",
+        "jest/expect-expect": [
+            "error",
+            {
+                "assertFunctionNames": [
+                    "expect",
+                    "request.*.expect"
+                ]
+            }
+        ],
+        "jest/no-test-return-statement": "error",
         "multiline-comment-style": [
             "error",
             "starred-block"
