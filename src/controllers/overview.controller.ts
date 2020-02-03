@@ -23,7 +23,6 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @UseFilters(new HttpExceptionFilter())
 @Controller('overview')
 export class OverviewController {
-
     constructor(private readonly overviewService: OverviewService) { }
 
     /**

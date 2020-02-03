@@ -14,10 +14,10 @@ import {
     ApiCreatedResponse,
     ApiConflictResponse,
     ApiNotFoundResponse,
-    ApiResponse
+    ApiResponse,
 } from '@nestjs/swagger';
 import {
-    Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters, UsePipes, ValidationPipe
+    Get, Post, Controller, Body, Param, Query, UseGuards, Patch, UseFilters, UsePipes, ValidationPipe,
 } from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dtos/create.log.dto';
@@ -41,11 +41,10 @@ import { ThreadDto } from 'dtos/thread.dto';
 @UseFilters(new HttpExceptionFilter())
 @Controller('logs')
 export class LogController {
-
     constructor(
         private readonly logService: LogService,
         private readonly loggerService: InfoLogService,
-        private readonly attachmentService: AttachmentService
+        private readonly attachmentService: AttachmentService,
     ) { }
 
     /**
@@ -77,7 +76,8 @@ export class LogController {
     @ApiCreatedResponse({ description: 'Succesfully created an Attachment.', type: Attachment })
     async createAttachment(
         @Param('id') logId: number,
-        @Body() createAttachmentDto: CreateAttachmentDto): Promise<ResponseObject<Attachment>> {
+            @Body() createAttachmentDto: CreateAttachmentDto,
+    ): Promise<ResponseObject<Attachment>> {
         try {
             const attachment = await this.attachmentService.create(logId, createAttachmentDto);
             return createResponseItem(attachment);
@@ -149,5 +149,4 @@ export class LogController {
             return createErrorResponse(error);
         }
     }
-
 }

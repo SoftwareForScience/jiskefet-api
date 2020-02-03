@@ -19,7 +19,7 @@ export class OverviewService {
     private readonly subSystemRepository: Repository<SubSystem>;
 
     constructor(
-        @InjectRepository(SubSystem) subSystemRepository: Repository<SubSystem>
+    @InjectRepository(SubSystem) subSystemRepository: Repository<SubSystem>,
     ) {
         this.subSystemRepository = subSystemRepository;
     }
@@ -40,9 +40,9 @@ export class OverviewService {
             LEFT JOIN user u
             ON u.user_id = ll.fk_user_id
             WHERE ll.creation_time > (NOW() - INTERVAL ${query.timeRange ? query.timeRange : '24'} HOUR)
-            GROUP BY ss.subsystem_id;`
+            GROUP BY ss.subsystem_id;`,
         );
-        const overview = new Array() as GetOverviewDto[];
+        const overview = [] as GetOverviewDto[];
         for (const rowDataPacket of result) {
             const subsystem = {} as GetOverviewDto;
             subsystem.subsystemName = rowDataPacket.subsystem_name;
@@ -54,5 +54,4 @@ export class OverviewService {
         }
         return overview;
     }
-
 }

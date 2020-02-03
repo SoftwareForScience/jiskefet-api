@@ -13,7 +13,7 @@ import {
     ApiOkResponse,
     ApiNotFoundResponse,
     ApiConsumes,
-    ApiImplicitFile
+    ApiImplicitFile,
 } from '@nestjs/swagger';
 import {
     Controller,
@@ -26,7 +26,7 @@ import {
     UploadedFile,
     UseInterceptors,
     FileInterceptor,
-    NotFoundException
+    NotFoundException,
 } from '@nestjs/common';
 import { AttachmentService } from '../services/attachment.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -45,9 +45,8 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @UseFilters(new HttpExceptionFilter())
 @Controller('attachments')
 export class AttachmentController {
-
     constructor(
-        private readonly attachmentservice: AttachmentService
+        private readonly attachmentservice: AttachmentService,
     ) { }
 
     /**
@@ -75,14 +74,15 @@ export class AttachmentController {
     @Post()
     @ApiOperation({
         title: 'Creates an attachment for a log with a file upload field through the Swagger UI.',
-        description: 'This endpoint is only available in dev modus'
+        description: 'This endpoint is only available in dev modus',
     })
     @ApiConsumes('multipart/form-data')
     @ApiImplicitFile({ name: 'file', required: false })
     @UseInterceptors(FileInterceptor('file', { limits: { fileSize: FILE_UPLOAD_LIMIT * 1024 * 1024 } }))
     async uploadFile(
         @Body() logId: number,
-        @UploadedFile() file?: FileDto): Promise<ResponseObject<Attachment>> {
+            @UploadedFile() file?: FileDto,
+    ): Promise<ResponseObject<Attachment>> {
         switch (process.env.NODE_ENV) {
             case 'dev':
                 try {
@@ -90,7 +90,7 @@ export class AttachmentController {
                         fileName: file.originalname,
                         fileMime: file.mimetype,
                         fileData: Buffer.from(file.buffer).toString('base64'),
-                        creationTime: new Date()
+                        creationTime: new Date(),
                     };
                     return createResponseItem(await this.attachmentservice.create(logId, attachment));
                 } catch (error) {

@@ -11,13 +11,12 @@ import { Log } from './log.entity';
 
 @Entity('intervention_log')
 export class InterventionLog {
-
     @OneToOne(
         type => Log,
         {
             primary: true,
             eager: true,
-        }
+        },
     )
     @JoinColumn({ name: 'log_id' })
     log: Log;
@@ -25,7 +24,7 @@ export class InterventionLog {
     @Column({
         name: 'time_of_call',
         precision: 0,
-        nullable: true
+        nullable: true,
     })
     timeOfCall: Date;
 
@@ -33,20 +32,20 @@ export class InterventionLog {
         name: 'intervention_type',
         type: 'enum',
         enum: ['test'],
-        nullable: true
+        nullable: true,
     })
     interventionType: 'test';
 
     @Column({
         type: 'enum',
         enum: ['test'],
-        nullable: true
+        nullable: true,
     })
     location: 'test';
 
     @Column({
         name: 'action_taken',
-        nullable: true
+        nullable: true,
     })
     actionTaken: string;
 }

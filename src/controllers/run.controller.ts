@@ -6,8 +6,8 @@
  * copied verbatim in the file "LICENSE"
  */
 
-import { Get, Controller, Body, Param, Query, UseGuards, Patch, UseFilters } from '@nestjs/common';
-import { Post } from '@nestjs/common';
+import { Get, Controller, Body, Param, Query, UseGuards, Patch, UseFilters, Post } from '@nestjs/common';
+
 import {
     ApiUseTags,
     ApiBearerAuth,
@@ -16,7 +16,7 @@ import {
     ApiConflictResponse,
     ApiCreatedResponse,
     ApiNotFoundResponse,
-    ApiResponse
+    ApiResponse,
 } from '@nestjs/swagger';
 import { RunService } from '../services/run.service';
 import { CreateRunDto } from '../dtos/create.run.dto';
@@ -40,7 +40,7 @@ import { JwtAuthGuard } from '../common/auth.guard';
 export class RunController {
     constructor(
         private readonly runService: RunService,
-        private readonly loggerService: InfoLogService
+        private readonly loggerService: InfoLogService,
     ) { }
 
     /**
@@ -99,7 +99,6 @@ export class RunController {
         } catch (error) {
             return createErrorResponse(error);
         }
-
     }
 
     /**
@@ -116,7 +115,7 @@ export class RunController {
     @ApiConflictResponse({ description: 'The Log is already linked to the Run.' })
     @ApiNotFoundResponse({ description: 'The Log or Run does not exist.' })
     async linkLogToRun(@Param('id')
-    runNumber: number, @Body() request: LinkLogToRunDto): Promise<ResponseObject<void>> {
+        runNumber: number, @Body() request: LinkLogToRunDto): Promise<ResponseObject<void>> {
         try {
             const logToRun = await this.runService.linkLogToRun(runNumber, request);
             return createResponseItem(logToRun);

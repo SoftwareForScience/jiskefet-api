@@ -38,7 +38,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 error: exception.name,
                 code: exception.getStatus(),
                 message: errorMsg,
-                customMessage: customErrorMsg
+                customMessage: customErrorMsg,
             };
         }
 

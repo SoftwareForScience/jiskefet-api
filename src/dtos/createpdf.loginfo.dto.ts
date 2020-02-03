@@ -4,7 +4,7 @@ import { IsNumber } from 'class-validator';
 export class CreateLogInfo {
     @ApiModelProperty({
         example: 5,
-        description: 'Log id'
+        description: 'Log id',
     })
     @IsNumber()
     id: number;

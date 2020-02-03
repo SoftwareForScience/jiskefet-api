@@ -11,7 +11,7 @@ import {
     ApiBearerAuth,
     ApiOperation,
     ApiOkResponse,
-    ApiNotFoundResponse
+    ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { Get, Controller, Param, Post, Body, UseGuards, Query, UseFilters } from '@nestjs/common';
 import * as uuid from 'uuid/v4';
@@ -40,14 +40,13 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @UseFilters(new HttpExceptionFilter())
 @Controller('users')
 export class UserController {
-
     constructor(
         private readonly subSystemPermissionService: SubSystemPermissionService,
         private readonly authService: AuthService,
         private readonly bcryptService: BCryptService,
         private readonly userService: UserService,
         private readonly logService: LogService,
-        private readonly loggerService: InfoLogService
+        private readonly loggerService: InfoLogService,
     ) { }
 
     /**
@@ -76,7 +75,7 @@ export class UserController {
     @ApiOkResponse({ description: 'Succesfully returned all Tokens.', type: [SubSystemPermission] })
     @ApiNotFoundResponse({ description: 'Unable to find Tokens with given User ID' })
     async findTokensByExternalUserId(@Param('id') userId: number):
-        Promise<ResponseObject<SubSystemPermission>> {
+    Promise<ResponseObject<SubSystemPermission>> {
         try {
             const tokenByExternalId = await this.subSystemPermissionService.findTokensByExternalUserId(userId);
             return createResponseItems(tokenByExternalId);
@@ -92,7 +91,7 @@ export class UserController {
     @ApiOperation({ title: 'Creates a Token and links it to a Subsytem.' })
     @ApiOkResponse({ description: 'Succesfully created a Token.' })
     async generateTokenForSubsystem(@Param('id') userId: number, @Body() request: CreateSubSystemPermissionDto):
-        Promise<ResponseObject<CreateSubSystemPermissionDto>> {
+    Promise<ResponseObject<CreateSubSystemPermissionDto>> {
         const uniqueId: string = uuid();
         request.subSystemHash = await this.bcryptService.hashToken(uniqueId);
         request.user = userId;
@@ -104,9 +103,9 @@ export class UserController {
 
             // add extra field to the jwt token to identify that a machine is making the request
             const jwtPayload: JwtPayload = {
-                ['token']: uniqueId,
-                ['is_subsystem']: 'true',
-                ['permission_id']: newSubSystemPermission.subSystemPermissionId.toString()
+                token: uniqueId,
+                is_subsystem: 'true',
+                permission_id: newSubSystemPermission.subSystemPermissionId.toString(),
             };
 
             // creates a jwt and returns it
@@ -129,9 +128,7 @@ export class UserController {
     @ApiOperation({ title: 'Returns all Logs for a specific User.' })
     @ApiOkResponse({ description: 'Succesfully returned Logs.', type: [Log] })
     @ApiNotFoundResponse({ description: 'No Logs found for this User.' })
-    async findLogsByUserId(
-        @Param('id') userId: number, @Query() query?: QueryLogDto
-    ): Promise<ResponseObject<Log>> {
+    async findLogsByUserId(@Param('id') userId: number, @Query() query?: QueryLogDto): Promise<ResponseObject<Log>> {
         try {
             const logsByUserId = await this.logService.findLogsByUserId(userId, query);
             return createResponseItems(logsByUserId.logs, undefined, logsByUserId.additionalInformation);

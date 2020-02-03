@@ -12,8 +12,8 @@ import { SubSystemPermission } from '../entities/sub_system_permission.entity';
 import { SubSystemPermissionService } from '../services/subsystem_permission.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SubSystemPermission])],
-  providers: [SubSystemPermissionService],
-  exports: [SubSystemPermissionService],
+    imports: [TypeOrmModule.forFeature([SubSystemPermission])],
+    providers: [SubSystemPermissionService],
+    exports: [SubSystemPermissionService],
 })
 export class SubSystemPermissionModule { }

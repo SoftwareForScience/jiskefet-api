@@ -13,18 +13,18 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('detectors_in_run')
 export class DetectorsInRun {
-
     @ApiModelProperty(
         {
             type: 'integer',
-        }
+        },
     )
     @ManyToOne(
-        type => Run, run => run.detectorsInRun,
+        type => Run,
+        run => run.detectorsInRun,
         {
             primary: true,
-            eager: true
-        }
+            eager: true,
+        },
     )
     @JoinColumn({ name: 'fk_run_number' })
     run: Run;
@@ -32,14 +32,15 @@ export class DetectorsInRun {
     @ApiModelProperty(
         {
             type: 'integer',
-        }
+        },
     )
     @ManyToOne(
-        type => Detector, detector => detector.detectorsInRun,
+        type => Detector,
+        detector => detector.detectorsInRun,
         {
             primary: true,
-            eager: true
-        }
+            eager: true,
+        },
     )
     @JoinColumn({ name: 'fk_detector_id' })
     detector: Detector;
@@ -48,7 +49,7 @@ export class DetectorsInRun {
         {
             type: 'enum',
             enum: ['test'],
-        }
+        },
     )
     @Column({
         name: 'run_quality',

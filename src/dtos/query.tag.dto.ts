@@ -10,10 +10,9 @@ import { IsString, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class QueryTagDto {
-
     @ApiModelProperty({
         description: 'The text of the tag',
-        required: false
+        required: false,
     })
     @IsString()
     @IsOptional()

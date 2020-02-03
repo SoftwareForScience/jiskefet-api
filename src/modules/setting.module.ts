@@ -11,8 +11,8 @@ import { SettingService } from '../services/setting.service';
 import { SettingController } from '../controllers/setting.controller';
 
 @Module({
-  providers: [SettingService],
-  controllers: [SettingController],
-  exports: [SettingService],
+    providers: [SettingService],
+    controllers: [SettingController],
+    exports: [SettingService],
 })
 export class SettingModule { }

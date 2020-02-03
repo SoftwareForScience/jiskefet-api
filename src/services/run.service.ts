@@ -24,15 +24,14 @@ import { FlpRole } from '../entities/flp_role.entity';
 
 @Injectable()
 export class RunService {
-
     private readonly runRepository: Repository<Run>;
     private readonly logRepository: Repository<Log>;
     private readonly flpRepository: Repository<FlpRole>;
 
     constructor(
-        @InjectRepository(Run) runRepository: Repository<Run>,
+    @InjectRepository(Run) runRepository: Repository<Run>,
         @InjectRepository(Log) logRepostiory: Repository<Log>,
-        @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>
+        @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>,
     ) {
         this.runRepository = runRepository;
         this.logRepository = logRepostiory;
@@ -49,7 +48,8 @@ export class RunService {
         if (run) {
             throw new HttpException(
                 `The request could not be completed due to a conflict with the run number: ${RunEntity.runNumber}`,
-                HttpStatus.CONFLICT);
+                HttpStatus.CONFLICT,
+            );
         }
         return await this.runRepository.save(RunEntity);
     }
@@ -58,70 +58,70 @@ export class RunService {
      * Returns runs from the db, filtered by the optional query.
      * @param query QueryRunDto
      */
-    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[], additionalInformation: AdditionalOptions }> {
+    async findAll(queryRunDto?: QueryRunDto): Promise<{ runs: Run[]; additionalInformation: AdditionalOptions }> {
         let query = await this.runRepository.createQueryBuilder();
 
         if (queryRunDto.runType) {
             await query.andWhere('run_type like :runType', {
-                runType: queryRunDto.runType ? queryRunDto.runType : '%'
+                runType: queryRunDto.runType ? queryRunDto.runType : '%',
             });
         }
 
         if (queryRunDto.runQuality) {
             await query.andWhere('run_quality like :runQuality', {
-                runQuality: queryRunDto.runQuality ? queryRunDto.runQuality : '%'
+                runQuality: queryRunDto.runQuality ? queryRunDto.runQuality : '%',
             });
         }
 
         // o2 start
         if (queryRunDto.startTimeO2Start) {
             await query.andWhere('time_o2_start >= :startTimeO2Start', {
-                startTimeO2Start: queryRunDto.startTimeO2Start
+                startTimeO2Start: queryRunDto.startTimeO2Start,
             });
         }
 
         if (queryRunDto.endTimeO2Start) {
             await query.andWhere('time_o2_start <= :endTimeO2Start', {
-                endTimeO2Start: queryRunDto.endTimeO2Start
+                endTimeO2Start: queryRunDto.endTimeO2Start,
             });
         }
 
         // trg start
         if (queryRunDto.startTimeTrgStart) {
             await query.andWhere('time_trg_start >= :startTimeTrgStart', {
-                startTimeTrgStart: queryRunDto.startTimeTrgStart
+                startTimeTrgStart: queryRunDto.startTimeTrgStart,
             });
         }
 
         if (queryRunDto.endTimeTrgStart) {
             await query.andWhere('time_o2_start <= :endTimeTrgStart', {
-                endTimeTrgStart: queryRunDto.endTimeTrgStart
+                endTimeTrgStart: queryRunDto.endTimeTrgStart,
             });
         }
 
         // trg end
         if (queryRunDto.startTimeTrgEnd) {
             await query.andWhere('time_trg_end >= :startTimeTrgEnd', {
-                startTimeTrgEnd: queryRunDto.startTimeTrgEnd
+                startTimeTrgEnd: queryRunDto.startTimeTrgEnd,
             });
         }
 
         if (queryRunDto.endTimeTrgEnd) {
             await query.andWhere('time_trg_end <= :endTimeTrgEnd', {
-                endTimeTrgEnd: queryRunDto.endTimeTrgEnd
+                endTimeTrgEnd: queryRunDto.endTimeTrgEnd,
             });
         }
 
         // o2 end
         if (queryRunDto.startTimeO2End) {
             await query.andWhere('time_o2_end >= :startTimeO2End', {
-                startTimeO2End: queryRunDto.startTimeO2End
+                startTimeO2End: queryRunDto.startTimeO2End,
             });
         }
 
         if (queryRunDto.endTimeO2End) {
             await query.andWhere('time_o2_end <= :endTimeO2End', {
-                endTimeO2End: queryRunDto.endTimeO2End
+                endTimeO2End: queryRunDto.endTimeO2End,
             });
         }
 
@@ -136,7 +136,7 @@ export class RunService {
         if (queryRunDto.orderBy) {
             query = query.orderBy(
                 _.snakeCase(queryRunDto.orderBy).replace('o_2', 'o2'),
-                queryRunDto.orderDirection || OrderDirection.asc
+                queryRunDto.orderDirection || OrderDirection.asc,
             );
         }
 
@@ -149,8 +149,8 @@ export class RunService {
             additionalInformation: {
                 count: result[1],
                 pageNumber: queryRunDto.pageNumber,
-                pageSize: queryRunDto.pageSize
-            }
+                pageSize: queryRunDto.pageSize,
+            },
         };
     }
 
@@ -175,13 +175,11 @@ export class RunService {
     async linkLogToRun(runNumber: number, linkLogToRunDto: LinkLogToRunDto): Promise<void> {
         const run = await this.findById(runNumber);
         if (!run) {
-            throw new HttpException(
-                `Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+            throw new HttpException(`Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
         }
         const log = await this.logRepository.findOne(linkLogToRunDto.logId);
         if (!log) {
-            throw new HttpException(
-                `Log with log number ${linkLogToRunDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
+            throw new HttpException(`Log with log number ${linkLogToRunDto.logId} does not exist.`, HttpStatus.NOT_FOUND);
         }
         run.logs = [...run.logs, log];
         await this.runRepository.save(run);
@@ -195,8 +193,7 @@ export class RunService {
     async updateRun(runNumber: number, patchRunDto: PatchRunDto): Promise<Run> {
         const runToUpdate: Run = await this.findById(runNumber);
         if (!runToUpdate) {
-            throw new HttpException(
-                `Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+            throw new HttpException(`Run with with number ${runNumber} does not exist.`, HttpStatus.NOT_FOUND);
         }
         let accSubtimeframes = 0;
         let accBytesReadOut = 0;
@@ -220,6 +217,7 @@ export class RunService {
 
         return await this.runRepository.save(runToUpdate);
     }
+
     /**
      * This function gets params for
      * RunConf template
@@ -228,33 +226,42 @@ export class RunService {
      * @param Id2 this is ID of the second run
      */
     async getRunConfParams(Id1: number, Id2: number): Promise<any> {
-
         const curDate = new Date();
         const firstResult = await this.findById(Id1);
         const secondResult = await this.findById(Id2);
         if (!firstResult) {
-            throw new HttpException(
-                `Run with run number ${Id1} does not exists.`, HttpStatus.NOT_FOUND
-            );
+            throw new HttpException(`Run with run number ${Id1} does not exists.`, HttpStatus.NOT_FOUND);
         } else if (!secondResult) {
-            throw new HttpException(
-                `Run with run number ${Id2} does not exists.`, HttpStatus.NOT_FOUND
-            );
+            throw new HttpException(`Run with run number ${Id2} does not exists.`, HttpStatus.NOT_FOUND);
         }
         const params = {
-            Run1: firstResult.runNumber, O21: firstResult.O2StartTime,
-            TargetStart1: firstResult.TrgStartTime, TargetEnd1: firstResult.TrgEndTime, o2End1: firstResult.O2EndTime,
-            runType1: firstResult.runType, RunQuality1: firstResult.runQuality, NumbDetectors1: firstResult.nDetectors,
-            numberFlips1: firstResult.nFlps, timeFrame1: firstResult.nTimeframes,
-            SubTimeFrame1: firstResult.nSubtimeframes, Readout1: firstResult.bytesReadOut,
-            Bytestimeframe1: firstResult.bytesTimeframeBuilder, Run2: secondResult.runNumber,
-            O22: secondResult.O2StartTime, TargetStart2: secondResult.TrgStartTime,
-            TargetEnd2: secondResult.TrgEndTime, o2End2: secondResult.O2EndTime, runType2: secondResult.runType,
-            RunQuality2: secondResult.runQuality, NumbDetectors2: secondResult.nDetectors,
-            numberFlips2: secondResult.nFlps, timeFrame2: secondResult.nTimeframes,
-            SubTimeFrame2: secondResult.nSubtimeframes, Readout2: secondResult.bytesReadOut,
+            Run1: firstResult.runNumber,
+            O21: firstResult.O2StartTime,
+            TargetStart1: firstResult.TrgStartTime,
+            TargetEnd1: firstResult.TrgEndTime,
+            o2End1: firstResult.O2EndTime,
+            runType1: firstResult.runType,
+            RunQuality1: firstResult.runQuality,
+            NumbDetectors1: firstResult.nDetectors,
+            numberFlips1: firstResult.nFlps,
+            timeFrame1: firstResult.nTimeframes,
+            SubTimeFrame1: firstResult.nSubtimeframes,
+            Readout1: firstResult.bytesReadOut,
+            Bytestimeframe1: firstResult.bytesTimeframeBuilder,
+            Run2: secondResult.runNumber,
+            O22: secondResult.O2StartTime,
+            TargetStart2: secondResult.TrgStartTime,
+            TargetEnd2: secondResult.TrgEndTime,
+            o2End2: secondResult.O2EndTime,
+            runType2: secondResult.runType,
+            RunQuality2: secondResult.runQuality,
+            NumbDetectors2: secondResult.nDetectors,
+            numberFlips2: secondResult.nFlps,
+            timeFrame2: secondResult.nTimeframes,
+            SubTimeFrame2: secondResult.nSubtimeframes,
+            Readout2: secondResult.bytesReadOut,
             Bytestimeframe2: secondResult.bytesTimeframeBuilder,
-            Data: curDate.toLocaleString('en-GB')
+            Data: curDate.toLocaleString('en-GB'),
         };
         return params;
     }

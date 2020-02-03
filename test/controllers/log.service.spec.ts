@@ -44,13 +44,13 @@ describe('LogService', () => {
         password: TEST_DB_PASSWORD,
         database: TEST_DB_DATABASE,
         entities: ['src/**/**.entity{.ts,.js}'],
-        synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
+        synchronize: TEST_DB_SYNCHRONIZE === 'true',
         migrations: ['populate/*{.ts,.js}'],
-        migrationsRun: true
+        migrationsRun: true,
     };
     const queryRunDto: QueryRunDto = {
         pageNumber: 1,
-        pageSize: 25
+        pageSize: 25,
     };
     const queryLogDto: QueryLogDto = {};
     const logDto: CreateLogDto = {
@@ -59,22 +59,24 @@ describe('LogService', () => {
         subtype: 'run',
         origin: 'human',
         user: 1,
-        run: null
+        run: null,
     };
 
-    beforeAll(async () => {
-        // maybe add a switch to support an in memory db like sqljs,
-        // so that tests can be run in a CI pipeline like Travis
+    beforeAll(async() => {
+        /*
+         * maybe add a switch to support an in memory db like sqljs,
+         * so that tests can be run in a CI pipeline like Travis
+         */
         testingModule = await Test.createTestingModule({
             providers: [
                 RunService,
                 LogService,
-                FlpSerivce
+                FlpSerivce,
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log, FlpRole])
-            ]
+                TypeOrmModule.forFeature([Run, Log, FlpRole]),
+            ],
         })
             .compile();
 
@@ -83,35 +85,34 @@ describe('LogService', () => {
         flpService = await testingModule.get<FlpSerivce>(FlpSerivce);
     });
 
-    afterAll(async () => {
+    afterAll(async() => {
         testingModule.close();
     });
 
     describe('initialize', () => {
-        it('logService should be defined', async () => {
+        it('logService should be defined', async() => {
             expect(logService).toBeDefined();
         });
 
-        it('runService should be defined', async () => {
+        it('runService should be defined', async() => {
             expect(runService).toBeDefined();
         });
     });
 
-    describe('getLogInfoParams', ()=> {
-        it('should return params with logId 1', async () => {
+    describe('getLogInfoParams', () => {
+        it('should return params with logId 1', async() => {
             const result = await logService.getLogInfoParams(1);
             expect(result.logId).toBe(1);
         });
     });
 
     describe('post()', () => {
-
-        it('should create one log and return it', async () => {
+        it('should create one log and return it', async() => {
             const result = await logService.create(logDto);
             expect(result).toBeInstanceOf(Log);
         });
 
-        it('should link a run to a log', async () => {
+        it('should link a run to a log', async() => {
             // retrieve the latest run
             const runs = await runService.findAll(queryRunDto);
             const latestRun = runs.runs[runs.runs.length - 1];
@@ -132,17 +133,17 @@ describe('LogService', () => {
     });
 
     describe('get()', () => {
-        it('should return a log with logId 1', async () => {
+        it('should return a log with logId 1', async() => {
             log = await logService.findLogById(1);
             expect(log.logId).toBe(1);
         });
 
-        it('should return multiple logs', async () => {
+        it('should return multiple logs', async() => {
             const logs = await logService.find(queryLogDto);
             expect((logs.logs as Log[]).length).toBeGreaterThanOrEqual(1);
         });
 
-        it('should return the logs from the given user', async () => {
+        it('should return the logs from the given user', async() => {
             const logsFromUser = await logService.findLogsByUserId(1, queryLogDto);
             expect(typeof logsFromUser.logs).toBe('object');
             expect(logsFromUser.logs[0].user.userId).toBe(1);

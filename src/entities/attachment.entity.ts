@@ -12,7 +12,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('attachment')
 export class Attachment {
-
     @PrimaryGeneratedColumn({ name: 'file_id' })
     @ApiModelProperty({
         type: 'integer',
@@ -25,9 +24,9 @@ export class Attachment {
         log => log.attachments,
         {
             nullable: true,
-            cascade: ['insert']
+            cascade: ['insert'],
 
-        }
+        },
     )
     @JoinColumn({ name: 'fk_log_id' })
     @ApiModelProperty()
@@ -39,7 +38,7 @@ export class Attachment {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     creationTime: Date;
 
@@ -57,7 +56,7 @@ export class Attachment {
 
     @Column({
         name: 'file_data',
-        type: 'longblob'
+        type: 'longblob',
     })
     @ApiModelProperty()
     fileData: string;

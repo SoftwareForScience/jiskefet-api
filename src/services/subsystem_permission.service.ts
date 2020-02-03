@@ -15,11 +15,10 @@ import { CreateSubSystemPermissionDto } from '../dtos/create.subsystemPermission
 
 @Injectable()
 export class SubSystemPermissionService {
-
     private readonly repository: Repository<SubSystemPermission>;
 
     constructor(
-        @InjectRepository(SubSystemPermission) repository: Repository<SubSystemPermission>,
+    @InjectRepository(SubSystemPermission) repository: Repository<SubSystemPermission>,
     ) {
         this.repository = repository;
     }
@@ -48,9 +47,9 @@ export class SubSystemPermissionService {
     async findTokensByExternalUserId(userId: number): Promise<SubSystemPermission[]> {
         const result = await this.repository.query(
             `SELECT sub_system_permission_id, sub_system_token_description
-            FROM sub_system_permission WHERE fk_user_id = ${userId};`
+            FROM sub_system_permission WHERE fk_user_id = ${userId};`,
         );
-        const overview = new Array() as SubSystemPermission[];
+        const overview = [] as SubSystemPermission[];
         for (const r of result) {
             const subSystemPermission = {} as SubSystemPermission;
             subSystemPermission.subSystemPermissionId = r.sub_system_permission_id;
@@ -75,7 +74,8 @@ export class SubSystemPermissionService {
      * @param subSystemPermissionDto
      */
     async saveTokenForSubSystemPermission(
-        subSystemPermissionDto: CreateSubSystemPermissionDto): Promise<SubSystemPermission> {
+        subSystemPermissionDto: CreateSubSystemPermissionDto,
+    ): Promise<SubSystemPermission> {
         const newSubSystemPermission: SubSystemPermission = plainToClass(SubSystemPermission, subSystemPermissionDto);
         return this.repository.save(newSubSystemPermission);
     }

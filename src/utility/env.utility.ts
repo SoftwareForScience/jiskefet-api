@@ -40,7 +40,7 @@ export class EnvironmentUtility {
         }
 
         if (values) {
-            for (let i: number = 0; i < keys.length; i++) {
+            for (let i = 0; i < keys.length; i++) {
                 // Retrieve the starting keyword in order to determine which case to use
                 const startingKey: string = values[i].substr(0, values[i].indexOf(':'));
 
@@ -67,7 +67,7 @@ export class EnvironmentUtility {
                     case 'matches':
                         let possibleValues: string[];
                         possibleValues = values[i].replace('matches:', '').replace(/\s/g, '').split(',');
-                        if (possibleValues.indexOf(constants[keys[i]]) === -1) {
+                        if (!possibleValues.includes(constants[keys[i]])) {
                             errorMsg.push(`${[keys[i]]} does not match the possible string(s): ${possibleValues}.`);
                         }
                         break;
@@ -97,10 +97,12 @@ export class EnvironmentUtility {
         if (errorMsg.length) {
             if (errorMsg.length === 1) {
                 throw new EnvValueDoesNotMatchException(
-                    'Environment value does not match expected value: \n' + errorMsg[0]);
+                    'Environment value does not match expected value: \n' + errorMsg[0],
+                );
             }
             throw new EnvValueDoesNotMatchException(
-                'Environment value does not match expected value: \n' + errorMsg.join('\n'));
+                'Environment value does not match expected value: \n' + errorMsg.join('\n'),
+            );
         }
     }
 }

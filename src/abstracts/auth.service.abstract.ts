@@ -23,17 +23,16 @@ import { SUB_SYSTEM_TOKEN_EXPIRES_IN } from '../constants';
  * Handles authorization via OAuth 2.
  */
 export abstract class AuthService implements Authentication {
-
     protected oAuth2Client: oauth2.OAuthClient;
     protected oAuth2Config: oauth2.ModuleOptions = {
         client: {
             id: '<id>',
-            secret: '<secret>'
+            secret: '<secret>',
         },
         auth: {
             tokenHost: '<token_host>',
             tokenPath: '<token_path>',
-        }
+        },
     };
 
     constructor(
@@ -113,7 +112,7 @@ export abstract class AuthService implements Authentication {
             const jsonBody = JSON.parse(body);
             const createUserDto: CreateUserDto = {
                 externalUserId: jsonBody.id,
-                name: jsonBody.name
+                name: jsonBody.name,
             };
             return createUserDto;
         }).catch((error) => {
@@ -149,5 +148,4 @@ export abstract class AuthService implements Authentication {
      * @param accessToken
      */
     protected abstract getApiRequest(accessToken: string): Promise<OptionsWithUrl>;
-
 }

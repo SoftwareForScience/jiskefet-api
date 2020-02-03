@@ -13,9 +13,9 @@ import { SubSystemService } from '../services/subsystem.service';
 import { SubSystemController } from '../controllers/subsystem.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SubSystem])],
-  providers: [SubSystemService],
-  controllers: [SubSystemController],
-  exports: [SubSystemService],
+    imports: [TypeOrmModule.forFeature([SubSystem])],
+    providers: [SubSystemService],
+    controllers: [SubSystemController],
+    exports: [SubSystemService],
 })
 export class SubSystemModule { }

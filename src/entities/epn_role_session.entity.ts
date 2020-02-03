@@ -12,23 +12,23 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('epn_role_session')
 export class EpnRoleSession {
-
     @PrimaryGeneratedColumn({ name: 'session_number' })
     sessionNumber: number;
 
     @PrimaryColumn({
         name: 'epn_role_name',
         type: 'char',
-        length: 16
+        length: 16,
     })
     epnRoleName: string;
 
     @ManyToOne(
-        type => Run, run => run.epnRoleSessions,
+        type => Run,
+        run => run.epnRoleSessions,
         {
             primary: true,
-            eager: true
-        }
+            eager: true,
+        },
     )
     @JoinColumn({ name: 'fk_run_number' })
     run: Run;
@@ -63,7 +63,7 @@ export class EpnRoleSession {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     sessionStart: Date;
 
@@ -73,7 +73,7 @@ export class EpnRoleSession {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     sessionEnd: Date;
 }

@@ -9,18 +9,18 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { USE_INFO_LOGGER } from '../constants';
 
-@Entity('messages', { database: 'INFOLOGGER', synchronize: USE_INFO_LOGGER === 'true' ? true : false })
+@Entity('messages', { database: 'INFOLOGGER', synchronize: USE_INFO_LOGGER === 'true' })
 export class InfoLog {
     @Column({
         name: 'severity',
-        nullable: true
+        nullable: true,
     })
     severity: string;
 
     @Column({
         name: 'level',
         nullable: true,
-        unsigned: true
+        unsigned: true,
     })
     level: number;
 
@@ -28,83 +28,83 @@ export class InfoLog {
         name: 'timestamp',
         type: 'double',
         precision: 16,
-        scale: 6
+        scale: 6,
     })
     timestamp: number;
 
     @Column({
         name: 'hostname',
-        nullable: true
+        nullable: true,
     })
     hostname: string;
 
     @Column({
         name: 'rolename',
-        nullable: true
+        nullable: true,
     })
     rolename: string;
 
     @Column({
         name: 'pid',
         nullable: true,
-        unsigned: true
+        unsigned: true,
     })
     pid: number;
 
     @Column({
         name: 'username',
-        nullable: true
+        nullable: true,
     })
     username: string;
 
     @Column({
         name: 'system',
-        nullable: true
+        nullable: true,
     })
     system: string;
 
     @Column({
         name: 'facility',
-        nullable: true
+        nullable: true,
     })
     facility: string;
 
     @Column({
         name: 'detector',
-        nullable: true
+        nullable: true,
     })
     detector: string;
 
     @Column({
         name: 'partition',
-        nullable: true
+        nullable: true,
     })
     partition: string;
 
     @Column({
         name: 'run',
         nullable: true,
-        unsigned: true
+        unsigned: true,
     })
     run: number;
 
     @Column({
         name: 'errcode',
         nullable: true,
-        unsigned: true
+        unsigned: true,
     })
     errcode: number;
 
     @Column({
         name: 'errline',
         nullable: true,
-        unsigned: true
+        unsigned: true,
     })
     errline: number;
 
     @Column({
         name: 'errsource',
-        nullable: true
+        nullable: true,
     })
     errsource: string;
 

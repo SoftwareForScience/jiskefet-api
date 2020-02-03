@@ -20,13 +20,12 @@ import { USE_INFO_LOGGER } from '../constants';
 
 @Injectable()
 export class InfoLogService extends Logger {
-
     private readonly infoLogRepository: Repository<InfoLog>;
     private readonly INFO_LOG_DIR_PATH: string = 'infolog-data';
 
     constructor(
-        @InjectRepository(InfoLog) infoLogRepository: Repository<InfoLog>,
-        private readonly timeUtility: TimeUtility
+    @InjectRepository(InfoLog) infoLogRepository: Repository<InfoLog>,
+        private readonly timeUtility: TimeUtility,
     ) {
         super();
         this.ensureInfoLogDirExists();
@@ -111,7 +110,8 @@ export class InfoLogService extends Logger {
                         if (err) {
                             return console.log(err);
                         }
-                    });
+                    },
+                );
             });
         }
     }

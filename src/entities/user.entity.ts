@@ -19,7 +19,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('user')
 export class User {
-
     @PrimaryGeneratedColumn({ name: 'user_id' })
     @ApiModelProperty({
         type: 'integer',
@@ -30,7 +29,7 @@ export class User {
     @Column({
         name: 'external_id',
         type: 'int',
-        unique: true
+        unique: true,
     })
     @ApiModelProperty({
         type: 'integer',
@@ -40,7 +39,7 @@ export class User {
 
     @Column({
         name: 'sams_id',
-        type: 'int'
+        type: 'int',
     })
     @ApiModelProperty({
         type: 'integer',

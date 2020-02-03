@@ -21,11 +21,11 @@ describe('RunController', () => {
     let runToPost: CreateRunDto;
 
     const runNumber = Math.floor(+new Date() / 1000);
-    const activityId: string = 'run.controller.e2e-spec.ts';
+    const activityId = 'run.controller.e2e-spec.ts';
 
-    beforeAll(async () => {
+    beforeAll(async() => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule]
+            imports: [AppModule],
         }).compile();
 
         app = await moduleFixture.createNestApplication();
@@ -34,7 +34,7 @@ describe('RunController', () => {
         jwt = await getJwt(app);
     });
 
-    afterAll(async () => {
+    afterAll(async() => {
         await app.close();
     });
 
@@ -47,22 +47,22 @@ describe('RunController', () => {
             activityId,
             nDetectors: 16,
             nFlps: 7,
-            nEpns: 8
+            nEpns: 8,
         };
 
         it('should return status 201 and JSON Cotent-Type', () => {
             return request(app.getHttpServer())
-                .post(`/runs`)
+                .post('/runs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
                 .expect(201)
                 .expect('Content-Type', /json/);
         });
 
-        it(`should return an object containing ${activityId} as the activityId`, async () => {
+        it(`should return an object containing ${activityId} as the activityId`, async() => {
             runToPost.runNumber = runToPost.runNumber + 3;
             const response = await request(app.getHttpServer())
-                .post(`/runs`)
+                .post('/runs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(runToPost)
                 .set('Accept', 'application/json');
@@ -79,7 +79,7 @@ describe('RunController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object with a runs array', async () => {
+        it('should return an object with a runs array', async() => {
             const response = await request(app.getHttpServer())
                 .get('/runs')
                 .set('Authorization', `Bearer ${jwt}`);
@@ -97,7 +97,7 @@ describe('RunController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object', async () => {
+        it('should return an object', async() => {
             const response = await request(app.getHttpServer())
                 .get(`/runs/${runToPost.runNumber}`)
                 .set('Authorization', `Bearer ${jwt}`);
@@ -109,7 +109,7 @@ describe('RunController', () => {
 
     describe('PATCH /runs/{id}/logs', () => {
         const linkLogToRunDto: LinkLogToRunDto = {
-            logId: 1
+            logId: 1,
         };
 
         it('should return status 200 and JSON Content-Type', () => {
@@ -127,7 +127,7 @@ describe('RunController', () => {
             const patchRunDto: PatchRunDto = {
                 O2EndTime: new Date(),
                 TrgEndTime: new Date(),
-                runQuality: 'Unknown'
+                runQuality: 'Unknown',
             };
 
             return request(app.getHttpServer())

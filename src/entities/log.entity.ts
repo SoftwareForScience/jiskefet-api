@@ -14,7 +14,7 @@ import {
     JoinTable,
     OneToMany,
     ManyToOne,
-    JoinColumn
+    JoinColumn,
 } from 'typeorm';
 import { Tag } from './tag.entity';
 import { Attachment } from './attachment.entity';
@@ -25,7 +25,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('log')
 export class Log {
-
     @PrimaryGeneratedColumn({ name: 'log_id' })
     @ApiModelProperty({
         type: 'integer',
@@ -41,21 +40,22 @@ export class Log {
         {
             type: 'enum',
             enum: ['run', 'subsystem', 'announcement', 'intervention', 'comment'],
-        }
+        },
     )
     subtype: 'run' | 'subsystem' | 'announcement' | 'intervention' | 'comment';
+
     @ApiModelProperty(
         {
             type: User,
-        }
+        },
     )
     @ManyToOne(
         type => User,
         user => user.logs,
         {
             nullable: false,
-            cascade: ['insert']
-        }
+            cascade: ['insert'],
+        },
     )
     @JoinColumn({ name: 'fk_user_id' })
     user: User;
@@ -68,7 +68,7 @@ export class Log {
         {
             type: 'enum',
             enum: ['human', 'process'],
-        }
+        },
     )
     origin: 'human' | 'process';
 
@@ -78,7 +78,7 @@ export class Log {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     creationTime: Date;
 
@@ -115,7 +115,7 @@ export class Log {
 
     @Column({
         name: 'comment_fk_parent_log_id',
-        nullable: true
+        nullable: true,
     })
     @ApiModelProperty({
         required: false,
@@ -126,7 +126,7 @@ export class Log {
 
     @Column({
         name: 'comment_fk_root_log_id',
-        nullable: true
+        nullable: true,
     })
     @ApiModelProperty({
         required: false,
@@ -138,7 +138,7 @@ export class Log {
     @ApiModelProperty({
         type: Tag,
         isArray: true,
-        minProperties: 1
+        minProperties: 1,
     })
     @ManyToMany(type => Tag, tag => tag.logs)
     tags: Tag[];
@@ -149,23 +149,23 @@ export class Log {
     })
     @ManyToMany(
         type => Run,
-        run => run.logs
+        run => run.logs,
     )
     @JoinTable({
         name: 'runs_in_log',
         joinColumn: {
             name: 'fk_log_id',
-            referencedColumnName: 'logId'
+            referencedColumnName: 'logId',
         },
         inverseJoinColumn: {
             name: 'fk_run_number',
-            referencedColumnName: 'runNumber'
-        }
+            referencedColumnName: 'runNumber',
+        },
     })
     runs: Run[];
 
     @OneToMany(type => Attachment, attachment => attachment.log, {
-        cascade: ['insert']
+        cascade: ['insert'],
     })
     @ApiModelProperty({
         type: Attachment,

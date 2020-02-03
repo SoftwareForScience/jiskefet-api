@@ -12,7 +12,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('sub_system')
 export class SubSystem {
-
     @PrimaryGeneratedColumn({ name: 'subsystem_id' })
     @ApiModelProperty({
         type: 'integer',
@@ -28,7 +27,7 @@ export class SubSystem {
         {
             type: 'integer',
             isArray: true,
-        }
+        },
     )
     @OneToMany(type => SubSystemPermission, subSystemPermission => subSystemPermission.subsystem)
     subSystemPermissions: SubSystemPermission[];

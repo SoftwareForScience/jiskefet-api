@@ -15,7 +15,6 @@ import { IsOptional, IsNumber } from 'class-validator';
  */
 @Entity('overview')
 export class QueryOverviewDto {
-
     @ApiModelProperty({
         description: 'In which time range the logs of eachsubsystem should be posted',
         required: false,

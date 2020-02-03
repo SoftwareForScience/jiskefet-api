@@ -16,7 +16,7 @@ import {
     ApiConflictResponse,
     ApiOkResponse,
     ApiNotFoundResponse,
-    ApiResponse
+    ApiResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { HttpExceptionFilter } from '../filters/httpexception.filter';
@@ -37,9 +37,8 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @UseFilters(new HttpExceptionFilter())
 @Controller('tags')
 export class TagController {
-
     constructor(
-        private readonly tagService: TagService
+        private readonly tagService: TagService,
     ) { }
 
     /**
@@ -103,7 +102,7 @@ export class TagController {
     @ApiNotFoundResponse({ description: 'No Runs found for this Tag.' })
     async findRunsByTagId(@Param('id') tagId: number): Promise<ResponseObject<Tag>> {
         try {
-            const runsByTagId = await this.tagService.findRunsByTagId (tagId);
+            const runsByTagId = await this.tagService.findRunsByTagId(tagId);
             return createResponseItem(runsByTagId);
         } catch (error) {
             return createErrorResponse(error);

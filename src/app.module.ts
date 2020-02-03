@@ -45,22 +45,22 @@ import { SettingService } from './services/setting.service';
 import { SettingController } from './controllers/setting.controller';
 import { SettingModule } from './modules/setting.module';
 import {
-  TEST_DB_CONNECTION,
-  TEST_DB_HOST,
-  TEST_DB_PORT,
-  TEST_DB_USERNAME,
-  TEST_DB_PASSWORD,
-  TEST_DB_DATABASE,
-  TEST_DB_SYNCHRONIZE,
-  TYPEORM_CONNECTION,
-  TYPEORM_HOST,
-  TYPEORM_PORT,
-  TYPEORM_USERNAME,
-  TYPEORM_PASSWORD,
-  TYPEORM_DATABASE,
-  TYPEORM_LOGGING,
-  TYPEORM_SYNCHRONIZE,
-  USE_CERN_SSO
+    TEST_DB_CONNECTION,
+    TEST_DB_HOST,
+    TEST_DB_PORT,
+    TEST_DB_USERNAME,
+    TEST_DB_PASSWORD,
+    TEST_DB_DATABASE,
+    TEST_DB_SYNCHRONIZE,
+    TYPEORM_CONNECTION,
+    TYPEORM_HOST,
+    TYPEORM_PORT,
+    TYPEORM_USERNAME,
+    TYPEORM_PASSWORD,
+    TYPEORM_DATABASE,
+    TYPEORM_LOGGING,
+    TYPEORM_SYNCHRONIZE,
+    USE_CERN_SSO,
 } from './constants';
 import { FlpModule } from './modules/flp.module';
 import { FlpController } from './controllers/flp.controller';
@@ -72,89 +72,89 @@ import { TagService } from './services/tag.service';
 let databaseOptions;
 // Use a different database for running tests.
 if (process.env.NODE_ENV === 'test') {
-  databaseOptions = {
-    type: TEST_DB_CONNECTION,
-    host: TEST_DB_HOST,
-    port: +TEST_DB_PORT,
-    username: TEST_DB_USERNAME,
-    password: TEST_DB_PASSWORD,
-    database: TEST_DB_DATABASE,
-    entities: ['src/**/**.entity{.ts,.js}'],
-    synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
-    migrations: ['populate/*{.ts,.js}'],
-    migrationsRun: true
-  };
+    databaseOptions = {
+        type: TEST_DB_CONNECTION,
+        host: TEST_DB_HOST,
+        port: +TEST_DB_PORT,
+        username: TEST_DB_USERNAME,
+        password: TEST_DB_PASSWORD,
+        database: TEST_DB_DATABASE,
+        entities: ['src/**/**.entity{.ts,.js}'],
+        synchronize: TEST_DB_SYNCHRONIZE === 'true',
+        migrations: ['populate/*{.ts,.js}'],
+        migrationsRun: true,
+    };
 } else {
-  databaseOptions = {
-    type: TYPEORM_CONNECTION,
-    host: TYPEORM_HOST,
-    port: TYPEORM_PORT,
-    username: TYPEORM_USERNAME,
-    password: TYPEORM_PASSWORD,
-    database: TYPEORM_DATABASE,
-    entities: ['src/**/**.entity{.ts,.js}'],
-    logging: TYPEORM_LOGGING,
-    synchronize: TYPEORM_SYNCHRONIZE === 'true' ? true : false,
-    migrations: ['src/migration/*{.ts,.js}', 'src/populate/*{.ts,.js}'],
-    migrationsRun: true
+    databaseOptions = {
+        type: TYPEORM_CONNECTION,
+        host: TYPEORM_HOST,
+        port: TYPEORM_PORT,
+        username: TYPEORM_USERNAME,
+        password: TYPEORM_PASSWORD,
+        database: TYPEORM_DATABASE,
+        entities: ['src/**/**.entity{.ts,.js}'],
+        logging: TYPEORM_LOGGING,
+        synchronize: TYPEORM_SYNCHRONIZE === 'true',
+        migrations: ['src/migration/*{.ts,.js}', 'src/populate/*{.ts,.js}'],
+        migrationsRun: true,
     // what to do with the cli variable from ormconfig.json
-  };
+    };
 }
 
 const authServiceProvider = {
-  provide: AuthService,
-  useClass: USE_CERN_SSO === 'true'
-    ? CernAuthService
-    : GithubAuthService,
+    provide: AuthService,
+    useClass: USE_CERN_SSO === 'true'
+        ? CernAuthService
+        : GithubAuthService,
 };
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(databaseOptions),
-    RunModule,
-    LogModule,
-    FlpModule,
-    TagModule,
-    AttachmentModule,
-    SubSystemModule,
-    UserModule,
-    AuthModule,
-    SubSystemPermissionModule,
-    OverviewModule,
-    InfoLogModule,
-    SettingModule,
-  ],
-  controllers: [
-    AppController,
-    RunController,
-    LogController,
-    FlpController,
-    TagController,
-    AttachmentController,
-    SubSystemController,
-    UserController,
-    AuthController,
-    OverviewController,
-    SettingController,
-    CreatepdfController
-  ],
-  providers: [
-    AppService,
-    RunService,
-    LogService,
-    FlpSerivce,
-    TagService,
-    AttachmentService,
-    SubSystemService,
-    UserService,
-    authServiceProvider,
-    AuthUtility,
-    BCryptService,
-    SubSystemPermissionService,
-    OverviewService,
-    InfoLogService,
-    TimeUtility,
-    SettingService,
-    CreatePdfService
-  ],
+    imports: [
+        TypeOrmModule.forRoot(databaseOptions),
+        RunModule,
+        LogModule,
+        FlpModule,
+        TagModule,
+        AttachmentModule,
+        SubSystemModule,
+        UserModule,
+        AuthModule,
+        SubSystemPermissionModule,
+        OverviewModule,
+        InfoLogModule,
+        SettingModule,
+    ],
+    controllers: [
+        AppController,
+        RunController,
+        LogController,
+        FlpController,
+        TagController,
+        AttachmentController,
+        SubSystemController,
+        UserController,
+        AuthController,
+        OverviewController,
+        SettingController,
+        CreatepdfController,
+    ],
+    providers: [
+        AppService,
+        RunService,
+        LogService,
+        FlpSerivce,
+        TagService,
+        AttachmentService,
+        SubSystemService,
+        UserService,
+        authServiceProvider,
+        AuthUtility,
+        BCryptService,
+        SubSystemPermissionService,
+        OverviewService,
+        InfoLogService,
+        TimeUtility,
+        SettingService,
+        CreatePdfService,
+    ],
 })
 export class AppModule { }

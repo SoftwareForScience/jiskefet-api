@@ -29,8 +29,8 @@ export class LogService {
     private readonly threadUtility: ThreadUtility;
 
     constructor(
-        @InjectRepository(Log) logRepository: Repository<Log>,
-        @InjectRepository(Run) runRepository: Repository<Run>
+    @InjectRepository(Log) logRepository: Repository<Log>,
+        @InjectRepository(Run) runRepository: Repository<Run>,
     ) {
         this.logRepository = logRepository;
         this.runRepository = runRepository;
@@ -62,7 +62,7 @@ export class LogService {
      * @param queryLogDto queryfilters.
      */
     async find(queryLogDto?: QueryLogDto):
-        Promise<{ logs: Log[] | ThreadDto, additionalInformation: AdditionalOptions }> {
+    Promise<{ logs: Log[] | ThreadDto; additionalInformation: AdditionalOptions }> {
         // check to return thread or any logs
         if (queryLogDto.threadId) {
             return await this.findThread(queryLogDto.threadId);
@@ -97,8 +97,7 @@ export class LogService {
         }
         const run = await this.runRepository.findOne(linkRunToLogDto.runNumber);
         if (!run) {
-            throw new HttpException(
-                `Run with run number ${linkRunToLogDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
+            throw new HttpException(`Run with run number ${linkRunToLogDto.runNumber} does not exist.`, HttpStatus.NOT_FOUND);
         }
         log.runs = [...log.runs, run];
         await this.logRepository.save(log);
@@ -110,8 +109,8 @@ export class LogService {
      */
     async findLogsByUserId(
         userId: number,
-        queryLogDto: QueryLogDto
-    ): Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
+        queryLogDto: QueryLogDto,
+    ): Promise<{ logs: Log[]; additionalInformation: AdditionalOptions }> {
         let query = await this.logRepository
             .createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
@@ -120,7 +119,7 @@ export class LogService {
         if (queryLogDto.orderBy) {
             query = query.orderBy(
                 `log.${queryLogDto.orderBy}`,
-                queryLogDto.orderDirection || OrderDirection.asc
+                queryLogDto.orderDirection || OrderDirection.asc,
             );
         }
         const result = await query
@@ -132,8 +131,8 @@ export class LogService {
             additionalInformation: {
                 count: result[1],
                 pageNumber: queryLogDto.pageNumber,
-                pageSize: queryLogDto.pageSize
-            }
+                pageSize: queryLogDto.pageSize,
+            },
         };
     }
 
@@ -144,18 +143,21 @@ export class LogService {
      * @param Id this is ID of log
      */
     async getLogInfoParams(Id: number): Promise<any> {
-
         const result = await this.findLogById(Id);
         if (!result) {
-            throw new HttpException(
-                `Log with log id ${Id} does not exists.`, HttpStatus.NOT_FOUND
-            );
+            throw new HttpException(`Log with log id ${Id} does not exists.`, HttpStatus.NOT_FOUND);
         }
         const params = {
-            user: result.user.userId, external: result.user.externalUserId, sams: result.user.samsId,
-            logId: result.logId, subsytemID: result.subsystemFkSubsystemId, subtype: result.subtype,
-            origin: result.origin, creationTime: result.creationTime,
-            title: result.title, text: result.body
+            user: result.user.userId,
+            external: result.user.externalUserId,
+            sams: result.user.samsId,
+            logId: result.logId,
+            subsytemID: result.subsystemFkSubsystemId,
+            subtype: result.subtype,
+            origin: result.origin,
+            creationTime: result.creationTime,
+            title: result.title,
+            text: result.body,
         };
         return params;
     }
@@ -176,9 +178,7 @@ export class LogService {
         if (runId) {
             const run = await this.runRepository.findOne(runId);
             if (!run) {
-                throw new HttpException(
-                    `Run with run number ${runId} does not exist.`, HttpStatus.NOT_FOUND
-                );
+                throw new HttpException(`Run with run number ${runId} does not exist.`, HttpStatus.NOT_FOUND);
             }
             await log.runs.push(run);
         }
@@ -217,41 +217,41 @@ export class LogService {
      * @param queryLogDto queryfilters.
      */
     private async findAllLogs(queryLogDto: QueryLogDto):
-        Promise<{ logs: Log[], additionalInformation: AdditionalOptions }> {
+    Promise<{ logs: Log[]; additionalInformation: AdditionalOptions }> {
         let query = await this.logRepository.createQueryBuilder('log')
             .innerJoinAndSelect('log.user', 'user')
             .where('title like :title', {
-                title: queryLogDto.searchterm ? `%${queryLogDto.searchterm}%` : '%'
+                title: queryLogDto.searchterm ? `%${queryLogDto.searchterm}%` : '%',
             })
             .andWhere('subtype like :subtype', {
-                subtype: queryLogDto.subtype ? queryLogDto.subtype : '%'
+                subtype: queryLogDto.subtype ? queryLogDto.subtype : '%',
             })
             .andWhere('origin like :origin', {
-                origin: queryLogDto.origin ? queryLogDto.origin : '%'
+                origin: queryLogDto.origin ? queryLogDto.origin : '%',
             });
 
         if (queryLogDto.startCreationTime) {
             await query.andWhere('creation_time >= :startCreationTime', {
-                startCreationTime: queryLogDto.startCreationTime
+                startCreationTime: queryLogDto.startCreationTime,
             });
         }
 
         if (queryLogDto.endCreationTime) {
             await query.andWhere('creation_time <= :endCreationTime', {
-                endCreationTime: queryLogDto.endCreationTime
+                endCreationTime: queryLogDto.endCreationTime,
             });
         }
 
         if (queryLogDto.logId) {
             await query.andWhere('log_id = :id', {
-                id: queryLogDto.logId
+                id: queryLogDto.logId,
             });
         }
 
         if (queryLogDto.orderBy) {
             query = query.orderBy(
                 `log.${queryLogDto.orderBy}`,
-                queryLogDto.orderDirection || OrderDirection.asc
+                queryLogDto.orderDirection || OrderDirection.asc,
             );
         }
         const result = await query
@@ -263,8 +263,8 @@ export class LogService {
             additionalInformation: {
                 count: result[1],
                 pageNumber: queryLogDto.pageNumber,
-                pageSize: queryLogDto.pageSize
-            }
+                pageSize: queryLogDto.pageSize,
+            },
         };
     }
 
@@ -272,7 +272,7 @@ export class LogService {
      * Find a thread that contains the log with given @param logId.
      */
     private async findThread(logId: number):
-        Promise<{ logs: ThreadDto, additionalInformation: AdditionalOptions }> {
+    Promise<{ logs: ThreadDto; additionalInformation: AdditionalOptions }> {
         // Fetch the Log by given logId
         const log = await this.logRepository.findOne(logId);
 
@@ -289,8 +289,8 @@ export class LogService {
         const comments = await this.logRepository.find({
             where: [{
                 commentFkRootLogId: root.logId,
-                logId: Not(root.logId)
-            }]
+                logId: Not(root.logId),
+            }],
         });
 
         const amountOfComments = comments.length;
@@ -300,9 +300,8 @@ export class LogService {
         return {
             logs: threadStructured,
             additionalInformation: {
-                count: amountOfComments + 1
-            }
+                count: amountOfComments + 1,
+            },
         };
     }
-
 }
