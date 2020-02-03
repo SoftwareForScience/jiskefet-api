@@ -1,0 +1,78 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": [
+            "tsconfig.json",
+            "tsconfig.spec.json"
+        ]
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "standard-with-typescript",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "rules": {
+        "@typescript-eslint/indent": [
+            "error",
+            4
+        ],
+        "@typescript-eslint/member-delimiter-style": [
+            "error",
+            {
+                "multiline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                },
+                "singleline": {
+                    "delimiter": "semi",
+                    "requireLast": false
+                }
+            }
+        ],
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "@typescript-eslint/semi": [
+            "error"
+        ],
+        "@typescript-eslint/space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "@typescript-eslint/strict-boolean-expressions": "warn",
+        "comma-dangle": [
+            "error",
+            "always-multiline"
+        ],
+        "function-paren-newline": [
+            "error",
+            "multiline-arguments"
+        ],
+        "indent": "off",
+        "multiline-comment-style": [
+            "error",
+            "starred-block"
+        ],
+        "semi": "off",
+        "space-unary-ops": [
+            "error",
+            {
+                "words": false,
+                "nonwords": false
+            }
+        ],
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "block": {
+                    "balanced": true
+                }
+            }
+        ],
+        "valid-jsdoc": "warn"
+    }
+}
