@@ -53,7 +53,7 @@ function preCheck(): void {
         'typeof:isNumber',
         '',
         'matches:mysql, postgres, mariadb, mssql, mongodb',
-        `regex:${Regex.IP_OR_URL_OR_LOCALHOST}`,
+        '',
         '',
         '',
         '',

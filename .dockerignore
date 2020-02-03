@@ -1,0 +1,10 @@
+# Node specific
+node_modules/
+
+# Application specific
+infolog-data/
+
+# Docker specific
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
