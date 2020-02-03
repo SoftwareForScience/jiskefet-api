@@ -1,17 +1,23 @@
 language: node_js
-addons:
-  mariadb: '10.3'
 node_js:
   - 'stable'
-before_install:
-  - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
-install:
-  - npm install
-script:
-  # - tslint -c tslint.json 'src/**/*.ts'
-  - npm run lint
-  - npm test
-after_success: 
-  - codecov
-notifications:   
-  slack: jiskefet:cGYsslE19X0IqoUwQXwAR9tT
+
+jobs:
+  include:
+    - stage: lint
+      install:
+        - npm ci
+      script:
+        - npm run lint
+
+    - stage: test
+      addons:
+        mariadb: '10.3'
+      before_install:
+        - sudo mysql -e 'CREATE DATABASE IF NOT EXISTS test_jiskefet;'
+      install:
+        - npm ci
+      script:
+        - npm test
+      after_success:
+        - codecov
