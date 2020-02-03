@@ -87,7 +87,6 @@ export class InfoLogService extends Logger {
         if (USE_INFO_LOGGER === 'true') {
             this.infoLogRepository.save(infoLogs).then(() => {
                 const infoLog = new CreateInfologDto();
-                // tslint:disable-next-line:no-trailing-whitespace
                 infoLog.message = `Successfully saved InfoLogs that could not be persisted 
             to the database in the past due to a possible database outage.`;
                 this.logInfoLog(infoLog);
