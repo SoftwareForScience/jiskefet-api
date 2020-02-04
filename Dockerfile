@@ -1,13 +1,49 @@
 #
 # ---- Base ----
-FROM node:12.13.1 as base
+FROM centos:7.7.1908 as base
 
+# Change shell from 'sh' to 'bash'
+SHELL [ "/bin/bash", "-c" ]
+
+# Install required system dependencies
+RUN yum install --quiet --assumeyes \
+    bzip2 \
+    gcc \
+    g++ \
+    gcc-c++ \
+    make
+
+
+#
+# ---- Node Version Manager ----
+FROM base as nvm
+
+# Specify the required versions of NodeJS and Node Version Manager
+ENV NVM_VERSION=v0.35.2
+ENV NODE_VERSION=12.14.1
+
+# Specifiy the NVM install directory
+ENV NVM_DIR=/root/.nvm
+
+# Installs NVM which will automatically install NodeJS and NPM
+RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
+
+# Add the just installed NodeJS and NPM to the PATH
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+
+#
+# ---- Node ----
+FROM nvm as node
+
+# Create app directory
 WORKDIR /usr/src/app
 
 
 #
 # ---- Dependency ----
-FROM base as dependencies
+FROM node as dependencies
 
 # Copy package.json and package-lock.json to the container.
 COPY package*.json ./
