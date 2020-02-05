@@ -65,7 +65,7 @@ COPY . .
 FROM build as release
 
 # Expose the port to the Docker instance (not the host!).
-EXPOSE 4000
+EXPOSE 3000
 
 # Run start script as specified in package.json
 CMD [ "npm", "start" ]
