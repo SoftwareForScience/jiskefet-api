@@ -16,13 +16,12 @@ import { Log } from '../entities/log.entity';
 
 @Injectable()
 export class AttachmentService {
-
     private readonly repository: Repository<Attachment>;
     private readonly logRepository: Repository<Log>;
 
     constructor(
-        @InjectRepository(Attachment) repository: Repository<Attachment>,
-        @InjectRepository(Log) logRepository: Repository<Log>
+    @InjectRepository(Attachment) repository: Repository<Attachment>,
+        @InjectRepository(Log) logRepository: Repository<Log>,
     ) {
         this.repository = repository;
         this.logRepository = logRepository;
@@ -38,9 +37,7 @@ export class AttachmentService {
         if (logId) {
             const log = await this.logRepository.findOne(logId);
             if (!log) {
-                throw new HttpException(
-                    `Log for logId ${logId} doesn't exist.`, HttpStatus.NOT_FOUND
-                );
+                throw new HttpException(`Log for logId ${logId} doesn't exist.`, HttpStatus.NOT_FOUND);
             }
             AttachmentEntity.log = log;
         }

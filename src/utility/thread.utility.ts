@@ -38,7 +38,6 @@ export class ThreadUtility {
      * @param thread return a threadDto
      */
     private addComments(comments: Log[], parentId: number, thread: ThreadDto): any {
-        // tslint:disable-next-line:prefer-for-of
         for (let a = 0; a < comments.length; a++) {
             if (comments[a].commentFkParentLogId === parentId) {
                 const subComment = comments[a].toThreadDto();

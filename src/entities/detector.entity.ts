@@ -13,7 +13,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('detector')
 export class Detector {
-
     @PrimaryGeneratedColumn({ name: 'detector_id' })
     @ApiModelProperty({
         type: 'integer',

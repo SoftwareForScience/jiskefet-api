@@ -11,9 +11,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BCryptService {
-    // let end user decide whether he wants to modify the number of saltRounds.
-    // private saltRounds: number = process.env.NUMBER_SALT_ROUNDS;
-    private saltRounds: number = 10;
+    /*
+     * let end user decide whether he wants to modify the number of saltRounds.
+     * private saltRounds: number = process.env.NUMBER_SALT_ROUNDS;
+     */
+    private readonly saltRounds = 10;
 
     /**
      * Hash token with bcrypt

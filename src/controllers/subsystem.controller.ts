@@ -23,7 +23,8 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @Controller('subsystems')
 export class SubSystemController {
     constructor(
-        private readonly subSystemService: SubSystemService) { }
+        private readonly subSystemService: SubSystemService,
+    ) { }
 
     /**
      * Get all subsystem

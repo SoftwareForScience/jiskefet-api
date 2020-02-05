@@ -13,7 +13,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('run_eor_history')
 export class RunEorHistory {
-
     @PrimaryGeneratedColumn({ name: 'eor_history_id' })
     eorHistoryId: number;
 
@@ -21,8 +20,8 @@ export class RunEorHistory {
         type => Run,
         run => run.runQualityHistories,
         {
-            primary: true
-        }
+            primary: true,
+        },
     )
     @JoinColumn({ name: 'fk_run_number' })
     run: Run;
@@ -37,8 +36,8 @@ export class RunEorHistory {
         type => User,
         user => user.runEorHistories,
         {
-            nullable: false
-        }
+            nullable: false,
+        },
     )
     @JoinColumn({ name: 'fk_changed_by_user_id' })
     user: User;
@@ -49,7 +48,7 @@ export class RunEorHistory {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     changeTime: Date;
 

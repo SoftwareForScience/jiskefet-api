@@ -22,11 +22,10 @@ import { CLIENT_ID, CLIENT_SECRET, CERN_REGISTERED_URI } from '../constants';
  */
 @Injectable()
 export class CernAuthService extends AuthService {
-
-    private cernRegisteredURI: string;
+    private readonly cernRegisteredURI: string;
 
     constructor(
-        @Inject(UserService) userService: UserService,
+    @Inject(UserService) userService: UserService,
         @Inject(SubSystemPermissionService) subSystemPermissionService: SubSystemPermissionService,
         @Inject(BCryptService) bcryptService: BCryptService,
         @Inject(JwtService) jwtService: JwtService,
@@ -36,10 +35,12 @@ export class CernAuthService extends AuthService {
         this.oAuth2Config.client.id = CLIENT_ID;
         this.oAuth2Config.client.secret = CLIENT_SECRET;
 
-        // if (CERN_REGISTERED_URI === undefined
-        //     || CERN_REGISTERED_URI === '') {
-        //     throw new InvalidSettingException('CERN_REGISTERED_URI must be filled in');
-        // }
+        /*
+         * if (CERN_REGISTERED_URI === undefined
+         *     || CERN_REGISTERED_URI === '') {
+         *     throw new InvalidSettingException('CERN_REGISTERED_URI must be filled in');
+         * }
+         */
 
         this.cernRegisteredURI = CERN_REGISTERED_URI;
 
@@ -57,13 +58,12 @@ export class CernAuthService extends AuthService {
      */
     protected async getToken(code: string): Promise<string> {
         try {
-
             // This line will return a 400 Bad Request error (Invalid grant)
             const authorizationGrant =
                 await this.oAuth2Client.authorizationCode.getToken({
                     code,
-                    redirect_uri: this.cernRegisteredURI
-                    } as any);
+                    redirect_uri: this.cernRegisteredURI,
+                } as any);
             const accessTokenObject = await this.oAuth2Client.accessToken.create(authorizationGrant);
 
             if (!accessTokenObject.token.access_token) {
@@ -86,8 +86,8 @@ export class CernAuthService extends AuthService {
             url: 'https://oauthresource.web.cern.ch/api/User',
             headers: {
                 'User-Agent': 'Jiskefet',
-                'Authorization': `bearer ${accessToken}`
-            }
+                Authorization: `bearer ${accessToken}`,
+            },
         };
     }
 }

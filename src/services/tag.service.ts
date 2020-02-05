@@ -21,7 +21,7 @@ export class TagService {
     private readonly tagRepository: Repository<Tag>;
 
     constructor(
-        @InjectRepository(Tag) tagRepository: Repository<Tag>
+    @InjectRepository(Tag) tagRepository: Repository<Tag>,
     ) {
         this.tagRepository = tagRepository;
     }
@@ -43,7 +43,7 @@ export class TagService {
         const query = await this.tagRepository.createQueryBuilder('tag')
             .select('tag', 'tag')
             .where('tag_text like :tagText', {
-                tagText: queryTagDto.tagText ? queryTagDto.tagText : '%'
+                tagText: queryTagDto.tagText ? queryTagDto.tagText : '%',
             })
             .getMany();
         return query;

@@ -19,9 +19,8 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('run')
 export class Run {
-
     @PrimaryColumn({
-        name: 'run_number'
+        name: 'run_number',
     })
     @ApiModelProperty({
         type: 'integer',
@@ -57,7 +56,7 @@ export class Run {
     @ApiModelProperty({
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     TrgEndTime: Date;
 
@@ -69,14 +68,14 @@ export class Run {
     @ApiModelProperty({
         required: false,
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     O2EndTime: Date;
 
     @Column({
         name: 'activity_id',
         type: 'char',
-        length: 64
+        length: 64,
     })
     @ApiModelProperty()
     activityId: string;
@@ -87,7 +86,7 @@ export class Run {
         enum: [
             'PHYSICS',
             'COSMICS',
-            'TECHNICAL'
+            'TECHNICAL',
         ],
     })
     @ApiModelProperty(
@@ -96,9 +95,9 @@ export class Run {
             enum: [
                 'PHYSICS',
                 'COSMICS',
-                'TECHNICAL'
+                'TECHNICAL',
             ],
-        }
+        },
     )
     runType: ['PHYSICS' | 'COSMICS' | 'TECHNICAL'];
 
@@ -108,7 +107,7 @@ export class Run {
         enum: [
             'Good',
             'Bad',
-            'Unknown'
+            'Unknown',
         ],
         nullable: true,
     })
@@ -119,9 +118,9 @@ export class Run {
             enum: [
                 'Good',
                 'Bad',
-                'Unknown'
+                'Unknown',
             ],
-        }
+        },
     )
     runQuality: ['Good' | 'Bad' | 'Unknown'];
 
@@ -193,7 +192,7 @@ export class Run {
     @ApiModelProperty({
         type: 'integer',
         isArray: true,
-        minProperties: 1
+        minProperties: 1,
     })
     @ManyToMany(type => Tag, tag => tag.runs)
     tags: Tag[];
@@ -201,7 +200,7 @@ export class Run {
     @ApiModelProperty({
         type: 'integer',
         isArray: true,
-        minProperties: 1
+        minProperties: 1,
     })
     @ManyToMany(type => Log, log => log.runs)
     logs: Log[];
@@ -211,7 +210,7 @@ export class Run {
         {
             type: EpnRoleSession,
             isArray: true,
-        }
+        },
     )
     epnRoleSessions: EpnRoleSession[];
 

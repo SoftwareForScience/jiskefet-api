@@ -15,7 +15,7 @@ import {
     BadRequestException,
     UnauthorizedException,
     NotFoundException,
-    UseFilters
+    UseFilters,
 } from '@nestjs/common';
 import {
     ApiImplicitQuery,
@@ -23,7 +23,7 @@ import {
     ApiOperation,
     ApiResponse,
     ApiOkResponse,
-    ApiUnprocessableEntityResponse
+    ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { AuthUtility } from '../utility/auth.utility';
 import { UserService } from '../services/user.service';
@@ -59,14 +59,14 @@ export class AuthController {
     @Get('/auth')
     @ApiOperation({ title: 'Authenticate a user by giving an Authorization Grant.' })
     @ApiOkResponse({
-        description: 'User has successfully authenticated and a JWT has been given as a response.'
+        description: 'User has successfully authenticated and a JWT has been given as a response.',
     })
     @ApiUnprocessableEntityResponse({
-        description: 'User has not provided an Authorization Grant as a query parameter.'
+        description: 'User has not provided an Authorization Grant as a query parameter.',
     })
     @ApiResponse({
         status: 401,
-        description: 'User is unauthorized due to an invalid Authorization Grant.'
+        description: 'User is unauthorized due to an invalid Authorization Grant.',
     })
     @ApiImplicitQuery({ name: 'grant', required: true, type: 'string' })
     async auth(@Query() query?: any): Promise<{ token: string }> {
@@ -96,15 +96,15 @@ export class AuthController {
     @Get('/user/profile')
     @ApiOperation({ title: 'Returns the user\'s profile' })
     @ApiOkResponse({
-        description: 'User successfully received profile information.'
+        description: 'User successfully received profile information.',
     })
     @ApiResponse({
         status: 400,
-        description: 'No JWT could be found in headers.'
+        description: 'No JWT could be found in headers.',
     })
     @ApiResponse({
         status: 401,
-        description: 'User is unauthorized'
+        description: 'User is unauthorized',
     })
     async profile(@Headers() headers: any): Promise<ResponseObject<any>> {
         try {
@@ -114,7 +114,7 @@ export class AuthController {
                 process.env.ALLOW_ANONYMOUS.toLowerCase() === 'true') {
                     return createResponseItem({
                         userData: {
-                            userId: 1
+                            userId: 1,
                         },
                         profileData: {
                             name: 'Anonymous',
@@ -127,8 +127,8 @@ export class AuthController {
                             identityclass: 'CERN Registered',
                             federation: 'CERN',
                             phone: null,
-                            mobile: null
-                        }
+                            mobile: null,
+                        },
                     });
                 }
                 jwt = null;
@@ -155,15 +155,15 @@ export class AuthController {
     @Get('/test-token')
     @ApiOperation({ title: 'Returns a JWT for authorization when running end-to-end tests.' })
     @ApiOkResponse({
-        description: 'The hashed secret given matches the secret in the environment and a JWT is returned.'
+        description: 'The hashed secret given matches the secret in the environment and a JWT is returned.',
     })
     @ApiResponse({
         status: 400,
-        description: 'The required query parameter \'hashedSecret\' is missing.'
+        description: 'The required query parameter \'hashedSecret\' is missing.',
     })
     @ApiResponse({
         status: 401,
-        description: 'Hashed secret was not accepted'
+        description: 'Hashed secret was not accepted',
     })
     @ApiImplicitQuery({ name: 'hashedSecret', required: false, type: 'string' })
     async testToken(@Query() query?: any): Promise<ResponseObject<string>> {
@@ -183,10 +183,11 @@ export class AuthController {
                     return createResponseItem(jwt);
                 } else {
                     throw new UnauthorizedException(
-                        'The hashed secret given does not match the secret in the environment.');
+                        'The hashed secret given does not match the secret in the environment.',
+                    );
                 }
             default:
-            throw new NotFoundException();
+                throw new NotFoundException();
         }
     }
 }

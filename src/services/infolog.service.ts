@@ -20,13 +20,12 @@ import { USE_INFO_LOGGER } from '../constants';
 
 @Injectable()
 export class InfoLogService extends Logger {
-
     private readonly infoLogRepository: Repository<InfoLog>;
     private readonly INFO_LOG_DIR_PATH: string = 'infolog-data';
 
     constructor(
-        @InjectRepository(InfoLog) infoLogRepository: Repository<InfoLog>,
-        private readonly timeUtility: TimeUtility
+    @InjectRepository(InfoLog) infoLogRepository: Repository<InfoLog>,
+        private readonly timeUtility: TimeUtility,
     ) {
         super();
         this.ensureInfoLogDirExists();
@@ -87,7 +86,6 @@ export class InfoLogService extends Logger {
         if (USE_INFO_LOGGER === 'true') {
             this.infoLogRepository.save(infoLogs).then(() => {
                 const infoLog = new CreateInfologDto();
-                // tslint:disable-next-line:no-trailing-whitespace
                 infoLog.message = `Successfully saved InfoLogs that could not be persisted 
             to the database in the past due to a possible database outage.`;
                 this.logInfoLog(infoLog);
@@ -112,7 +110,8 @@ export class InfoLogService extends Logger {
                         if (err) {
                             return console.log(err);
                         }
-                    });
+                    },
+                );
             });
         }
     }

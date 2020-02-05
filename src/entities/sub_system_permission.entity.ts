@@ -13,7 +13,7 @@ import {
     JoinColumn,
     ManyToMany,
     JoinTable,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SubSystem } from './sub_system.entity';
 import { User } from './user.entity';
@@ -22,7 +22,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('sub_system_permission')
 export class SubSystemPermission {
-
     @PrimaryGeneratedColumn({ name: 'sub_system_permission_id' })
     @ApiModelProperty()
     subSystemPermissionId: number;
@@ -30,64 +29,64 @@ export class SubSystemPermission {
     @ApiModelProperty(
         {
             type: User,
-        }
+        },
     )
     @ManyToOne(
         type => User,
         user => user.subSystemPermissions,
         {
             nullable: false,
-            cascade: ['insert']
-        }
+            cascade: ['insert'],
+        },
     )
     @JoinColumn({
-        name: 'fk_user_id'
+        name: 'fk_user_id',
     })
     user: User;
 
     @ApiModelProperty(
         {
             type: SubSystem,
-        }
+        },
     )
     @ManyToOne(
         type => SubSystem,
         subSystem => subSystem.subSystemPermissions,
         {
             nullable: false,
-            cascade: ['insert']
-        }
+            cascade: ['insert'],
+        },
     )
     @JoinColumn({
-        name: 'fk_subsystem_id'
+        name: 'fk_subsystem_id',
     })
     subsystem: SubSystem;
 
     @ApiModelProperty()
     @Column({
         name: 'sub_system_hash',
-        type: 'varchar'
+        type: 'varchar',
     })
     subSystemHash: string;
 
     @ApiModelProperty()
     @Column({
         name: 'sub_system_token_description',
-        type: 'varchar'
+        type: 'varchar',
     })
     subSystemTokenDescription: string;
 
     @ApiModelProperty()
     @Column({
         name: 'is_member',
-        type: 'tinyint'
+        type: 'tinyint',
     })
     isMember: boolean;
 
     @ApiModelProperty()
     @Column({
         name: 'edit_eor_reason',
-        type: 'tinyint'
+        type: 'tinyint',
     })
     editEorReason: boolean;
 
@@ -95,19 +94,19 @@ export class SubSystemPermission {
         {
             type: SubSystemRole,
             isArray: true,
-        }
+        },
     )
     @ManyToMany(type => SubSystemRole)
     @JoinTable({
         name: 'sub_system_permission_in_sub_system_role',
         joinColumn: {
             name: 'fk_sub_system_permission_id',
-            referencedColumnName: 'subSystemPermissionId'
+            referencedColumnName: 'subSystemPermissionId',
         },
         inverseJoinColumn: {
             name: 'fk_sub_system_role_id',
-            referencedColumnName: 'subSystemRoleId'
-        }
+            referencedColumnName: 'subSystemRoleId',
+        },
     })
     subSystemRoles: SubSystemRole[];
 }

@@ -21,9 +21,8 @@ import { CLIENT_ID, CLIENT_SECRET } from '../constants';
  */
 @Injectable()
 export class GithubAuthService extends AuthService {
-
     constructor(
-        @Inject(UserService) userService: UserService,
+    @Inject(UserService) userService: UserService,
         @Inject(SubSystemPermissionService) subSystemPermissionService: SubSystemPermissionService,
         @Inject(BCryptService) bcryptService: BCryptService,
         @Inject(JwtService) jwtService: JwtService,
@@ -65,8 +64,8 @@ export class GithubAuthService extends AuthService {
             url: 'https://api.github.com/user',
             headers: {
                 'User-Agent': 'request',
-                'Authorization': `token ${accessToken}`
-            }
+                Authorization: `token ${accessToken}`,
+            },
         };
     }
 }

@@ -14,7 +14,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 @Entity('detector_quality_history')
 export class DetectorQualityHistory {
-
     @PrimaryGeneratedColumn({ name: 'detector_quality_history_id' })
     detectorQualityHistoryId: number;
 
@@ -22,8 +21,8 @@ export class DetectorQualityHistory {
         type => Run,
         run => run.detectorQualityHistories,
         {
-            primary: true
-        }
+            primary: true,
+        },
     )
     @JoinColumn({ name: 'fk_run_number' })
     run: Run;
@@ -32,8 +31,8 @@ export class DetectorQualityHistory {
         type => Detector,
         detector => detector.detectorQualityHistories,
         {
-            primary: true
-        }
+            primary: true,
+        },
     )
     @JoinColumn({ name: 'fk_detector_id' })
     detector: Detector;
@@ -42,8 +41,8 @@ export class DetectorQualityHistory {
         type => User,
         user => user.detectorQualityHistories,
         {
-            nullable: false
-        }
+            nullable: false,
+        },
     )
     @JoinColumn({ name: 'fk_changed_by_user_id' })
     user: User;
@@ -54,7 +53,7 @@ export class DetectorQualityHistory {
     })
     @ApiModelProperty({
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
     })
     changeTime: Date;
 

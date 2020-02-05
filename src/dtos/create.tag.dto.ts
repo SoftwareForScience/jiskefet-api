@@ -10,10 +10,9 @@ import { IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class CreateTagDto {
-
     @ApiModelProperty({
         example: '#ALICE',
-        description: 'The text of the tag'
+        description: 'The text of the tag',
     })
     @IsString()
     tagText: string;

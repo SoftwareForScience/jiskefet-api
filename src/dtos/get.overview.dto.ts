@@ -9,7 +9,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class GetOverviewDto {
-
     @ApiModelProperty({
         type: 'string',
     })

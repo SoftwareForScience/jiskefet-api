@@ -13,7 +13,7 @@ import {
     ApiOkResponse,
     ApiNotFoundResponse,
     ApiCreatedResponse,
-    ApiConflictResponse
+    ApiConflictResponse,
 } from '@nestjs/swagger';
 import { UseGuards, Controller, Get, Param, Patch, Post, Body, UseFilters } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -32,10 +32,10 @@ import { JwtAuthGuard } from '../common/auth.guard';
 @UseFilters(new HttpExceptionFilter())
 @Controller('flp')
 export class FlpController {
-
     constructor(
-        private readonly flpService: FlpSerivce
+        private readonly flpService: FlpSerivce,
     ) { }
+
     /**
      * Find a specific Flp. /flp/id
      * @param id unique identifier for a Flp.
@@ -82,8 +82,9 @@ export class FlpController {
     @ApiNotFoundResponse({ description: 'The Run number or/and FLP name does not exist.' })
     async updateById(
         @Param('id') runId: number,
-        @Param('name') flpName: string,
-        @Body() request: PatchFlpDto): Promise<ResponseObject<FlpRole>> {
+            @Param('name') flpName: string,
+            @Body() request: PatchFlpDto,
+    ): Promise<ResponseObject<FlpRole>> {
         // Update bytes that are produced for the flp (during runtime).
         try {
             const flp = await this.flpService.patch(flpName, runId, request);

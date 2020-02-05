@@ -14,9 +14,9 @@ import { Run } from '../entities/run.entity';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Run])],
-  providers: [RunService],
-  controllers: [RunController],
-  exports: [RunService],
+    imports: [TypeOrmModule.forFeature([Run])],
+    providers: [RunService],
+    controllers: [RunController],
+    exports: [RunService],
 })
 export class RunModule { }

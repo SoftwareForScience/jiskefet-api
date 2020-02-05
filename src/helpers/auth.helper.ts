@@ -22,7 +22,7 @@ dotenv.config();
  * @param app Nest application.
  * @returns JWT string
  */
-export const getJwt = async (app: INestApplication): Promise<string> => {
+export const getJwt = async(app: INestApplication): Promise<string> => {
     const bcryptService = new BCryptService();
     const hashedSecret = await bcryptService.hashToken(JWT_SECRET_KEY);
     const response = await request(app.getHttpServer())

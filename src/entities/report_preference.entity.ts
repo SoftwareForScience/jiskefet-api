@@ -11,13 +11,12 @@ import { User } from './user.entity';
 
 @Entity('report_preference')
 export class ReportPreference {
-
     @ManyToOne(
         type => User,
         user => user.reportPreferences,
         {
-            primary: true
-        }
+            primary: true,
+        },
     )
     @JoinColumn({ name: 'fk_user_id' })
     user: User;

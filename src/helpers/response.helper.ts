@@ -11,7 +11,7 @@ import {
     CollectionSuccessObject,
     SuccessObject,
     ErrorObject,
-    InnerError
+    InnerError,
 } from '../interfaces/response_object.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
@@ -21,7 +21,7 @@ export const createResponseItem = <T>(item: T, meta?: Meta, additionalData?: any
         meta,
         data: {
             ...additionalData,
-            item
+            item,
         },
     };
 };
@@ -33,7 +33,7 @@ export const createResponseItems = <T>(
         meta,
         data: {
             ...additionalData,
-            items
+            items,
         },
     };
 };
@@ -59,7 +59,7 @@ export const createErrorResponse = <T>(
                     code: errorCode,
                     message: httpError ? httpError.message : 'Oops, something went wrong',
                     details: stackTrace,
-                    innerError
+                    innerError,
                 },
             };
             break;
@@ -72,7 +72,7 @@ export const createErrorResponse = <T>(
                     code: errorCode,
                     message: httpError ? httpError.message : 'Oops, something went wrong',
                     details,
-                    innerError
+                    innerError,
                 },
             };
     }

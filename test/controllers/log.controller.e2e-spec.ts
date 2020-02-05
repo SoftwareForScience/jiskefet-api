@@ -18,9 +18,9 @@ describe('LogController', () => {
     let app: INestApplication;
     let jwt: string;
 
-    beforeAll(async () => {
+    beforeAll(async() => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule]
+            imports: [AppModule],
         }).compile();
 
         app = await moduleFixture.createNestApplication();
@@ -29,7 +29,7 @@ describe('LogController', () => {
         jwt = await getJwt(app);
     });
 
-    afterAll(async () => {
+    afterAll(async() => {
         await app.close();
     });
 
@@ -40,21 +40,21 @@ describe('LogController', () => {
             title: 'test log',
             body: 'text of test log',
             run: 1,
-            user: 1
+            user: 1,
         };
 
         it('should return status 201 and JSON Content-Type', () => {
             return request(app.getHttpServer())
-                .post(`/logs`)
+                .post('/logs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
                 .expect(201)
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object containing "test log" as a title', async () => {
+        it('should return an object containing "test log" as a title', async() => {
             const response = await request(app.getHttpServer())
-                .post(`/logs`)
+                .post('/logs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
                 .set('Accept', 'application/json');
@@ -65,7 +65,7 @@ describe('LogController', () => {
             // non existing run
             logToPost.run = -1;
             return request(app.getHttpServer())
-                .post(`/logs`)
+                .post('/logs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
                 .expect(404)
@@ -75,7 +75,7 @@ describe('LogController', () => {
         it('should return status 400 and JSON Content-Type', () => {
             logToPost = null;
             return request(app.getHttpServer())
-                .post(`/logs`)
+                .post('/logs')
                 .set('Authorization', `Bearer ${jwt}`)
                 .send(logToPost)
                 .expect(400)
@@ -92,7 +92,7 @@ describe('LogController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object with a logs array', async () => {
+        it('should return an object with a logs array', async() => {
             const response = await request(app.getHttpServer())
                 .get('/logs')
                 .set('Authorization', `Bearer ${jwt}`);
@@ -110,7 +110,7 @@ describe('LogController', () => {
                 .expect('Content-Type', /json/);
         });
 
-        it('should return an object', async () => {
+        it('should return an object', async() => {
             const response = await request(app.getHttpServer())
                 .get(`/logs/${1}`)
                 .set('Authorization', `Bearer ${jwt}`);
@@ -121,7 +121,7 @@ describe('LogController', () => {
 
     describe('PATCH /logs/{id}/runs', () => {
         const linkRunToLogDto: LinkRunToLogDto = {
-            runNumber: 1
+            runNumber: 1,
         };
 
         it('should link a run to a log', () => {

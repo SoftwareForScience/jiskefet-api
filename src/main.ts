@@ -21,7 +21,7 @@ import { join } from 'path';
  * Check the .env against the array of variables.
  * if one of the variables is missing or does not pass the check, the program will exit.
  */
-//#region
+// #region
 function preCheck(): void {
     const envUtil = new EnvironmentUtility();
     let keys: string[] = [
@@ -43,7 +43,7 @@ function preCheck(): void {
         'SUB_SYSTEM_TOKEN_EXPIRES_IN',
         'CLIENT_ID',
         'CLIENT_SECRET',
-        'AUTH_REDIRECT_URI'
+        'AUTH_REDIRECT_URI',
     ];
 
     let values: string[] = [
@@ -85,7 +85,7 @@ function preCheck(): void {
             'TEST_DB_DATABASE',
             'TEST_DB_PORT',
             'TEST_DB_SYNCHRONIZE',
-            'TEST_DB_LOGGING'
+            'TEST_DB_LOGGING',
         ];
 
         values = [
@@ -102,7 +102,7 @@ function preCheck(): void {
         envUtil.checkEnv(keys, values);
     }
 }
-//#endregion
+// #endregion
 
 preCheck();
 
@@ -111,9 +111,11 @@ async function bootstrap(): Promise<void> {
     app.enableCors();
     app.setBaseViewsDir(join(__dirname, 'views'));
     app.setViewEngine('hbs');
-    // Increases the packet limit to 15MB instead of the default 100kb
-    // app.use(bodyParser.json({ limit: 5000000 }));
-    // app.use(bodyParser.urlencoded({ limit: 5000000, extended: true }));
+    /*
+     * Increases the packet limit to 15MB instead of the default 100kb
+     * app.use(bodyParser.json({ limit: 5000000 }));
+     * app.use(bodyParser.urlencoded({ limit: 5000000, extended: true }));
+     */
 
     const options = new DocumentBuilder()
         .setTitle(APPLICATION_NAME)

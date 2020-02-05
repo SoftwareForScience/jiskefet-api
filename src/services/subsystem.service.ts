@@ -13,7 +13,6 @@ import { SubSystem } from '../entities/sub_system.entity';
 
 @Injectable()
 export class SubSystemService {
-
     private readonly repository: Repository<SubSystem>;
 
     constructor(@InjectRepository(SubSystem) repository: Repository<SubSystem>) {

@@ -20,7 +20,6 @@ import { User } from '../entities/user.entity';
  */
 @Entity('logs')
 export class QueryLogDto {
-
     @ApiModelProperty({
         description: 'On which field to order on.',
         required: false,
@@ -36,7 +35,7 @@ export class QueryLogDto {
     @IsEnum(OrderDirection, {
         each: true,
         message: `orderDirection must be of enum string types:
-            ${_.values(OrderDirection).map((x: OrderDirection) => x)}.`
+            ${_.values(OrderDirection).map((x: OrderDirection) => x)}.`,
     })
     @IsOptional()
     orderDirection?: OrderDirection;

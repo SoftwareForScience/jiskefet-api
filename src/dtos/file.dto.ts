@@ -7,7 +7,6 @@
  */
 
 export class FileDto {
-
     fieldname: string;
 
     originalname: string;

@@ -31,16 +31,16 @@ if (USE_INFO_LOGGER === 'true') {
             password: 'root',
             database: 'INFOLOGGER',
             synchronize: true,
-            logging: true
-        })
+            logging: true,
+        }),
     ];
 }
 
 @Global()
 @Module({
-        imports: [
-            ...imports
-        ],
+    imports: [
+        ...imports,
+    ],
     providers: [InfoLogService, TimeUtility],
     exports: [InfoLogService],
 })

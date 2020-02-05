@@ -15,7 +15,6 @@ import { IsInt, IsString, IsEnum, IsDateString, IsNumber } from 'class-validator
 import { RunType } from '../enums/run.runtype.enum';
 
 export class CreateRunDto {
-
     @ApiModelProperty({
         example: 1,
         description: 'The id of the run',
@@ -46,7 +45,7 @@ export class CreateRunDto {
     @ApiModelProperty({
         example: 'COSMICS',
         description: 'What kind of run.',
-        enum: ['PHYSICS' , 'COSMICS' , 'TECHNICAL'],
+        enum: ['PHYSICS', 'COSMICS', 'TECHNICAL'],
     })
     @IsEnum(RunType, { each: true, message: 'Each value in subtype must be a valid enum value' })
     readonly runType: string;

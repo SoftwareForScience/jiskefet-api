@@ -15,7 +15,6 @@ import { IsString, IsBoolean } from 'class-validator';
 import { SubSystem } from '../entities/sub_system.entity';
 
 export class CreateSubSystemPermissionDto {
-
     @ApiModelProperty({
         type: 'integer',
         format: 'int64',

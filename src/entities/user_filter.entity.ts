@@ -11,7 +11,6 @@ import { User } from './user.entity';
 
 @Entity('user_filter')
 export class UserFilter {
-
     @PrimaryGeneratedColumn({ name: 'filter_id' })
     filterId: number;
 
@@ -19,8 +18,8 @@ export class UserFilter {
         type => User,
         user => user.userFilters,
         {
-            primary: true
-        }
+            primary: true,
+        },
     )
     @JoinColumn({ name: 'fk_user_id' })
     user: User;

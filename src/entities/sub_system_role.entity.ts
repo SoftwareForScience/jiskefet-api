@@ -10,19 +10,18 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('sub_system_role')
 export class SubSystemRole {
-
     @PrimaryGeneratedColumn({ name: 'sub_system_role_id' })
     subSystemRoleId: number;
 
     @Column({
         name: 'sub_system_role_name',
-        type: 'varchar'
+        type: 'varchar',
     })
     subSystemRoleName: string;
 
     @Column({
         name: 'sub_system_role_description',
-        type: 'varchar'
+        type: 'varchar',
     })
     subSystemRoleDescription: string;
 }

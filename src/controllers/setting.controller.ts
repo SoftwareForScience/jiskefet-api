@@ -18,7 +18,6 @@ import { HttpExceptionFilter } from '../filters/httpexception.filter';
 @UseFilters(new HttpExceptionFilter())
 @Controller()
 export class SettingController {
-
     constructor(
         private readonly settingService: SettingService,
     ) { }

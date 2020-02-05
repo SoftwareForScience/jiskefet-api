@@ -13,7 +13,6 @@ import { Log } from './log.entity';
 
 @Entity('tag')
 export class Tag {
-
     @PrimaryGeneratedColumn({ name: 'tag_id' })
     @ApiModelProperty({
         type: 'integer',
@@ -30,17 +29,19 @@ export class Tag {
         name: 'tags_in_run',
         joinColumn: {
             name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
+            referencedColumnName: 'tagId',
         },
         inverseJoinColumn: {
             name: 'fk_run_number',
-            referencedColumnName: 'runNumber'
-        }
+            referencedColumnName: 'runNumber',
+        },
     })
     @ApiModelProperty({
         type: Run,
-        // isArray: true,
-        // minProperties: 1
+        /*
+         * isArray: true,
+         * minProperties: 1
+         */
     })
     runs: Run[];
 
@@ -49,17 +50,19 @@ export class Tag {
         name: 'tags_in_log',
         joinColumn: {
             name: 'fk_tag_id',
-            referencedColumnName: 'tagId'
+            referencedColumnName: 'tagId',
         },
         inverseJoinColumn: {
             name: 'fk_log_id',
-            referencedColumnName: 'logId'
-        }
+            referencedColumnName: 'logId',
+        },
     })
     @ApiModelProperty({
         type: Log,
-        // isArray: true,
-        // minProperties: 1
+        /*
+         * isArray: true,
+         * minProperties: 1
+         */
     })
     logs: Log[];
 }

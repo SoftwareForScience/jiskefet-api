@@ -36,7 +36,7 @@ export class AppService {
                     </button>
                 </a>
             </h1>
-            `
+            `,
         ].join('');
     }
 }

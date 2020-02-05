@@ -49,7 +49,7 @@ describe('RunService', () => {
         password: TEST_DB_PASSWORD,
         database: TEST_DB_DATABASE,
         entities: ['src/**/**.entity{.ts,.js}'],
-        synchronize: TEST_DB_SYNCHRONIZE === 'true' ? true : false,
+        synchronize: TEST_DB_SYNCHRONIZE === 'true',
         migrations: ['populate/*{.ts,.js}'],
         migrationsRun: true,
         // logging: 'all'
@@ -57,7 +57,7 @@ describe('RunService', () => {
     const runNumber = Math.floor(+new Date() / 1000);
     const queryRunDto: QueryRunDto = {
         pageNumber: 1,
-        pageSize: 25
+        pageSize: 25,
     };
     const queryLogDto: QueryLogDto = {};
     const runDto: CreateRunDto = {
@@ -68,22 +68,24 @@ describe('RunService', () => {
         nFlps: 1,
         runType: RunType.TECHNICAL,
         O2StartTime: new Date(),
-        TrgStartTime: new Date()
+        TrgStartTime: new Date(),
     };
 
-    beforeAll(async () => {
-        // maybe add a switch to support an in memory db like sqljs,
-        // so that tests can be run in a CI pipeline like Travis
+    beforeAll(async() => {
+        /*
+         * maybe add a switch to support an in memory db like sqljs,
+         * so that tests can be run in a CI pipeline like Travis
+         */
         testingModule = await Test.createTestingModule({
             providers: [
                 RunService,
                 LogService,
-                FlpSerivce
+                FlpSerivce,
             ],
             imports: [
                 TypeOrmModule.forRoot(databaseOptions),
-                TypeOrmModule.forFeature([Run, Log, FlpRole])
-            ]
+                TypeOrmModule.forFeature([Run, Log, FlpRole]),
+            ],
         })
             .compile();
 
@@ -92,22 +94,22 @@ describe('RunService', () => {
         flpService = await testingModule.get<FlpSerivce>(FlpSerivce);
     });
 
-    afterAll(async () => {
+    afterAll(async() => {
         testingModule.close();
     });
 
     describe('initialize', () => {
-        it('expects logService to be defined', async () => {
+        it('expects logService to be defined', async() => {
             expect(logService).toBeDefined();
         });
 
-        it('expects runService to be defined', async () => {
+        it('expects runService to be defined', async() => {
             expect(runService).toBeDefined();
         });
     });
 
     describe('getRunConfParams', () => {
-        it('should return params with runNumber 1 and 2', async () => {
+        it('should return params with runNumber 1 and 2', async() => {
             const result = await runService.getRunConfParams(1, 2);
             expect(result.Run1).toBe(1);
             expect(result.Run2).toBe(2);
@@ -115,12 +117,12 @@ describe('RunService', () => {
     });
 
     describe('post()', () => {
-        it('should create one run and return it', async () => {
+        it('should create one run and return it', async() => {
             const result = await runService.create(runDto);
             expect(result).toBeInstanceOf(Run);
         });
 
-        it('should link a log to a run', async () => {
+        it('should link a log to a run', async() => {
             const runs = await runService.findAll(queryRunDto);
             latestRun = runs.runs[runs.runs.length - 1];
             const runId = latestRun.runNumber;
@@ -136,11 +138,11 @@ describe('RunService', () => {
             expect(await runService.linkLogToRun(runId, logId)).toEqual(run);
         });
 
-        it('should update a specific run and return it', async () => {
+        it('should update a specific run and return it', async() => {
             patchRunDto = {
                 O2EndTime: new Date(),
                 TrgEndTime: new Date(),
-                runQuality: 'Unknown'
+                runQuality: 'Unknown',
             };
 
             const updatedRun = await runService.updateRun(latestRun.runNumber, patchRunDto);
@@ -152,12 +154,12 @@ describe('RunService', () => {
     });
 
     describe('get()', () => {
-        it('should return a run with runNumber 1', async () => {
+        it('should return a run with runNumber 1', async() => {
             run = await runService.findById(1);
             expect(run.runNumber).toBe(1);
         });
 
-        it('should return multiple runs', async () => {
+        it('should return multiple runs', async() => {
             const runResult = await runService.findAll(queryRunDto);
             expect(runResult.runs.length).toBeGreaterThanOrEqual(1);
         });

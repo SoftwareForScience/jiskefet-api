@@ -27,7 +27,7 @@ export class CreateUserDto {
      * The user's name  from the database of the OAuth provider (e.g. GitHub, CERN etc.).
      */
     @ApiModelProperty({
-        type: 'string'
+        type: 'string',
     })
     name: string;
 }

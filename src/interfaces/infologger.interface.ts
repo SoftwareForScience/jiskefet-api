@@ -6,29 +6,31 @@
  * copied verbatim in the file "LICENSE"
  */
 
-// export interface InfoLogProtocols {
-//     [
-//     version: '1.4',
-//     fields: [
-//         { name: 'severity', type: string },
-//         { name: 'level', type: number },
-//         { name: 'timestamp', type: number },
-//         { name: 'hostname', type: string },
-//         { name: 'rolename', type: string },
-//         { name: 'pid', type: number },
-//         { name: 'username', type: string },
-//         { name: 'system', type: string },
-//         { name: 'facility', type: string },
-//         { name: 'detector', type: string },
-//         { name: 'partition', type: string },
-//         { name: 'run', type: number },
-//         { name: 'errcode', type: number },
-//         { name: 'errline', type: number },
-//         { name: 'errsource', type: string },
-//         { name: 'message', type: string }
-//     ],
-//     ];
-// }
+/*
+ * export interface InfoLogProtocols {
+ *     [
+ *     version: '1.4',
+ *     fields: [
+ *         { name: 'severity', type: string },
+ *         { name: 'level', type: number },
+ *         { name: 'timestamp', type: number },
+ *         { name: 'hostname', type: string },
+ *         { name: 'rolename', type: string },
+ *         { name: 'pid', type: number },
+ *         { name: 'username', type: string },
+ *         { name: 'system', type: string },
+ *         { name: 'facility', type: string },
+ *         { name: 'detector', type: string },
+ *         { name: 'partition', type: string },
+ *         { name: 'run', type: number },
+ *         { name: 'errcode', type: number },
+ *         { name: 'errline', type: number },
+ *         { name: 'errsource', type: string },
+ *         { name: 'message', type: string }
+ *     ],
+ *     ];
+ * }
+ */
 
 module.exports = {
     version: '1.4',
@@ -48,6 +50,6 @@ module.exports = {
         { name: 'errcode', type: Number },
         { name: 'errline', type: Number },
         { name: 'errsource', type: String },
-        { name: 'message', type: String }
-    ]
+        { name: 'message', type: String },
+    ],
 };

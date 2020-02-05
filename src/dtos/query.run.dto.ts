@@ -34,7 +34,7 @@ export class QueryRunDto {
     @IsEnum(OrderDirection, {
         each: true,
         message: `orderDirection must be of enum string types:
-            ${_.values(OrderDirection).map((x: OrderDirection) => x)}.`
+            ${_.values(OrderDirection).map((x: OrderDirection) => x)}.`,
     })
     @IsOptional()
     orderDirection?: OrderDirection;
@@ -47,7 +47,7 @@ export class QueryRunDto {
         format: 'int64',
     })
     @IsNumber()
-    pageSize: number = 25;
+    pageSize = 25;
 
     @ApiModelProperty({
         description: 'The current page, i.e. the offset in the result set based on pageSize.',
@@ -57,7 +57,7 @@ export class QueryRunDto {
         format: 'int64',
     })
     @IsNumber()
-    pageNumber: number = 1;
+    pageNumber = 1;
 
     @ApiModelProperty({
         description: 'The id of the log.',

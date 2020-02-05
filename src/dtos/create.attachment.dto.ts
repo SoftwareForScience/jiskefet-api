@@ -11,7 +11,6 @@ import { IsString, IsBase64, IsByteLength, IsOptional } from 'class-validator';
 import { FILE_UPLOAD_LIMIT } from '../constants';
 
 export class CreateAttachmentDto {
-
     @ApiModelProperty({
         type: 'string',
         format: 'date-time',

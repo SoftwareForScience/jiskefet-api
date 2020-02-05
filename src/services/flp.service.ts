@@ -21,8 +21,8 @@ export class FlpSerivce {
     private readonly runRepository: Repository<Run>;
 
     constructor(
-        @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>,
-        @InjectRepository(Run) runRepository: Repository<Run>
+    @InjectRepository(FlpRole) flpRepository: Repository<FlpRole>,
+        @InjectRepository(Run) runRepository: Repository<Run>,
     ) {
         this.flpRepository = flpRepository;
         this.runRepository = runRepository;
@@ -58,7 +58,8 @@ export class FlpSerivce {
         if (flp) {
             throw new HttpException(
                 `FLP with run number ${createFlpDto.run} and ${createFlpDto.flpName} already exist.`,
-                HttpStatus.CONFLICT);
+                HttpStatus.CONFLICT,
+            );
         }
 
         flpEntity.run = await this.runRepository.findOne(createFlpDto.run);

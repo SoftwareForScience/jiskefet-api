@@ -52,16 +52,18 @@ if (process.env.NODE_ENV === 'test') {
 // InfoLogger setting
 export const USE_INFO_LOGGER = process.env.USE_INFO_LOGGER ? process.env.USE_INFO_LOGGER : 'false';
 
-// Test database settings used when running `$ npm test`
-// Since Travis CI does not have a .env file, a new variable is created to set the name.
+/*
+ * Test database settings used when running `$ npm test`
+ * Since Travis CI does not have a .env file, a new variable is created to set the name.
+ */
 const TEST_DATABASE_NAME = TYPEORM_DATABASE ? 'test_' + TYPEORM_DATABASE : 'test_jiskefet';
 
 export const TEST_DB_CONNECTION = process.env.TEST_DB_CONNECTION ? process.env.TEST_DB_CONNECTION : 'mysql';
 export const TEST_DB_HOST = process.env.TEST_DB_HOST ? process.env.TEST_DB_HOST : '127.0.0.1';
 export const TEST_DB_USERNAME = process.env.TEST_DB_USERNAME ? process.env.TEST_DB_USERNAME : 'root';
 export const TEST_DB_PASSWORD = process.env.TEST_DB_PASSWORD;
-export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE ?
-    process.env.TEST_DB_DATABASE : TEST_DATABASE_NAME;
+export const TEST_DB_DATABASE = process.env.TEST_DB_DATABASE
+    ? process.env.TEST_DB_DATABASE : TEST_DATABASE_NAME;
 export const TEST_DB_PORT = process.env.TEST_DB_PORT ? process.env.TEST_DB_PORT : 3306;
 export const TEST_DB_SYNCHRONIZE = process.env.TEST_DB_SYNCHRONIZE ? process.env.TEST_DB_SYNCHRONIZE : 'true';
 export const TEST_DB_LOGGING = process.env.TEST_DB_LOGGING ? process.env.TEST_DB_LOGGING : 'true';
