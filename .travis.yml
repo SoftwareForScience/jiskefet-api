@@ -10,6 +10,13 @@ jobs:
       script:
         - npm run lint
 
+    - stage: docker
+      services:
+        - docker
+      install: skip
+      script:
+        - ENV=dev make build
+
     - stage: test
       addons:
         mariadb: '10.3'

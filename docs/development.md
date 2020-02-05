@@ -1,37 +1,32 @@
 # Development
 
-## Docker
+## Prerequisite
 
-### docker-compose.override.yml
-```docker
-version: '3.7'
+|                | Version      |
+|----------------|--------------|
+| Docker         | 19.03.5      |
+| Docker Compose | 1.25.2       |
+| Make           | GNU Make 4.3 |
 
-services:
-    server:
-        command: [ "/opt/wait-for-it.sh", "-t", "0", "database:3306", "--", "npm", "start" ]
-        volumes:
-            - './scripts:/opt'
-        depends_on:
-            - database
-        links:
-            - database:database
-        environment:
-            # These should match the mariadb configuration
-            TYPEORM_HOST: database
-            TYPEORM_USERNAME: jiskefet
-            TYPEORM_PASSWORD: abd1516812
-            TYPEORM_DATABASE: jiskefetdb
 
-    database:
-        image: mariadb:10.3
-        volumes:
-            # Let Docker create and manage a volume
-            - '/var/lib/mysql'
-        ports:
-            - 3306:3306
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: jiskefetdb
-            MYSQL_USER: jiskefet
-            MYSQL_PASSWORD: abd1516812
+## Commands
+|         | Description                                             |
+|---------|---------------------------------------------------------|
+| build   | Builds the containers                                   |
+| start   | Starts the containers                                   |
+| stop    | Stops the containers                                    |
+| restart | Starts and stops the containers                         |
+| logs    | Prints the console output of the containers             |
+| follow  | Prints and follows the console output of the containers |
+
+**Note:** These commands can be chained to create the desired flow.
+
+### Start 'development' environment
+```console
+$ ENV=dev make build restart follow
+```
+
+### Start 'production' environment
+```console
+$ ENV=prod make build restart follow
 ```

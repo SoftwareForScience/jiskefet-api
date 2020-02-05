@@ -68,6 +68,3 @@ ormconfig.json
 environments/*.env
 infolog-data
 .vscode/launch.json
-
-# Override for the developers
-docker-compose.override.yml

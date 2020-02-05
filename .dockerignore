@@ -1,5 +1,6 @@
 # Node specific
 node_modules/
+.env
 
 # Application specific
 infolog-data/
@@ -7,4 +8,8 @@ infolog-data/
 # Docker specific
 Dockerfile
 docker-compose.yml
-docker-compose.override.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+
+# Other
+Makefile

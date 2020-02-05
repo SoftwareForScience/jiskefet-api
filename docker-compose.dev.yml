@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+    server:
+        command: [ "/opt/wait-for-it.sh", "-t", "0", "database:3306", "--", "npm", "start" ]
+        volumes:
+            - './scripts:/opt'
+        depends_on:
+            - 'database'
+        links:
+            - 'database:database'
+        environment:
+            # Node specific
+            NODE_ENV: dev
+            # Application specific
+            AUTH_REDIRECT_URI: 'http://localhost:3000/callback'
+            JWT_SECRET_KEY:    'MY_VERY_SECURE_KEY'
+            USE_API_BASE_PATH: 'false'
+            USE_CERN_SSO:      'false'
+            # This should match the alias of the links property
+            TYPEORM_HOST: 'database'
+            # These should match the MariaDB configuration
+            TYPEORM_DATABASE: 'jiskefet'
+            TYPEORM_USERNAME: 'jiskefet'
+            TYPEORM_PASSWORD: 'abc12345'
+
+    database:
+        image: mariadb:10.3
+        volumes:
+            # Let Docker create and manage a volume
+            - '/var/lib/mysql'
+        ports:
+            - '3306:3306'
+        environment:
+            # Application specific
+            MYSQL_ROOT_PASSWORD: 'root'
+            # These should match the TypeORM configuration
+            MYSQL_DATABASE: 'jiskefet'
+            MYSQL_USER:     'jiskefet'
+            MYSQL_PASSWORD: 'abc12345'
